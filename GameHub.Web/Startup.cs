@@ -1,3 +1,4 @@
+using GameHub.Games.BoardGames.ConnectFour;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -27,6 +28,8 @@ namespace GameHub.Web
             {
                 configuration.RootPath = "ClientApp/build";
             });
+
+            services.AddSingleton<IConnectFour, ConnectFour>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -35,6 +38,7 @@ namespace GameHub.Web
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseCors();
             }
             else
             {
