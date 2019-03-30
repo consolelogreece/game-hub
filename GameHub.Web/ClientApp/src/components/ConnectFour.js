@@ -1,4 +1,5 @@
 ﻿import React, { Component } from 'react';
+import {HubConnectionBuilder} from '@aspnet/signalr'
 
 export class ConnectFour extends Component {
     constructor(props) {
@@ -6,17 +7,33 @@ export class ConnectFour extends Component {
         this.state = {
             player: "",
             column: 0,
-            response: {}
+            response: {},
+            hubConnection: null
         };
+    }
+
+    componentDidMount() {
+        const hubConnection = new HubConnectionBuilder()
+            .withUrl("/connectfourhub")
+            .build();
+
+        console.log(hubConnection);
+
+        this.setState({ hubConnection }, () => {
+            this.state.hubConnection
+                .start()
+                .then(() => console.log('Connection started!'))
+                .catch(err => console.log('Error while establishing connection :(', err))
+
+            this.state.hubConnection.on('PlayerMoved', res => {
+                console.log("res recieved", res)
+            });
+        });
     }
 
     MakeMove()
     {
-        fetch(`api/ConnectFour/MakeMove?column=${this.state.column}&player=${this.state.player}`)
-            .then(response => response.json())
-            .then(data => {
-                this.setState({response: data})
-            });
+        this.state.hubConnection.invoke('MakeMove', this.state.column, this.state.player).catch(err => console.error(err));;
     }
 
     HandleChange(e)

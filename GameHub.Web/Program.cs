@@ -19,6 +19,7 @@ namespace GameHub.Web
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .UseUrls("https://*:3002")
                 .UseStartup<Startup>();
     }
 }

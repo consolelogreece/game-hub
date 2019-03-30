@@ -1,4 +1,5 @@
 using GameHub.Games.BoardGames.ConnectFour;
+using GameHub.Web.SignalR.hubs.BoardGames;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -30,6 +31,7 @@ namespace GameHub.Web
             });
 
             services.AddSingleton<IConnectFour, ConnectFour>();
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -38,7 +40,8 @@ namespace GameHub.Web
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseCors();
+
+                app.UseCors(builder => builder.AllowAnyHeader().AllowAnyHeader().AllowAnyOrigin());
             }
             else
             {
@@ -50,6 +53,11 @@ namespace GameHub.Web
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
+
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<ConnectFourHub>("/connectfourhub");
+            });
 
             app.UseMvc(routes =>
             {
