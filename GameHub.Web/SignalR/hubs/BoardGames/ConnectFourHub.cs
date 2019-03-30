@@ -1,29 +1,47 @@
 ﻿using GameHub.Games.BoardGames.ConnectFour;
 using Microsoft.AspNetCore.SignalR;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace GameHub.Web.SignalR.hubs.BoardGames
 {
     public class ConnectFourHub : Hub
     {
-        IConnectFour _game;
+        //TODO: Manually purge completed or inactive games to prevent mem leak
+        static ConcurrentDictionary<string, IConnectFour> _games = new ConcurrentDictionary<string, IConnectFour>();
 
-        public ConnectFourHub(IConnectFour game)
+        public void MakeMove(string gameId, int col, string player)
         {
-            _game = game;
-        }
-
-        public void MakeMove(int col, string player)
-        {
-            var result = _game.MakeMove(col, player);
+            var result = _games[gameId].MakeMove(col, player);
 
             if (result.WasValidMove)
             {
-                Clients.All.SendAsync("PlayerMoved", result);
+                Clients.Group(gameId).SendAsync("PlayerMoved", result);
             }
+            else
+            {
+                // TODO: Dedicated invalid move endpoint on front end
+                Clients.Caller.SendAsync("PlayerMoved", result);
+            }
+        }
+
+        public void CreateRoom(ConnectFourConfiguration config)
+        {
+            var Id = Guid.NewGuid().ToString();
+
+            var createdSuccessfully = _games.TryAdd(Id, new ConnectFour());
+
+            if (createdSuccessfully)
+            {
+                Clients.Caller.SendAsync("RoomCreatedRedirect", Id);
+            }
+        }
+
+        public void JoinRoom(Guid gameId)
+        {
+            // ensure game exists before adding to group
+            Groups.AddToGroupAsync(Context.ConnectionId, gameId.ToString());
         }
     }
 }

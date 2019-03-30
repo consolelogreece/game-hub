@@ -7,6 +7,7 @@ export class ConnectFour extends Component {
         this.state = {
             player: "",
             column: 0,
+            gameId: this.props.match.params.gameId,
             response: {},
             hubConnection: null
         };
@@ -17,23 +18,24 @@ export class ConnectFour extends Component {
             .withUrl("/connectfourhub")
             .build();
 
-        console.log(hubConnection);
 
         this.setState({ hubConnection }, () => {
             this.state.hubConnection
                 .start()
-                .then(() => console.log('Connection started!'))
+                .then(() => {
+                    this.state.hubConnection.invoke('JoinRoom', this.state.gameId);
+                })
                 .catch(err => console.log('Error while establishing connection :(', err))
 
             this.state.hubConnection.on('PlayerMoved', res => {
-                console.log("res recieved", res)
+                this.setState({ response: res });
             });
         });
     }
 
     MakeMove()
     {
-        this.state.hubConnection.invoke('MakeMove', this.state.column, this.state.player).catch(err => console.error(err));;
+        this.state.hubConnection.invoke('MakeMove', this.state.gameId, this.state.column, this.state.player).catch(err => console.error(err));;
     }
 
     HandleChange(e)
