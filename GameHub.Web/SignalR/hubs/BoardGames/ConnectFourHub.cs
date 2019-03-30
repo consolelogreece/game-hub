@@ -8,7 +8,7 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
 {
     public class ConnectFourHub : Hub
     {
-        //TODO: Manually purge completed or inactive games to prevent mem leak
+        //TODO: Manually purge completed or inactive games to prevent mem leak. maybe extract this functional into own service then inject that 
         static ConcurrentDictionary<string, IConnectFour> _games = new ConcurrentDictionary<string, IConnectFour>();
 
         public void MakeMove(string gameId, int col, string player)

@@ -1,5 +1,7 @@
 ﻿import React, { Component } from 'react';
-import {HubConnectionBuilder} from '@aspnet/signalr'
+import { HubConnectionBuilder } from '@aspnet/signalr'
+
+import Board from './Board';
 
 export class ConnectFour extends Component {
     constructor(props) {
@@ -8,12 +10,27 @@ export class ConnectFour extends Component {
             player: "",
             column: 0,
             gameId: this.props.match.params.gameId,
-            response: {},
-            hubConnection: null
+            gameMessage: "",
+            hubConnection: null,
+            boardState: [],
+            nRows: 6,
+            nCols: 7
         };
     }
 
     componentDidMount() {
+        let board = [];
+
+        for (let i = 0; i < this.state.nRows; i++) {
+            let row = [];
+            for (let j = 0; j < this.state.nCols; j++) {
+                row.push("white");
+            }
+            board.push(row);
+        }
+
+        this.setState({boardState: board})
+
         const hubConnection = new HubConnectionBuilder()
             .withUrl("/connectfourhub")
             .build();
@@ -28,8 +45,17 @@ export class ConnectFour extends Component {
                 .catch(err => console.log('Error while establishing connection :(', err))
 
             this.state.hubConnection.on('PlayerMoved', res => {
-                this.setState({ response: res });
+                const { boardState } = this.state;
+
+                boardState[res.row][res.col] = res.player;
+
+                this.setState({
+                    boardState: boardState,
+                    gameMessage: res.message
+                });
             });
+
+
         });
     }
 
@@ -47,6 +73,7 @@ export class ConnectFour extends Component {
     {
         return (
             <div>
+                <Board boardState={this.state.boardState}/>
                 <h6>Column</h6>
                 <input name="column" onChange={e => this.HandleChange(e)} />
                 <br />
@@ -55,7 +82,7 @@ export class ConnectFour extends Component {
                 <br />
                 <button onClick={() => this.MakeMove()}>go</button>
                 <br />
-                {JSON.stringify(this.state.response)}
+                {this.state.gameMessage}
             </div>
         )
     }
