@@ -29,6 +29,8 @@ export default class Board extends Component {
             )
         }
 
+        console.log(this.props.boardState);
+
         return (
             <div>
                 {boardRender}

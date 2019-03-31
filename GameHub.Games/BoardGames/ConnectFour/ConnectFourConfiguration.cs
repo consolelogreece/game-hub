@@ -16,7 +16,7 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
         public bool Validate()
         {
-            return nRows <= 100 && nCols <= 100 && winThreshold <= 100 && nPlayersMax <= 16;
+            return nRows <= 100 && nCols <= 100 && winThreshold <= 100 && nPlayersMax >= 2 && nPlayersMax <= 16;
         }
     }
 }

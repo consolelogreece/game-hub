@@ -1,12 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace GameHub.Games.BoardGames.ConnectFour
 {
     public class ConnectFour : IConnectFour
     {
+        public List<ConnectFourPlayer> _players = new List<ConnectFourPlayer>();
+
+        private int _maxPlayers = 16;
+
+        public bool _gameOver = false;
+
+        private bool _gameStarted = false;
+
         private string[][] _board;
 
         private int _winThreshold = 4;
@@ -17,14 +25,8 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
         private int _nextPlayerIndex;
 
-        private string[] _players;
-
-        private bool _gameOver = false;
-
         public ConnectFour()
         {
-            _players = new string[] { "Red", "Yellow" };
-
             // Initialize board
             _board = new string[_rowCount][];
 
@@ -35,13 +37,38 @@ namespace GameHub.Games.BoardGames.ConnectFour
             }
         }
 
-
-        public MoveResult MakeMove(int col, string player)
+        public ConnectFourPlayer Start()
         {
-            // create own exception?
+            _gameStarted = true;
+
+            return _players.FirstOrDefault();
+        }
+
+        public bool RegisterPlayer(ConnectFourPlayer newPlayer)
+        {
+            // TODO: Return error msg to user
+            if (_gameStarted) return false;
+
+            if (_players.Count > _maxPlayers) return false;
+
+            if (_players.Any(p => p.Id == newPlayer.Id)) return false;
+
+            _players.Add(newPlayer);
+
+            return true;
+        }
+
+
+        public MoveResult MakeMove(int col, string playerId)
+        {
+            // dont use exceptions
             if (_gameOver) throw new Exception("Game is over");
 
-            if (_players[_nextPlayerIndex] != player)
+            if (!_gameStarted) throw new Exception("Game has not started");
+
+            var player = _players[_nextPlayerIndex];
+
+            if (player.Id != playerId)
             {
                 return new MoveResult()
                 {
@@ -52,30 +79,35 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
             var row = FindRow(col);
 
-            var MoveResult = new MoveResult()
+            var moveResult = new MoveResult()
             {
-                player = player,
+                PlayerColor = player.PlayerColor,
+                PlayerNick = player.PlayerNick,
                 row = row,
                 col = col   
             };
 
-            if (row != -1)
-            {
-                _board[row][col] = player;
-
-                // update next player, loop back to start if last player in list.
-                _nextPlayerIndex = (_nextPlayerIndex + 1) % _players.Length;
-
-                MoveResult.WasValidMove = true;
+            if (row == -1) {
+                moveResult.Message = "illegal move";
+                return moveResult;
             }
+
+            _board[row][col] = player.Id;
+
+            // update next player, loop back to start if last player in list.
+            _nextPlayerIndex = (_nextPlayerIndex + 1) % _players.Count;
+
+            moveResult.NextTurnPlayer = _players[_nextPlayerIndex].PlayerNick;
+
+            moveResult.WasValidMove = true;
 
             var didWin = HasWon(row, col);
 
-            MoveResult.DidMoveWin = didWin;
+            moveResult.DidMoveWin = didWin;
 
             _gameOver = didWin;
 
-            return MoveResult;
+            return moveResult;
         }
 
         private bool HasWon(int row, int col)
