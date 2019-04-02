@@ -1,21 +1,27 @@
 ﻿import React, { Component } from 'react';
 import { HubConnectionBuilder } from '@aspnet/signalr'
+import { setGame, getPlayerId } from '../../helpers/sessionstorage'
 
 import Board from './Board';
 
 export class ConnectFour extends Component {
     constructor(props) {
         super(props);
+
+        let gameId = this.props.match.params.gameId;
+
+        let playerId = getPlayerId(gameId);
+
         this.state = {
             playerNick: "",
             playerColor: "",
             column: 0,
-            gameId: this.props.match.params.gameId,
+            gameId: gameId,
             gameMessage: "",
             playerTurn: "",
             gameState: "lobby",
             hubConnection: null,
-            boardState: [],
+            boardState: [[]],
             nRows: 6,
             nCols: 7
         };
@@ -35,7 +41,7 @@ export class ConnectFour extends Component {
         this.setState({boardState: board})
 
         const hubConnection = new HubConnectionBuilder()
-            .withUrl("/connectfourhub")
+            .withUrl("/connectfourhub", {accessTokenFactory: () => "testing"})
             .build();
 
 
@@ -47,14 +53,25 @@ export class ConnectFour extends Component {
             this.state.hubConnection.on('PlayerMoved', res => {
                 const { boardState } = this.state;
                 boardState[res.row][res.col] = res.playerColor;
-
-                let gameState = res.DidMoveWin ? "complete" : this.state.gameState;
-
+ 
                 this.setState({
                     boardState: boardState,
                     gameMessage: res.message,
-                    playerTurn: `Turn: ${res.playerNick}`,
-                    gameState: gameState
+                    playerTurn: `Turn: ${res.playerNick}`
+                });
+            });
+
+            this.state.hubConnection.on('InvalidMove', res => {
+                this.setState({
+                    gameMessage: res.message
+                });
+            });
+
+            this.state.hubConnection.on('PlayerWon', playerNick => {
+                this.setState({
+                    gameMessage: `${playerNick} won!`,
+                    gameState: "complete"
+
                 });
             });
 
@@ -62,6 +79,24 @@ export class ConnectFour extends Component {
                 this.setState({
                     gameState: "inProgress",
                     playerTurn: `Turn: ${firstPlayerName}`
+                });
+            });
+
+            this.state.hubConnection.on('RoomJoinedNewPlayer', (playerId, boardState) => {
+                setGame(this.state.gameId, playerId);
+
+                console.log(boardState);
+
+
+                this.setState({
+                    boardState: boardState,
+                    playerId: playerId
+                });
+            });
+
+            this.state.hubConnection.on('RoomJoinedReturningPlayer', boardState => {
+                this.setState({
+                    boardState: boardState
                 });
             });
         });

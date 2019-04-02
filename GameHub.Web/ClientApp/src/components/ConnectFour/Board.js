@@ -11,8 +11,6 @@ export default class Board extends Component {
         };
     }
 
-
-
     render = () => {
         let boardRender = [];
 
@@ -29,10 +27,8 @@ export default class Board extends Component {
             )
         }
 
-        console.log(this.props.boardState);
-
         return (
-            <div>
+            <div style={{backgroundColor: "blue"}}>
                 {boardRender}
             </div>
         )

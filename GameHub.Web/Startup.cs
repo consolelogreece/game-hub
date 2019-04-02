@@ -1,5 +1,7 @@
 using GameHub.Games.BoardGames.ConnectFour;
+using GameHub.Web.SignalR.Auth;
 using GameHub.Web.SignalR.hubs.BoardGames;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -7,6 +9,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System;
+using System.Threading.Tasks;
+using Microsoft.IdentityModel.Tokens;
 
 namespace GameHub.Web
 {
@@ -31,6 +37,7 @@ namespace GameHub.Web
             });
 
             services.AddSingleton<IConnectFour, ConnectFour>();
+
             services.AddSignalR();
         }
 
@@ -53,6 +60,24 @@ namespace GameHub.Web
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
+
+            app.Use((context, next) =>
+                {
+                    var playerIdExists = context.Request.Cookies.ContainsKey("GHPID");
+
+                    var PlayerId = playerIdExists ? context.Request.Cookies["GHPID"] : Guid.NewGuid().ToString();
+
+                    context.Response.Cookies.Append("GHPID", PlayerId, new Microsoft.AspNetCore.Http.CookieOptions
+                    {
+                        HttpOnly = true,
+                        Expires = DateTimeOffset.Now + TimeSpan.FromMinutes(15)
+                    });
+                    
+
+                    context.Items.Add("GHPID", PlayerId);
+                    return next();
+                }
+            );
 
             app.UseSignalR(routes =>
             {

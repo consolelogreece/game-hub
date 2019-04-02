@@ -7,15 +7,15 @@ namespace GameHub.Games.BoardGames.ConnectFour
 {
     public class ConnectFour : IConnectFour
     {
-        public List<ConnectFourPlayer> _players = new List<ConnectFourPlayer>();
+        private List<ConnectFourPlayer> _players = new List<ConnectFourPlayer>();
+
+        private ConnectFourPlayer[][] _board;
+
+        private bool _gameOver = false;
 
         private int _maxPlayers = 16;
 
-        public bool _gameOver = false;
-
         private bool _gameStarted = false;
-
-        private string[][] _board;
 
         private int _winThreshold = 4;
 
@@ -28,11 +28,11 @@ namespace GameHub.Games.BoardGames.ConnectFour
         public ConnectFour()
         {
             // Initialize board
-            _board = new string[_rowCount][];
+            _board = new ConnectFourPlayer[_rowCount][];
 
             for (int i = 0; i < _rowCount; i++)
-            {
-                string[] row = new string[_columnCount];
+            {   
+                var row = new ConnectFourPlayer[_columnCount];
                 _board[i] = row;
             }
         }
@@ -92,7 +92,7 @@ namespace GameHub.Games.BoardGames.ConnectFour
                 return moveResult;
             }
 
-            _board[row][col] = player.Id;
+            _board[row][col] = player;
 
             // update next player, loop back to start if last player in list.
             _nextPlayerIndex = (_nextPlayerIndex + 1) % _players.Count;
@@ -194,6 +194,11 @@ namespace GameHub.Games.BoardGames.ConnectFour
             while (--col >= 0 && ++row < _rowCount && _board[row][col] == player) count++;
 
             return count >= _winThreshold;
+        }
+
+        public ConnectFourPlayer[][] GetBoardState()
+        {
+            return _board;
         }
     }
 }

@@ -12,5 +12,7 @@ namespace GameHub.Games.BoardGames.ConnectFour
         bool RegisterPlayer(ConnectFourPlayer player);
 
         ConnectFourPlayer Start();
+
+        ConnectFourPlayer[][] GetBoardState();     
     }
 }
