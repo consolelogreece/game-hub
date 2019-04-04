@@ -10,8 +10,6 @@ export class ConnectFour extends Component {
 
         let gameId = this.props.match.params.gameId;
 
-        let playerId = getPlayerId(gameId);
-
         this.state = {
             playerNick: "",
             playerColor: "",
@@ -71,7 +69,6 @@ export class ConnectFour extends Component {
                 this.setState({
                     gameMessage: `${playerNick} won!`,
                     gameState: "complete"
-
                 });
             });
 
@@ -84,10 +81,6 @@ export class ConnectFour extends Component {
 
             this.state.hubConnection.on('RoomJoinedNewPlayer', (playerId, boardState) => {
                 setGame(this.state.gameId, playerId);
-
-                console.log(boardState);
-
-
                 this.setState({
                     boardState: boardState,
                     playerId: playerId

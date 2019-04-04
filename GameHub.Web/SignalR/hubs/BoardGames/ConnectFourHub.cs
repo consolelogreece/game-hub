@@ -3,8 +3,9 @@ using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
+using System.Linq;
 using Microsoft.AspNetCore.Authorization;
-using GameHub.Web.SignalR.Auth;
+using System.Collections.Generic;
 
 namespace GameHub.Web.SignalR.hubs.BoardGames
 {
@@ -13,11 +14,10 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
         //TODO: Manually purge completed or inactive games to prevent mem leak. maybe extract this functional into own service then inject that 
         static ConcurrentDictionary<string, IConnectFour> _games = new ConcurrentDictionary<string, IConnectFour>();
 
-        static ConcurrentDictionary<string, string> _playerGameMap = new ConcurrentDictionary<string, string>();
+        static ConcurrentDictionary<string, ConcurrentBag<string>> _playerGameMap = new ConcurrentDictionary<string, ConcurrentBag<string>>();
 
         public void StartGame(string gameId)
         {
-
             // TODO: Don't allow game to start without 2 players.
             var game = _games[gameId];
 
@@ -30,7 +30,7 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
         {
             var playerId = Context.Items["PlayerId"].ToString();
 
-            if (_playerGameMap[playerId] != gameId)
+            if (_playerGameMap[gameId].Contains(gameId) == false)
             {
                 Clients.Caller.SendAsync("UnauthorizedAction");
                 return;
@@ -62,9 +62,13 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
 
             var createdSuccessfully = _games.TryAdd(Id, new ConnectFour());
 
-            if (createdSuccessfully)
+            if (createdSuccessfully && _playerGameMap.TryAdd(Id, new ConcurrentBag<string>()))
             {
                 Clients.Caller.SendAsync("RoomCreatedRedirect", Id);
+            }
+            else
+            {
+                throw new HubException("Failed to create room");
             }
         }
 
@@ -75,10 +79,10 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
 
             var playerId = Context.Items["PlayerId"].ToString();
 
-            bool isNewPlayer = playerId == null || !(_playerGameMap.ContainsKey(playerId) && _playerGameMap[playerId] == gameId);
+            bool isNewPlayer = _playerGameMap[gameId].Contains(playerId) == false;
 
             bool registeredSuccessfully;
-            //not a returning player, so create id
+
             if (!isNewPlayer) return;
             {
                 var player = new ConnectFourPlayer { Id = playerId, PlayerNick = playerNick, PlayerColor = playerColor };
@@ -86,7 +90,7 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
                 registeredSuccessfully = game.RegisterPlayer(player);
             }
 
-            _playerGameMap.AddOrUpdate(playerId, gameId, (k,v) => gameId);
+            _playerGameMap[gameId].Add(playerId);
             
             if (Clients.Group(Context.ConnectionId) != null)
             {
