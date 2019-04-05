@@ -1,6 +1,5 @@
 ﻿import React, { Component } from 'react';
 import { HubConnectionBuilder } from '@aspnet/signalr'
-import { setGame, getPlayerId } from '../../helpers/sessionstorage'
 
 import Board from './Board';
 
@@ -12,7 +11,6 @@ export class ConnectFour extends Component {
 
         this.state = {
             playerNick: "",
-            playerColor: "",
             column: 0,
             gameId: gameId,
             gameMessage: "",
@@ -49,11 +47,9 @@ export class ConnectFour extends Component {
                 .catch(err => console.log('Error while establishing connection :(', err))
 
             this.state.hubConnection.on('PlayerMoved', res => {
-                const { boardState } = this.state;
-                boardState[res.row][res.col] = res.playerColor;
- 
+                console.log(res);
                 this.setState({
-                    boardState: boardState,
+                    boardState: res.boardState,
                     gameMessage: res.message,
                     playerTurn: `Turn: ${res.playerNick}`
                 });
@@ -79,15 +75,9 @@ export class ConnectFour extends Component {
                 });
             });
 
-            this.state.hubConnection.on('RoomJoinedPlayer', boardState => {
+            this.state.hubConnection.on('RoomJoined', res => {
                 this.setState({
-                    boardState: boardState
-                });
-            });
-
-            this.state.hubConnection.on('RoomJoinedSpectator', boardState => {
-                this.setState({
-                    boardState: boardState
+                    boardState: res.boardState
                 });
             });
         });
@@ -105,7 +95,7 @@ export class ConnectFour extends Component {
 
     JoinRoom()
     {
-        this.state.hubConnection.invoke('JoinRoom', this.state.gameId, this.state.playerNick, this.state.playerColor);
+        this.state.hubConnection.invoke('JoinRoom', this.state.gameId, this.state.playerNick);
     }
 
     StartGame()
@@ -122,9 +112,7 @@ export class ConnectFour extends Component {
         {
             case "lobby":
                 optionsPanel = (
-                    <div>
-                        <h6>Player Color</h6>
-                        <input name="playerColor" value={this.state.playerColor} onChange={e => this.HandleChange(e)} />
+                    <div>         
                         <h6>Player Nickname</h6>
                         <input name="playerNick" value={this.state.playerNick} onChange={e => this.HandleChange(e)} />
                         <br />

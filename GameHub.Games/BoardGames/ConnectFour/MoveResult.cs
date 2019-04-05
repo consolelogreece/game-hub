@@ -10,9 +10,7 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
         public string PlayerColor { get; internal set; }
 
-        public int row { get; internal set; }
-
-        public int col { get; internal set; }
+        public string[][] BoardState { get; internal set; }
 
         public bool WasValidMove { get; internal set; }
 

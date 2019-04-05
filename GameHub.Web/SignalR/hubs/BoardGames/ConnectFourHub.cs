@@ -15,8 +15,6 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
         // TODO: Find better way to transmit errors to user, throwing exceptions is expensive.
         static ConcurrentDictionary<string, IConnectFour> _games = new ConcurrentDictionary<string, IConnectFour>();
 
-        static ConcurrentDictionary<string, ConcurrentBag<string>> _playerGameMap = new ConcurrentDictionary<string, ConcurrentBag<string>>();
-
         public void StartGame(string gameId)
         {
             // TODO: Don't allow game to start without 2 players.
@@ -40,13 +38,9 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
         {
             var playerId = Context.Items["PlayerId"].ToString();
 
-            if (_playerGameMap[gameId].Contains(gameId) == false)
-            {
-                Clients.Caller.SendAsync("UnauthorizedAction");
-                return;
-            }
+            var game = _games[gameId];
 
-            var result = _games[gameId].MakeMove(col, playerId);
+            var result = game.MakeMove(col, playerId);
 
             if (result.WasValidMove)
             {
@@ -70,7 +64,7 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
 
             var createdSuccessfully = _games.TryAdd(Id, new ConnectFour());
 
-            if (createdSuccessfully && _playerGameMap.TryAdd(Id, new ConcurrentBag<string>()))
+            if (createdSuccessfully)
             {
                 Clients.Caller.SendAsync("RoomCreatedRedirect", Id);
             }
@@ -80,65 +74,21 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
             }
         }
 
-        public void JoinRoom(string gameId, string playerNick, string playerColor)
+        public void JoinRoom(string gameId, string playerNick)
         {
             // todo: check to make sure game exists first.
             var game = _games[gameId];
 
             var playerId = Context.Items["PlayerId"].ToString();
 
-            bool isNewPlayer = _playerGameMap[gameId].Contains(playerId) == false;
+            var registerResult = game.RegisterPlayer(playerId, playerNick);
 
-            bool registeredSuccessfully;
-
-            if (!isNewPlayer) return;
+            if (registerResult.Successful)
             {
-                var player = new ConnectFourPlayer { Id = playerId, PlayerNick = playerNick, PlayerColor = playerColor };
-
-                registeredSuccessfully = game.RegisterPlayer(player);
-            }
-
-            _playerGameMap[gameId].Add(playerId);
-            
-            if (Clients.Group(Context.ConnectionId) != null)
-            {
-                var boardState = GetGameStateColors(game);
-
-                if (registeredSuccessfully)
-                {
-                    if (isNewPlayer)
-                    {
-                        Clients.Caller.SendAsync("RoomJoinedPlayer", playerId, boardState);
-                    }     
-                }
-                else
-                {
-                    Clients.Caller.SendAsync("RoomJoinedSpectator", boardState);
-                }
-
                 Groups.AddToGroupAsync(Context.ConnectionId, gameId);
             }
-        }
 
-        private string[][] GetGameStateColors(IConnectFour game)
-        {
-            var board = game.GetBoardState();
-
-            var boardColorsOnly = new string[board.GetLength(0)][];
-
-            for (int i = 0; i < board.GetLength(0); i++)
-            {
-                var formattedRow = new string[board[i].Length];
-
-                for (int j = 0; j < board[i].Length; j++)
-                {
-                    formattedRow[j] = board[i][j] == null ? "White" : board[i][j].PlayerColor;
-                }
-
-                boardColorsOnly[i] = formattedRow;
-            }
-
-            return boardColorsOnly;
+            Clients.Caller.SendAsync("RoomJoined", registerResult);  
         }
 
         public override Task OnConnectedAsync()

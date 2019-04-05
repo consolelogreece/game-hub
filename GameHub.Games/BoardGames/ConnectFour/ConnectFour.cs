@@ -1,208 +1,163 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace GameHub.Games.BoardGames.ConnectFour
 {
     public class ConnectFour : IConnectFour
     {
-        private List<ConnectFourPlayer> _players = new List<ConnectFourPlayer>();
+        private ConnectFourGame _game;
 
-        private ConnectFourPlayer[][] _board;
+        private List<ConnectFourPlayer> _players;
 
-        private bool _gameOver = false;
-
-        private int _maxPlayers = 16;
-
-        private bool _gameStarted = false;
-
-        private int _winThreshold = 4;
-
-        private int _rowCount = 6;
-
-        private int _columnCount = 7;
+        private List<string> _colors = new List<string>()
+        {
+            "red",
+            "yellow",
+            "orange",
+            "green",
+            "cyan",
+            "purple",
+            "lightblue",   
+            "magenta"
+        };
 
         private int _nextPlayerIndex;
 
+        private bool _gameOver = false;
+
+        private bool _gameStarted = false;
+
+        private int _maxPlayers = 8;
+
         public ConnectFour()
         {
-            // Initialize board
-            _board = new ConnectFourPlayer[_rowCount][];
+            _game = new ConnectFourGame();
+            _players = new List<ConnectFourPlayer>();
+        }
 
-            for (int i = 0; i < _rowCount; i++)
-            {   
-                var row = new ConnectFourPlayer[_columnCount];
-                _board[i] = row;
+        public MoveResult MakeMove(int col, string playerId)
+        {
+            var error = new MoveResult();
+
+            if (_gameStarted == false)
+            {
+                error.Message = "Game has not started";
+                return error;
+            }
+
+            // todo check for draws
+
+            if (_gameOver)
+            {
+                error.Message = "Game is over";
+                return error;
+            };
+   
+
+            lock (_game) lock (_players)
+            {
+                var nextTurnPlayer = _players[_nextPlayerIndex];
+
+                if (nextTurnPlayer.Id != playerId)
+                {
+                    error.Message = "It is not your turn.";
+                    return error;
+                }
+
+                var moveResult = _game.MakeMove(col, playerId);
+
+                moveResult.NextTurnPlayer = nextTurnPlayer.PlayerNick;
+
+                moveResult.PlayerColor = nextTurnPlayer.PlayerColor;
+
+                moveResult.BoardState = GetBoardStateColors();
+              
+                if (moveResult.DidMoveWin)
+                {
+                    // todo sanitize nickname
+                    moveResult.Message = $"{nextTurnPlayer.PlayerNick} won!";
+                }
+
+                _nextPlayerIndex = (_nextPlayerIndex + 1) % _players.Count;
+
+                return moveResult;
+            }      
+        }
+
+        public RegisterResult RegisterPlayer(string playerId, string playerNick)
+        {
+            var newPlayer = new ConnectFourPlayer { Id = playerId, PlayerNick = playerNick, PlayerColor = _colors[_players.Count] };
+
+            var registerResult = new RegisterResult();
+
+            if (_gameStarted) registerResult.JoinType = "spectator";
+
+            lock (_players)
+            lock(_game)
+            {
+                if (_players.Count > _maxPlayers)
+                {
+                    registerResult.JoinType = "spectator";
+                    return registerResult;
+                }
+
+                if (_players.Any(p => p.Id == newPlayer.Id)) {
+                    registerResult.JoinType = "player";
+                    return registerResult;
+                }
+
+                _players.Add(newPlayer);
+
+                registerResult.IsFirstJoin = _players.Count == 1;
+
+                registerResult.BoardState = GetBoardStateColors();
+
+                registerResult.Successful = true;
+
+                return registerResult;
             }
         }
 
         public bool Start(string playerId)
         {
-            var player = _players.FirstOrDefault();
+            if (_players.Count == 0) return false;
 
-            // make sure the person trying to start the game is the game creater.
-            if (player.Id == playerId)
+            var gameCreator = _players[0];
+
+            if (gameCreator != null && gameCreator.Id == playerId)
+            {
                 _gameStarted = true;
+            }
 
             return _gameStarted;
         }
 
-        public bool RegisterPlayer(ConnectFourPlayer newPlayer)
+        public string[][] GetBoardStateColors()
         {
-            // TODO: Return error msg to user
-            if (_gameStarted) return false;
-
-            if (_players.Count > _maxPlayers) return false;
-
-            if (_players.Any(p => p.Id == newPlayer.Id)) return false;
-
-            _players.Add(newPlayer);
-
-            return true;
-        }
-
-
-        public MoveResult MakeMove(int col, string playerId)
-        {
-            // dont use exceptions
-            if (_gameOver) throw new Exception("Game is over");
-
-            if (!_gameStarted) throw new Exception("Game has not started");
-
-            var player = _players[_nextPlayerIndex];
-
-            if (player.Id != playerId)
+            lock (_game)
             {
-                return new MoveResult()
+                var board = _game.GetBoardState();
+
+                var boardColorsOnly = new string[board.GetLength(0)][];
+
+                for (int i = 0; i < board.GetLength(0); i++)
                 {
-                    WasValidMove = false,
-                    Message = "It is not your turn."
-                };
-            }
+                    var formattedRow = new string[board[i].Length];
 
-            var row = FindRow(col);
+                    for (int j = 0; j < board[i].Length; j++)
+                    {
+                        var playerId = board[i][j];
+                        var color = _players.FirstOrDefault(p => p.Id == playerId)?.PlayerColor ?? "white";
+                        formattedRow[j] = color;
+                    }
 
-            var moveResult = new MoveResult()
-            {
-                PlayerColor = player.PlayerColor,
-                PlayerNick = player.PlayerNick,
-                row = row,
-                col = col   
-            };
-
-            if (row == -1) {
-                moveResult.Message = "illegal move";
-                return moveResult;
-            }
-
-            _board[row][col] = player;
-
-            // update next player, loop back to start if last player in list.
-            _nextPlayerIndex = (_nextPlayerIndex + 1) % _players.Count;
-
-            moveResult.NextTurnPlayer = _players[_nextPlayerIndex].PlayerNick;
-
-            moveResult.WasValidMove = true;
-
-            var didWin = HasWon(row, col);
-
-            moveResult.DidMoveWin = didWin;
-
-            _gameOver = didWin;
-
-            return moveResult;
-        }
-
-        private bool HasWon(int row, int col)
-        {
-            return CheckVertical(row, col) || CheckHorizontal(row, col) || CheckDiagonalTLBR(row, col) || CheckDiagonalTRBL(row, col);
-        }
-
-        private int FindRow(int col)
-        {
-            int i = -1;
-            foreach (var row in _board)
-            {
-                i++;
-                if (row[col] == null)
-                {
-                    return i;
+                    boardColorsOnly[i] = formattedRow;
                 }
+
+                return boardColorsOnly;
             }
-
-            return -1;
-        }
-
-        private bool CheckVertical(int row, int col)
-        {
-            int count = 1;
-
-            var player = _board[row][col];
-
-            row--;
-
-            for (; row >= 0; row--)
-            {
-                if (_board[row][col] == player) count++;
-                else break;
-            }
-
-            return count >= _winThreshold;
-        }
-
-        private bool CheckHorizontal(int row, int col)
-        {
-            int count = 1;
-
-            var tempCol = col;
-
-            var player = _board[row][col];
-
-            while (++tempCol < _columnCount && _board[row][tempCol] == player) count++;
-
-            while (--col >= 0 && _board[row][col] == player) count++;
-
-            return count >= _winThreshold;
-        }
-
-        private bool CheckDiagonalTLBR(int row, int col)
-        {
-            int count = 1;
-
-            var tempCol = col;
-
-            var tempRow = row;
-
-            var player = _board[row][col];
-
-            while (++tempCol < _columnCount && ++tempRow < _rowCount && _board[tempRow][tempCol] == player) count++;
-
-            while (--col >= 0 && --row >= 0 && _board[row][col] == player) count++;
-
-            return count >= _winThreshold;
-        }
-
-        private bool CheckDiagonalTRBL(int row, int col)
-        {
-            int count = 1;
-
-            var tempCol = col;
-
-            var tempRow = row;
-
-            var player = _board[row][col];
-
-            while (++tempCol < _columnCount && --tempRow >= 0 && _board[tempRow][tempCol] == player) count++;
-
-            while (--col >= 0 && ++row < _rowCount && _board[row][col] == player) count++;
-
-            return count >= _winThreshold;
-        }
-
-        public ConnectFourPlayer[][] GetBoardState()
-        {
-            return _board;
         }
     }
 }

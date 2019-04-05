@@ -9,10 +9,10 @@ namespace GameHub.Games.BoardGames.ConnectFour
         // return val is the row index
         MoveResult MakeMove(int col, string player);
 
-        bool RegisterPlayer(ConnectFourPlayer player);
+        RegisterResult RegisterPlayer(string playerId, string playerNick);
 
         bool Start(string playerId);
 
-        ConnectFourPlayer[][] GetBoardState();     
+        string[][] GetBoardStateColors();     
     }
 }
