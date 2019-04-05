@@ -12,6 +12,7 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
     public class ConnectFourHub : Hub
     {
         //TODO: Manually purge completed or inactive games to prevent mem leak. maybe extract this functional into own service then inject that 
+        // TODO: Find better way to transmit errors to user, throwing exceptions is expensive.
         static ConcurrentDictionary<string, IConnectFour> _games = new ConcurrentDictionary<string, IConnectFour>();
 
         static ConcurrentDictionary<string, ConcurrentBag<string>> _playerGameMap = new ConcurrentDictionary<string, ConcurrentBag<string>>();
@@ -21,9 +22,18 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
             // TODO: Don't allow game to start without 2 players.
             var game = _games[gameId];
 
-            var firstplayer = game.Start();
+            var playerId = Context.Items["PlayerId"].ToString();
 
-            Clients.Group(gameId).SendAsync("GameStarted", firstplayer.PlayerNick);
+            var startedSuccessfully = game.Start(playerId);
+
+            if (startedSuccessfully)
+            {
+                Clients.Group(gameId).SendAsync("GameStarted");
+            }
+            else
+            {
+                throw new HubException("You are not the game creator");
+            }     
         }
 
         public void MakeMove(string gameId, int col)
@@ -40,14 +50,12 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
 
             if (result.WasValidMove)
             {
+                Clients.Group(gameId).SendAsync("PlayerMoved", result);
+
                 if (result.DidMoveWin)
                 {
                     Clients.Group(gameId).SendAsync("PlayerWon", result.PlayerNick);
-                }
-                else
-                {
-                    Clients.Group(gameId).SendAsync("PlayerMoved", result);
-                }          
+                }        
             }
             else
             {
@@ -100,11 +108,7 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
                 {
                     if (isNewPlayer)
                     {
-                        Clients.Caller.SendAsync("RoomJoinedNewPlayer", playerId, boardState);
-                    }
-                    else
-                    {
-                        Clients.Caller.SendAsync("RoomJoinedReturningPlayer", boardState);
+                        Clients.Caller.SendAsync("RoomJoinedPlayer", playerId, boardState);
                     }     
                 }
                 else
@@ -115,7 +119,6 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
                 Groups.AddToGroupAsync(Context.ConnectionId, gameId);
             }
         }
-
 
         private string[][] GetGameStateColors(IConnectFour game)
         {
@@ -140,12 +143,17 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
 
         public override Task OnConnectedAsync()
         {
+            // Get player id from http context. This is taken from a cookie and put in httpcontext items dictionary in an earlier piece of middleware.
             var httpContext = Context.GetHttpContext();
 
-            if (!httpContext.Items.ContainsKey("GHPID")) Context.Abort();
+            if (httpContext.Items.ContainsKey("GHPID") == false)
+            {
+                throw new Exception("Got to hub without GHPID. This shouldn't happen, everybody panic!");
+            }
 
             var ghpid = httpContext.Items["GHPID"].ToString();
 
+            // Store playerid in hub context.
             Context.Items.Add("PlayerId", ghpid);
 
             return base.OnConnectedAsync();
