@@ -28,7 +28,7 @@ export default class Board extends Component {
         }
 
         return (
-            <div style={{backgroundColor: "blue"}}>
+            <div style={{backgroundColor: "blue", display:"inline-block"}}>
                 {boardRender}
             </div>
         )

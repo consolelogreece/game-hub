@@ -37,11 +37,15 @@ namespace GameHub.Games.BoardGames.ConnectFour
             }
         }
 
-        public ConnectFourPlayer Start()
+        public bool Start(string playerId)
         {
-            _gameStarted = true;
+            var player = _players.FirstOrDefault();
 
-            return _players.FirstOrDefault();
+            // make sure the person trying to start the game is the game creater.
+            if (player.Id == playerId)
+                _gameStarted = true;
+
+            return _gameStarted;
         }
 
         public bool RegisterPlayer(ConnectFourPlayer newPlayer)

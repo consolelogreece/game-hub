@@ -79,15 +79,13 @@ export class ConnectFour extends Component {
                 });
             });
 
-            this.state.hubConnection.on('RoomJoinedNewPlayer', (playerId, boardState) => {
-                setGame(this.state.gameId, playerId);
+            this.state.hubConnection.on('RoomJoinedPlayer', boardState => {
                 this.setState({
-                    boardState: boardState,
-                    playerId: playerId
+                    boardState: boardState
                 });
             });
 
-            this.state.hubConnection.on('RoomJoinedReturningPlayer', boardState => {
+            this.state.hubConnection.on('RoomJoinedSpectator', boardState => {
                 this.setState({
                     boardState: boardState
                 });
