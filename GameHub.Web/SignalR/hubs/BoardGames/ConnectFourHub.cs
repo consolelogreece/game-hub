@@ -58,15 +58,17 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
             }
         }
 
-        public void CreateRoom(ConnectFourConfiguration config)
+        public string CreateRoom(ConnectFourConfiguration config)
         {
             var Id = Guid.NewGuid().ToString();
 
-            var createdSuccessfully = _games.TryAdd(Id, new ConnectFour());
+            if (!config.Validate()) throw new HubException("Invalid game config");
+
+            var createdSuccessfully = _games.TryAdd(Id, new ConnectFour(config));
 
             if (createdSuccessfully)
             {
-                Clients.Caller.SendAsync("RoomCreatedRedirect", Id);
+                return Id;
             }
             else
             {
@@ -76,6 +78,7 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
 
         public void JoinRoom(string gameId, string playerNick)
         {
+            // todo: stop breaking error on front end when player attempts to join but already has. perhaps make a check on componentdidmount and remove join option if already registered too.
             // todo: check to make sure game exists first.
             var game = _games[gameId];
 

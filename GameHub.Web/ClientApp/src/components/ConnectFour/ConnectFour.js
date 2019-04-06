@@ -11,8 +11,10 @@ export class ConnectFour extends Component {
 
         this.state = {
             playerNick: "",
+            joined:"",
             column: 0,
             gameId: gameId,
+            isGameCreator: false,
             gameMessage: "",
             playerTurn: "",
             gameState: "lobby",
@@ -39,7 +41,6 @@ export class ConnectFour extends Component {
         const hubConnection = new HubConnectionBuilder()
             .withUrl("/connectfourhub", {accessTokenFactory: () => "testing"})
             .build();
-
 
         this.setState({ hubConnection }, () => {
             this.state.hubConnection
@@ -77,10 +78,13 @@ export class ConnectFour extends Component {
 
             this.state.hubConnection.on('RoomJoined', res => {
                 this.setState({
-                    boardState: res.boardState
+                    boardState: res.boardState,
+                    isGameCreator: res.isGameCreator
                 });
             });
         });
+
+
     }
 
     MakeMove()
@@ -93,9 +97,10 @@ export class ConnectFour extends Component {
         this.setState({...this.state, [e.target.name]: e.target.value})
     }
 
-    JoinRoom()
-    {
-        this.state.hubConnection.invoke('JoinRoom', this.state.gameId, this.state.playerNick);
+    JoinRoom() {
+        this.state.hubConnection.invoke('JoinRoom', this.state.gameId, this.state.playerNick)
+            .then(() => this.setState({ joined: true }))
+            .catch(() => this.setState({gameMessage: "oopsie daisy"}));
     }
 
     StartGame()
@@ -112,13 +117,19 @@ export class ConnectFour extends Component {
         {
             case "lobby":
                 optionsPanel = (
-                    <div>         
-                        <h6>Player Nickname</h6>
-                        <input name="playerNick" value={this.state.playerNick} onChange={e => this.HandleChange(e)} />
-                        <br />
-                        <button onClick={() => this.JoinRoom()}>Join</button>
-                        <br/>
-                        <button onClick={() => this.StartGame()}>StartGame</button>    
+                    <div>                        
+                        {!this.state.joined &&
+                            <div>
+                                <h6>Choose your nickname</h6>
+                                <input name="playerNick" value={this.state.playerNick} onChange={e => this.HandleChange(e)} />
+                                <br /> 
+                                <button onClick={() => this.JoinRoom()}>Join</button>
+                            </div>
+                        }
+                        {this.state.isGameCreator &&
+                            <button onClick={() => this.StartGame()}>StartGame</button>    
+                        }
+                       
                     </div>
                 )
                 break;
@@ -152,6 +163,7 @@ export class ConnectFour extends Component {
 
         return (
             <div>      
+                {this.state.playerNick} <br />
                 <Board boardState={this.state.boardState}/>
                 {optionsPanel}
             </div>

@@ -32,11 +32,8 @@ export class NewGame extends Component {
 
     CreateRoom = () => {
         this.state.hubConnection.invoke('CreateRoom', this.state.roomConfig)
+            .then(gameId => this.props.history.push(gameId))
             .catch(err => console.error(err));
-
-        this.state.hubConnection.on('RoomCreatedRedirect', gameId => {
-            this.props.history.push(gameId)
-        });
     }
 
 

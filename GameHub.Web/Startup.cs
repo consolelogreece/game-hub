@@ -73,6 +73,7 @@ namespace GameHub.Web
                 }
 
                 // todo: encode datetime expire with cookie to help date tampering.
+                // consider signed jwts or something
 
                 context.Items.Add("GHPID", playerId);
 

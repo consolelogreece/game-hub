@@ -11,16 +11,18 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
         private List<ConnectFourPlayer> _players;
 
+        private string _creatorId;
+
         private List<string> _colors = new List<string>()
         {
             "red",
             "yellow",
-            "orange",
-            "green",
             "cyan",
+            "limegreen",
+            "magenta",
+            "orange",
             "purple",
-            "lightblue",   
-            "magenta"
+            "lightblue"
         };
 
         private int _nextPlayerIndex;
@@ -31,9 +33,14 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
         private int _maxPlayers = 8;
 
-        public ConnectFour()
+        public ConnectFour(ConnectFourConfiguration config)
         {
-            _game = new ConnectFourGame();
+            _maxPlayers = config.nPlayersMax;
+
+            _creatorId = config.creatorId;
+
+            _game = new ConnectFourGame(config);
+
             _players = new List<ConnectFourPlayer>();
         }
 
@@ -110,7 +117,7 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
                 _players.Add(newPlayer);
 
-                registerResult.IsFirstJoin = _players.Count == 1;
+                registerResult.IsGameCreator = _players[0].Id == playerId;
 
                 registerResult.BoardState = GetBoardStateColors();
 

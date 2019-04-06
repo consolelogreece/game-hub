@@ -15,8 +15,14 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
         private int _columnCount = 7;
 
-        public ConnectFourGame()
+        public ConnectFourGame(ConnectFourConfiguration config)
         {
+            _rowCount = config.nRows;
+
+            _columnCount = config.nCols;
+
+            _winThreshold = config.winThreshold;
+
             // Initialize board
             _board = new string[_rowCount][];
 
@@ -26,6 +32,8 @@ namespace GameHub.Games.BoardGames.ConnectFour
                 _board[i] = row;
             }
         }
+
+
 
         public MoveResult MakeMove(int col, string playerId)
         {
