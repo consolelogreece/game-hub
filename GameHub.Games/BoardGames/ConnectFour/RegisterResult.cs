@@ -11,8 +11,6 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
         public string[][] BoardState { get; set; }
 
-        public bool IsGameCreator { get; set; }
-
         public bool Successful { get; set; }
     }
 }

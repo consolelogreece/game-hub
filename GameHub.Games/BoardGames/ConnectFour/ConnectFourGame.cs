@@ -37,9 +37,18 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
         public MoveResult MakeMove(int col, string playerId)
         {
-            var row = FindRow(col);
-
             var moveResult = new MoveResult();
+
+            if (col >= _columnCount || _columnCount < 0)
+            {
+                moveResult.WasValidMove = false;
+
+                moveResult.Message = "Invalid column";
+
+                return moveResult;
+            }
+
+            var row = FindRow(col);
 
             if (row == -1) {
                 moveResult.WasValidMove = false;
@@ -48,6 +57,7 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
                 return moveResult;
             }
+
 
             moveResult.WasValidMove = true;
 

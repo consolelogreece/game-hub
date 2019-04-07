@@ -11,6 +11,8 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
         RegisterResult RegisterPlayer(string playerId, string playerNick);
 
+        GameState GetGameState(string playerId);
+
         bool Start(string playerId);
 
         string[][] GetBoardStateColors();     

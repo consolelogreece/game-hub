@@ -63,7 +63,8 @@ namespace GameHub.Games.BoardGames.ConnectFour
             };
    
 
-            lock (_game) lock (_players)
+            lock (_game)
+            lock (_players)
             {
                 var nextTurnPlayer = _players[_nextPlayerIndex];
 
@@ -117,8 +118,6 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
                 _players.Add(newPlayer);
 
-                registerResult.IsGameCreator = _players[0].Id == playerId;
-
                 registerResult.BoardState = GetBoardStateColors();
 
                 registerResult.Successful = true;
@@ -164,6 +163,32 @@ namespace GameHub.Games.BoardGames.ConnectFour
                 }
 
                 return boardColorsOnly;
+            }
+        }
+
+        public GameState GetGameState(string playerId)
+        {
+            lock (_players)
+            {
+                var player = _players.FirstOrDefault(p => p.Id == playerId);
+
+                var gameState = new GameState();
+
+                 var status = _gameOver ? GameStatus.finished : _gameStarted ? GameStatus.started : GameStatus.lobby;
+
+                gameState.Status = status.ToString();
+
+                gameState.BoardState = GetBoardStateColors();
+
+                gameState.IsGameCreator = _creatorId == playerId;
+
+                if (player != null)
+                {
+                    gameState.IsPlayerRegistered = true;
+                    gameState.RegisteredNick = player.PlayerNick;      
+                }
+
+                return gameState;
             }
         }
     }

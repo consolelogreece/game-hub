@@ -11,7 +11,7 @@ export class ConnectFour extends Component {
 
         this.state = {
             playerNick: "",
-            joined:"",
+            joined:false,
             column: 0,
             gameId: gameId,
             isGameCreator: false,
@@ -45,6 +45,20 @@ export class ConnectFour extends Component {
         this.setState({ hubConnection }, () => {
             this.state.hubConnection
                 .start()
+                .then(() => {
+                    this.state.hubConnection.invoke('JoinRoom', this.state.gameId)
+                        .then(res => {
+                            console.log(res);
+                            this.setState({
+                                gameState: res.status,
+                                playerNick: res.registeredNick,
+                                joined: res.isPlayerRegistered,
+                                isGameCreator: res.isGameCreator,
+                                boardState: res.boardState
+                            })
+                        })
+                        .catch(res => console.log(res))
+                })
                 .catch(err => console.log('Error while establishing connection :(', err))
 
             this.state.hubConnection.on('PlayerMoved', res => {
@@ -71,20 +85,11 @@ export class ConnectFour extends Component {
 
             this.state.hubConnection.on('GameStarted', firstPlayerName => {
                 this.setState({
-                    gameState: "inProgress",
+                    gameState: "started",
                     playerTurn: `Turn: ${firstPlayerName}`
                 });
             });
-
-            this.state.hubConnection.on('RoomJoined', res => {
-                this.setState({
-                    boardState: res.boardState,
-                    isGameCreator: res.isGameCreator
-                });
-            });
         });
-
-
     }
 
     MakeMove()
@@ -95,11 +100,14 @@ export class ConnectFour extends Component {
     HandleChange(e)
     {
         this.setState({...this.state, [e.target.name]: e.target.value})
-    }
+    } 
 
-    JoinRoom() {
-        this.state.hubConnection.invoke('JoinRoom', this.state.gameId, this.state.playerNick)
-            .then(() => this.setState({ joined: true }))
+    JoinGame() {
+        this.state.hubConnection.invoke('JoinGame', this.state.gameId, this.state.playerNick)
+            .then(res => this.setState({
+                joined: true,
+                boardState: res.boardState
+            }))
             .catch(() => this.setState({gameMessage: "oopsie daisy"}));
     }
 
@@ -123,7 +131,7 @@ export class ConnectFour extends Component {
                                 <h6>Choose your nickname</h6>
                                 <input name="playerNick" value={this.state.playerNick} onChange={e => this.HandleChange(e)} />
                                 <br /> 
-                                <button onClick={() => this.JoinRoom()}>Join</button>
+                                <button onClick={() => this.JoinGame()}>Join</button>
                             </div>
                         }
                         {this.state.isGameCreator &&
@@ -134,7 +142,7 @@ export class ConnectFour extends Component {
                 )
                 break;
 
-            case "inProgress":
+            case "started":
                 optionsPanel = (
                     <div>
                         <h6> Column </h6>
@@ -144,7 +152,7 @@ export class ConnectFour extends Component {
                 )
                 break;
 
-            case "complete":
+            case "finished":
                 optionsPanel = (
                     <div>
                         <h6>Game over!</h6>
@@ -159,7 +167,6 @@ export class ConnectFour extends Component {
                 </div>
             )
         }
-
 
         return (
             <div>      
