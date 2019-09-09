@@ -70,6 +70,11 @@ export class ConnectFour extends Component {
                 });
             });
 
+            this.state.hubConnection.on('RoomDoesntExist', res => {
+                console.log(res);
+                this.props.history.push("/connectfour/createroom")
+            });
+
             this.state.hubConnection.on('InvalidMove', res => {
                 this.setState({
                     gameMessage: res.message

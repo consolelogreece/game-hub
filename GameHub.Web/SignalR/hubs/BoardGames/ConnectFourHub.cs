@@ -12,6 +12,7 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
     public class ConnectFourHub : Hub
     {
         //TODO: Manually purge completed or inactive games to prevent mem leak. maybe extract this functional into own service then inject that 
+        // if a game has had over 5 minutes without a move and no active connections, delete? or just delete after 15 mins without a move.
         // TODO: Find better way to transmit errors to user, throwing exceptions is expensive.
         static ConcurrentDictionary<string, IConnectFour> _games = new ConcurrentDictionary<string, IConnectFour>();
 
@@ -84,11 +85,25 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
         {
             var playerId = Context.Items["PlayerId"].ToString();
 
+            if (!_games.ContainsKey(gameId)) 
+            {
+                Clients.Caller.SendAsync("RoomDoesntExist");
+
+                return null;
+            }
+
             return _games[gameId].GetGameState(playerId);
         }
 
         public RegisterResult JoinGame(string gameId, string playerNick)
         {
+            if (!_games.ContainsKey(gameId)) 
+            {
+                Clients.Caller.SendAsync("RoomDoesntExist");
+
+                return null;
+            }
+
             // todo: stop breaking error on front end when player attempts to join but already has. perhaps make a check on componentdidmount and remove join option if already registered too.
             // todo: check to make sure game exists first.
             var game = _games[gameId];
