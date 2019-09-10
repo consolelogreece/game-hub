@@ -168,6 +168,8 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
                 gameState.IsGameCreator = _creatorId == playerId;
 
+                gameState.Players = _players;
+
                 if (player != null)
                 {
                     gameState.IsPlayerRegistered = true;

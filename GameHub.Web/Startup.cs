@@ -61,6 +61,8 @@ namespace GameHub.Web
 
             app.Use((context, next) =>
             {
+                //currently ids are "protected" when sent to front end, so cant just paste in another players id as it hasn't been protected.
+                //that is what this middleware is doing.
                 var playerIdExists = context.Request.Cookies.ContainsKey("GHPID");
 
                 var playerId = playerIdExists ? context.Request.Cookies["GHPID"] : Guid.NewGuid().ToString();
@@ -73,8 +75,9 @@ namespace GameHub.Web
                 }
 
                 // todo: encode datetime expire with cookie to help date tampering.
+                // todo: perhaps remove ids and just use unique temporary names chosen on page load. check if in use like any other username.
                 // consider signed jwts or something
-
+            
                 context.Items.Add("GHPID", playerId);
 
                 var protectedPlayerId = protector.Protect(playerId);

@@ -75,9 +75,9 @@ export class ConnectFour extends Component {
                 this.props.history.push("/connectfour/createroom")
             });
 
-            this.state.hubConnection.on('InvalidMove', res => {
+            this.state.hubConnection.on('IllegalAction', res => {
                 this.setState({
-                    gameMessage: res.message
+                    gameMessage: res
                 });
             });
 
@@ -118,7 +118,7 @@ export class ConnectFour extends Component {
 
     StartGame()
     {
-        this.state.hubConnection.invoke('StartGame', this.state.gameId);
+        this.state.hubConnection.invoke('StartGame', this.state.gameId).catch(res => this.setState({gameMessage:res}));
     }
 
 
@@ -185,6 +185,7 @@ export class ConnectFour extends Component {
             <div>      
                 {this.state.playerNick} <br />
                 <Board boardState={this.state.boardState}/>
+                {this.state.gameMessage}
                 {optionsPanel}
             </div>
         )

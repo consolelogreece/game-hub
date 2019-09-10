@@ -13,7 +13,8 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
     {
         //TODO: Manually purge completed or inactive games to prevent mem leak. maybe extract this functional into own service then inject that 
         // if a game has had over 5 minutes without a move and no active connections, delete? or just delete after 15 mins without a move.
-        // TODO: Find better way to transmit errors to user, throwing exceptions is expensive.
+
+        //  >>>>> TODO: Find better way to transmit errors to user, throwing exceptions is expensive. <<<<<
 
         // todo: if player joins after game starts it still sort of works. fix. to do this make sure to check if game has started BEFORE registering.
         // todo: register signalr connection on reconnect 
@@ -26,16 +27,23 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
 
             var playerId = Context.Items["PlayerId"].ToString();
 
-            var startedSuccessfully = game.Start(playerId);
-
-            if (startedSuccessfully)
+            if (game.GetGameState(playerId).Players.Count < 2) 
             {
-                Clients.Group(gameId).SendAsync("GameStarted");
+                Clients.Caller.SendAsync("IllegalAction", "Not enough players to start");
             }
             else
             {
-                throw new HubException("You are not the game creator");
-            }     
+                var startedSuccessfully = game.Start(playerId);
+
+                if (startedSuccessfully)
+                {
+                    Clients.Group(gameId).SendAsync("GameStarted");
+                }
+                else
+                {
+                    Clients.Caller.SendAsync("IllegalAction", "You are no the host");
+                }     
+            }
         }
 
         public void MakeMove(string gameId, int col)
@@ -57,8 +65,7 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
             }
             else
             {
-                // TODO: Dedicated invalid move endpoint on front end
-                Clients.Caller.SendAsync("InvalidMove", result);
+                Clients.Caller.SendAsync("IllegalAction", result.Message);
             }
         }
 
