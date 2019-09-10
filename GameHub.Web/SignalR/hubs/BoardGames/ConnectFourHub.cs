@@ -71,14 +71,11 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
 
             var createdSuccessfully = _games.TryAdd(Id, new ConnectFour(config));
 
-            if (createdSuccessfully)
-            {
-                return Id;
-            }
-            else
+            if (!createdSuccessfully)
             {
                 throw new HubException("Failed to create room");
             }
+            return Id;
         }
 
         public GameState JoinRoom(string gameId)
@@ -105,7 +102,6 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
             }
 
             // todo: stop breaking error on front end when player attempts to join but already has. perhaps make a check on componentdidmount and remove join option if already registered too.
-            // todo: check to make sure game exists first.
             var game = _games[gameId];
 
             var playerId = Context.Items["PlayerId"].ToString();
