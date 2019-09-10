@@ -171,6 +171,14 @@ export class ConnectFour extends Component {
                 <div>
                 </div>
             )
+
+            if (!this.state.joined)
+            {
+                optionsPanel = (
+                    <div>
+                    </div>
+                )
+            }
         }
 
         return (

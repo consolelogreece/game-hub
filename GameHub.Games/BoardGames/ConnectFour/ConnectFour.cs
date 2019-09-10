@@ -94,35 +94,21 @@ namespace GameHub.Games.BoardGames.ConnectFour
             }      
         }
 
-        public RegisterResult RegisterPlayer(string playerId, string playerNick)
+        public bool RegisterPlayer(string playerId, string playerNick)
         {
             var newPlayer = new ConnectFourPlayer { Id = playerId, PlayerNick = playerNick, PlayerColor = _colors[_players.Count] };
-
-            var registerResult = new RegisterResult();
-
-            if (_gameStarted) registerResult.JoinType = "spectator";
 
             lock (_players)
             lock(_game)
             {
-                if (_players.Count > _maxPlayers)
+                if (_players.Count > _maxPlayers || _players.Any(p => p.Id == newPlayer.Id))
                 {
-                    registerResult.JoinType = "spectator";
-                    return registerResult;
-                }
-
-                if (_players.Any(p => p.Id == newPlayer.Id)) {
-                    registerResult.JoinType = "player";
-                    return registerResult;
+                    return false;
                 }
 
                 _players.Add(newPlayer);
 
-                registerResult.BoardState = GetBoardStateColors();
-
-                registerResult.Successful = true;
-
-                return registerResult;
+                return true;
             }
         }
 
@@ -174,7 +160,7 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
                 var gameState = new GameState();
 
-                 var status = _gameOver ? GameStatus.finished : _gameStarted ? GameStatus.started : GameStatus.lobby;
+                var status = _gameOver ? GameStatus.finished : _gameStarted ? GameStatus.started : GameStatus.lobby;
 
                 gameState.Status = status.ToString();
 

@@ -14,6 +14,9 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
         //TODO: Manually purge completed or inactive games to prevent mem leak. maybe extract this functional into own service then inject that 
         // if a game has had over 5 minutes without a move and no active connections, delete? or just delete after 15 mins without a move.
         // TODO: Find better way to transmit errors to user, throwing exceptions is expensive.
+
+        // todo: if player joins after game starts it still sort of works. fix. to do this make sure to check if game has started BEFORE registering.
+        // todo: register signalr connection on reconnect 
         static ConcurrentDictionary<string, IConnectFour> _games = new ConcurrentDictionary<string, IConnectFour>();
 
         public void StartGame(string gameId)
@@ -82,17 +85,19 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
         {
             var playerId = Context.Items["PlayerId"].ToString();
 
-            if (!_games.ContainsKey(gameId)) 
+               if (!_games.ContainsKey(gameId)) 
             {
                 Clients.Caller.SendAsync("RoomDoesntExist");
 
                 return null;
             }
 
+            Groups.AddToGroupAsync(Context.ConnectionId, gameId); 
+
             return _games[gameId].GetGameState(playerId);
         }
 
-        public RegisterResult JoinGame(string gameId, string playerNick)
+        public GameState JoinGame(string gameId, string playerNick)
         {
             if (!_games.ContainsKey(gameId)) 
             {
@@ -106,14 +111,16 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
 
             var playerId = Context.Items["PlayerId"].ToString();
 
-            var registerResult = game.RegisterPlayer(playerId, playerNick);
+            var gamestate = game.GetGameState(playerId);  
 
-            if (registerResult.Successful)
+            var registeredSuccessfully = false;
+
+            if (gamestate.Status == GameStatus.lobby.ToString())
             {
-                Groups.AddToGroupAsync(Context.ConnectionId, gameId);
-            }
+                registeredSuccessfully = game.RegisterPlayer(playerId, playerNick);
+            }  
 
-            return registerResult;  
+            return game.GetGameState(playerId);  
         }
 
         public override Task OnConnectedAsync()
