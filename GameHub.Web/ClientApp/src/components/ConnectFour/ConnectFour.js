@@ -171,14 +171,14 @@ export class ConnectFour extends Component {
                 <div>
                 </div>
             )
+        }
 
-            if (!this.state.joined)
-            {
-                optionsPanel = (
-                    <div>
-                    </div>
-                )
-            }
+        if (!this.state.joined && this.state.gameState != "lobby")
+        {
+            optionsPanel = (
+                <div>
+                </div>
+            )
         }
 
         return (
