@@ -48,14 +48,10 @@ export class ConnectFour extends Component {
                 .then(() => {
                     this.state.hubConnection.invoke('JoinRoom', this.state.gameId)
                         .then(res => {
-                            console.log(res);
-                            this.setState({
-                                gameState: res.status,
-                                playerNick: res.registeredNick,
-                                joined: res.isPlayerRegistered,
-                                isGameCreator: res.isGameCreator,
-                                boardState: res.boardState
-                            })
+                            this.PopulateGameState();   
+                        })
+                        .then(res => {
+                            this.PopulateClientPlayerInfo();
                         })
                         .catch(res => console.log(res))
                 })
@@ -109,16 +105,42 @@ export class ConnectFour extends Component {
 
     JoinGame() {
         this.state.hubConnection.invoke('JoinGame', this.state.gameId, this.state.playerNick)
-            .then(res => this.setState({
-                joined: true,
-                boardState: res.boardState
-            }))
+            .then(res =>  
+                this.PopulateClientPlayerInfo()
+            )
             .catch(() => this.setState({gameMessage: "oopsie daisy"}));
     }
 
     StartGame()
     {
         this.state.hubConnection.invoke('StartGame', this.state.gameId).catch(res => this.setState({gameMessage:res}));
+    }
+
+    PopulateGameState()
+    {
+        this.state.hubConnection.invoke('GetGameState', this.state.gameId)
+        .then(res => 
+            {
+                if (res == null) return; 
+                this.setState({
+                gameState: res.status,
+                boardState: res.boardState
+            })
+        })
+    }
+
+    PopulateClientPlayerInfo()
+    {
+        return this.state.hubConnection.invoke('GetClientPlayerInfo', this.state.gameId)
+            .then(res => 
+                {
+                    if (res == null) return; 
+                    this.setState ({
+                        joined: res != null,
+                        playerNick: res.playerNick,
+                        isGameCreator: res.isHost
+                    })
+                })
     }
 
 

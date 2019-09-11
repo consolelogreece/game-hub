@@ -11,7 +11,7 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
         bool RegisterPlayer(string playerId, string playerNick);
 
-        GameState GetGameState(string playerId);
+        GameState GetGameState();
 
         bool Start(string playerId);
 

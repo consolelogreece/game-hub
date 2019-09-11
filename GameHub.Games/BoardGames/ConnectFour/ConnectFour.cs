@@ -96,7 +96,10 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
         public bool RegisterPlayer(string playerId, string playerNick)
         {
-            var newPlayer = new ConnectFourPlayer { Id = playerId, PlayerNick = playerNick, PlayerColor = _colors[_players.Count] };
+            var newPlayer = new ConnectFourPlayer { Id = playerId, 
+            PlayerNick = playerNick, 
+            PlayerColor = _colors[_players.Count], 
+            IsHost = _creatorId == playerId};
 
             lock (_players)
             lock(_game)
@@ -152,12 +155,10 @@ namespace GameHub.Games.BoardGames.ConnectFour
             }
         }
 
-        public GameState GetGameState(string playerId)
+        public GameState GetGameState()
         {
             lock (_players)
             {
-                var player = _players.FirstOrDefault(p => p.Id == playerId);
-
                 var gameState = new GameState();
 
                 var status = _gameOver ? GameStatus.finished : _gameStarted ? GameStatus.started : GameStatus.lobby;
@@ -166,15 +167,7 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
                 gameState.BoardState = GetBoardStateColors();
 
-                gameState.IsGameCreator = _creatorId == playerId;
-
                 gameState.Players = _players;
-
-                if (player != null)
-                {
-                    gameState.IsPlayerRegistered = true;
-                    gameState.RegisteredNick = player.PlayerNick;      
-                }
 
                 return gameState;
             }

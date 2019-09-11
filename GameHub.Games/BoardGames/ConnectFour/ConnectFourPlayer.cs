@@ -8,6 +8,8 @@ namespace GameHub.Games.BoardGames.ConnectFour
     {
         public string Id { get; set; }
 
+        public bool IsHost {get; set;}
+
         public string PlayerNick { get; set; }
 
         public string PlayerColor { get; set; }

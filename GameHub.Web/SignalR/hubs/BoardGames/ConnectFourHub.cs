@@ -27,7 +27,7 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
 
             var playerId = Context.Items["PlayerId"].ToString();
 
-            if (game.GetGameState(playerId).Players.Count < 2) 
+            if (game.GetGameState().Players.Count < 2) 
             {
                 Clients.Caller.SendAsync("IllegalAction", "Not enough players to start");
             }
@@ -44,6 +44,39 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
                     Clients.Caller.SendAsync("IllegalAction", "You are no the host");
                 }     
             }
+        }
+    
+
+        public GameState GetGameState(string gameId)
+        {
+            if (!_games.ContainsKey(gameId)) 
+            {
+                Clients.Caller.SendAsync("RoomDoesntExist");
+
+                return null;
+            }
+
+            var game = _games[gameId];
+
+            return game.GetGameState();
+        }
+
+        public ConnectFourPlayer GetClientPlayerInfo(string gameId)
+        {
+            if (!_games.ContainsKey(gameId)) 
+            {
+                Clients.Caller.SendAsync("RoomDoesntExist");
+
+                return null;
+            }
+
+            var playerId = Context.Items["PlayerId"].ToString();
+            
+            var game = _games[gameId];
+
+            var state = game.GetGameState();
+
+            return state.Players.FirstOrDefault(p => p.Id == playerId);            
         }
 
         public void MakeMove(string gameId, int col)
@@ -88,29 +121,27 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
             return Id;
         }
 
-        public GameState JoinRoom(string gameId)
+        public void JoinRoom(string gameId)
         {
             var playerId = Context.Items["PlayerId"].ToString();
 
-               if (!_games.ContainsKey(gameId)) 
+            if (!_games.ContainsKey(gameId)) 
             {
                 Clients.Caller.SendAsync("RoomDoesntExist");
 
-                return null;
+                return;
             }
 
-            Groups.AddToGroupAsync(Context.ConnectionId, gameId); 
-
-            return _games[gameId].GetGameState(playerId);
+            Groups.AddToGroupAsync(Context.ConnectionId, gameId);
         }
 
-        public GameState JoinGame(string gameId, string playerNick)
+        public void JoinGame(string gameId, string playerNick)
         {
             if (!_games.ContainsKey(gameId)) 
             {
                 Clients.Caller.SendAsync("RoomDoesntExist");
 
-                return null;
+                return;
             }
 
             // todo: stop breaking error on front end when player attempts to join but already has. perhaps make a check on componentdidmount and remove join option if already registered too.
@@ -118,16 +149,14 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
 
             var playerId = Context.Items["PlayerId"].ToString();
 
-            var gamestate = game.GetGameState(playerId);  
+            var gamestate = game.GetGameState();  
 
             var registeredSuccessfully = false;
 
             if (gamestate.Status == GameStatus.lobby.ToString())
             {
                 registeredSuccessfully = game.RegisterPlayer(playerId, playerNick);
-            }  
-
-            return game.GetGameState(playerId);  
+            }
         }
 
         public override Task OnConnectedAsync()
