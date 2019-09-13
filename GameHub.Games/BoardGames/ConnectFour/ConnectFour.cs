@@ -55,14 +55,12 @@ namespace GameHub.Games.BoardGames.ConnectFour
             }
 
             // todo check for draws
-
             if (_gameOver)
             {
                 error.Message = "Game is over";
                 return error;
             };
    
-
             lock (_game)
             lock (_players)
             {
@@ -76,15 +74,15 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
                 var moveResult = _game.MakeMove(col, playerId);
 
-                moveResult.NextTurnPlayer = nextTurnPlayer.PlayerNick;
+                moveResult.Player = _players.FirstOrDefault(p => p.Id == playerId);
 
-                moveResult.PlayerColor = nextTurnPlayer.PlayerColor;
+                moveResult.NextTurnPlayer = nextTurnPlayer;
 
                 moveResult.BoardState = GetBoardStateColors();
               
                 if (moveResult.DidMoveWin)
                 {
-                    // todo sanitize nickname
+                    // TODO: sanitize nickname
                     moveResult.Message = $"{nextTurnPlayer.PlayerNick} won!";
                 }
 
@@ -119,9 +117,7 @@ namespace GameHub.Games.BoardGames.ConnectFour
         {
             if (_players.Count == 0) return false;
 
-            var gameCreator = _players[0];
-
-            if (gameCreator != null && gameCreator.Id == playerId)
+            if (_creatorId == playerId)
             {
                 _gameStarted = true;
             }
@@ -168,6 +164,8 @@ namespace GameHub.Games.BoardGames.ConnectFour
                 gameState.BoardState = GetBoardStateColors();
 
                 gameState.Players = _players;
+
+                gameState.NextTurnPlayer = _players.Count != 0 ? _players[_nextPlayerIndex] : null;
 
                 return gameState;
             }
