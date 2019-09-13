@@ -13,11 +13,11 @@ export default class Board extends Component {
 
     render = () => {
         let boardRender = [];
-
+        
         for (let i = this.props.boardState.length - 1; i >= 0; i--) {
             let row = [];
             for (let j = 0; j < this.props.boardState[i].length; j++) {
-                row.push(<Tile color={this.props.boardState[i][j]} />)
+                row.push(<Tile color={this.props.boardState[i][j]} makeMove={(col) => this.props.makeMove(col)} column={j}/>)
             }
 
             boardRender.push(

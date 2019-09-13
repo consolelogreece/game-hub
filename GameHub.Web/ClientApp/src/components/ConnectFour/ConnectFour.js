@@ -58,7 +58,6 @@ export class ConnectFour extends Component {
                 .catch(err => console.log('Error while establishing connection :(', err))
 
             this.state.hubConnection.on('PlayerMoved', res => {
-                console.log(res);
                 this.setState({
                     boardState: res.boardState,
                     gameMessage: res.message,
@@ -67,7 +66,6 @@ export class ConnectFour extends Component {
             });
 
             this.state.hubConnection.on('RoomDoesntExist', res => {
-                console.log(res);
                 this.props.history.push("/connectfour/createroom")
             });
 
@@ -93,9 +91,9 @@ export class ConnectFour extends Component {
         });
     }
 
-    MakeMove()
+    MakeMove(col)
     {
-        this.state.hubConnection.invoke('MakeMove', this.state.gameId, this.state.column).catch(err => console.error(err));;
+        this.state.hubConnection.invoke('MakeMove', this.state.gameId, col).catch(err => console.error(err));;
     }
 
     HandleChange(e)
@@ -123,10 +121,12 @@ export class ConnectFour extends Component {
             {
                 if (res == null) return; 
                 this.setState({
-                gameState: res.status,
-                boardState: res.boardState
-            })
+                    gameState: res.status,
+                    boardState: res.boardState
+                })
         })
+
+        this.forceUpdate();
     }
 
     PopulateClientPlayerInfo()
@@ -162,19 +162,9 @@ export class ConnectFour extends Component {
                             </div>
                         }
                         {this.state.isGameCreator &&
-                            <button onClick={() => this.StartGame()}>StartGame</button>    
+                            <button onClick={() => this.StartGame()}>Start Game</button>    
                         }
                        
-                    </div>
-                )
-                break;
-
-            case "started":
-                optionsPanel = (
-                    <div>
-                        <h6> Column </h6>
-                        <input name="column" value={this.state.column}  onChange={e => this.HandleChange(e)} />
-                        <button onClick={() => this.MakeMove()}>Place token</button>
                     </div>
                 )
                 break;
@@ -202,11 +192,11 @@ export class ConnectFour extends Component {
                 </div>
             )
         }
-
+        
         return (
             <div>      
                 {this.state.playerNick} <br />
-                <Board boardState={this.state.boardState}/>
+                <Board boardState={this.state.boardState} makeMove={(col) => this.MakeMove(col)}/>
                 {this.state.gameMessage}
                 {optionsPanel}
             </div>

@@ -19,9 +19,7 @@ export class NewGame extends Component {
         const hubConnection = new HubConnectionBuilder()
             .withUrl("/connectfourhub")
             .build();
-
-        console.log(hubConnection);
-
+            
         this.setState({ hubConnection }, () => {
             this.state.hubConnection
                 .start()
@@ -35,8 +33,6 @@ export class NewGame extends Component {
             .then(gameId => this.props.history.push(gameId))
             .catch(err => console.error(err));
     }
-
-
 
     HandleChange(e) {
         this.setState({ ...this.state, roomConfig: { ...this.state.roomConfig, [e.target.name]: e.target.value }})
