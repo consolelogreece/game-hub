@@ -64,9 +64,9 @@ namespace GameHub.Games.BoardGames.ConnectFour
             lock (_game)
             lock (_players)
             {
-                var nextTurnPlayer = _players[_nextPlayerIndex];
+                var player = _players[_nextPlayerIndex];
 
-                if (nextTurnPlayer.Id != playerId)
+                if (player.Id != playerId)
                 {
                     error.Message = "It is not your turn.";
                     return error;
@@ -76,17 +76,18 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
                 moveResult.Player = _players.FirstOrDefault(p => p.Id == playerId);
 
-                moveResult.NextTurnPlayer = nextTurnPlayer;
+                _nextPlayerIndex = (_nextPlayerIndex + 1) % _players.Count;
+
+                moveResult.NextTurnPlayer = _players[_nextPlayerIndex];
 
                 moveResult.BoardState = GetBoardStateColors();
               
                 if (moveResult.DidMoveWin)
                 {
                     // TODO: sanitize nickname
-                    moveResult.Message = $"{nextTurnPlayer.PlayerNick} won!";
+                    moveResult.Message = $"{player.PlayerNick} won!";
+                    _gameOver = true;
                 }
-
-                _nextPlayerIndex = (_nextPlayerIndex + 1) % _players.Count;
 
                 return moveResult;
             }      

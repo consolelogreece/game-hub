@@ -11,6 +11,7 @@ export class ConnectFour extends Component {
 
         this.state = {
             playerNick: "",
+            playerId: "",
             joined:false,
             column: 0,
             gameId: gameId,
@@ -48,20 +49,21 @@ export class ConnectFour extends Component {
                 .then(() => {
                     this.state.hubConnection.invoke('JoinRoom', this.state.gameId)
                         .then(res => {
-                            this.PopulateGameState();   
+                            this.PopulateClientPlayerInfo();
                         })
                         .then(res => {
-                            this.PopulateClientPlayerInfo();
+                            this.PopulateGameState();   
                         })
                         .catch(res => console.log(res))
                 })
                 .catch(err => console.log('Error while establishing connection :(', err))
 
             this.state.hubConnection.on('PlayerMoved', res => {
+                var playerTurn = res.nextTurnPlayer.id == this.state.playerId ? "your" : res.nextTurnPlayer.playerNick;
                 this.setState({
                     boardState: res.boardState,
                     gameMessage: res.message,
-                    playerTurn: `Turn: ${res.playerNick}`
+                    playerTurn: playerTurn
                 });
             });
 
@@ -82,10 +84,10 @@ export class ConnectFour extends Component {
                 });
             });
 
-            this.state.hubConnection.on('GameStarted', firstPlayerName => {
+            this.state.hubConnection.on('GameStarted', gameState => {
                 this.setState({
                     gameState: "started",
-                    playerTurn: `Turn: ${firstPlayerName}`
+                    playerTurn: gameState.nextTurnPlayer.playerNick
                 });
             });
         });
@@ -120,9 +122,12 @@ export class ConnectFour extends Component {
         .then(res => 
             {
                 if (res == null) return; 
+                var playerTurn = res.nextTurnPlayer.id == this.state.playerId ? "your" : res.nextTurnPlayer.playerNick;
                 this.setState({
                     gameState: res.status,
-                    boardState: res.boardState
+                    boardState: res.boardState,
+                    playerTurn: playerTurn
+                   
                 })
         })
 
@@ -138,6 +143,7 @@ export class ConnectFour extends Component {
                     this.setState ({
                         joined: res != null,
                         playerNick: res.playerNick,
+                        playerId: res.id,
                         isGameCreator: res.isHost
                     })
                 })
@@ -165,6 +171,14 @@ export class ConnectFour extends Component {
                             <button onClick={() => this.StartGame()}>Start Game</button>    
                         }
                        
+                    </div>
+                )
+                break;
+
+            case "started":
+                optionsPanel = (
+                    <div>
+                        <h6>its {this.state.playerTurn}'s turn</h6>   
                     </div>
                 )
                 break;

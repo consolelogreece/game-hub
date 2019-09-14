@@ -6,9 +6,7 @@ namespace GameHub.Games.BoardGames.ConnectFour
 {
     public class MoveResult
     {
-        public string PlayerNick { get; internal set; }
-
-        public string PlayerColor { get; internal set; }
+        public ConnectFourPlayer Player { get; internal set; }
 
         public string[][] BoardState { get; internal set; }
 
@@ -18,6 +16,6 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
         public bool DidMoveWin { get; internal set; }
 
-        public string NextTurnPlayer { get; internal set; }
+        public ConnectFourPlayer NextTurnPlayer { get; internal set; }
     }
 }

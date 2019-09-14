@@ -37,11 +37,11 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
 
                 if (startedSuccessfully)
                 {
-                    Clients.Group(gameId).SendAsync("GameStarted");
+                    Clients.Group(gameId).SendAsync("GameStarted", this.GetGameState(gameId));
                 }
                 else
                 {
-                    Clients.Caller.SendAsync("IllegalAction", "You are no the host");
+                    Clients.Caller.SendAsync("IllegalAction", "You are not the host");
                 }     
             }
         }
@@ -93,7 +93,7 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
 
                 if (result.DidMoveWin)
                 {
-                    Clients.Group(gameId).SendAsync("PlayerWon", result.PlayerNick);
+                    Clients.Group(gameId).SendAsync("PlayerWon", result.Player);
                 }        
             }
             else
