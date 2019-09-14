@@ -80,7 +80,7 @@ export class ConnectFour extends Component {
             this.state.hubConnection.on('PlayerWon', player => {
                 this.setState({
                     gameMessage: `${player.playerNick} won!`,
-                    gameState: "finished"
+                    gameState: "finishedgit "
                 });
             });
 
