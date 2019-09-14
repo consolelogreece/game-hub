@@ -77,10 +77,10 @@ export class ConnectFour extends Component {
                 });
             });
 
-            this.state.hubConnection.on('PlayerWon', playerNick => {
+            this.state.hubConnection.on('PlayerWon', player => {
                 this.setState({
-                    gameMessage: `${playerNick} won!`,
-                    gameState: "complete"
+                    gameMessage: `${player.playerNick} won!`,
+                    gameState: "finished"
                 });
             });
 
