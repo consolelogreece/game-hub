@@ -1,0 +1,22 @@
+.vertical_center
+{
+    margin: 0 auto;
+}
+
+.board
+{
+    widows: 100%;
+    margin: 0 auto;
+    display:"inline-block";
+}
+
+.row
+{
+    margin: 0px 0px 0px 0px;
+}
+
+#ConnectFour
+{
+    width: 100%;
+    max-width: 800px;
+}

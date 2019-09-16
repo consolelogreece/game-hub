@@ -1,5 +1,6 @@
 ﻿import React, { Component } from 'react';
-import { HubConnectionBuilder } from '@aspnet/signalr'
+import { HubConnectionBuilder } from '@aspnet/signalr';
+import './ConnectFour.css';
 
 import Board from './Board';
 
@@ -22,13 +23,14 @@ export class ConnectFour extends Component {
             hubConnection: null,
             boardState: [[]],
             nRows: 6,
-            nCols: 7
+            nCols: 7,
+            boardColor: "#0e3363"
         };
     }
-
+      
     componentDidMount() {
         let board = [];
-
+        
         for (let i = 0; i < this.state.nRows; i++) {
             let row = [];
             for (let j = 0; j < this.state.nCols; j++) {
@@ -36,54 +38,54 @@ export class ConnectFour extends Component {
             }
             board.push(row);
         }
-
+        
         this.setState({boardState: board})
-
+        
         const hubConnection = new HubConnectionBuilder()
-            .withUrl("/connectfourhub", {accessTokenFactory: () => "testing"})
-            .build();
-
+        .withUrl("/connectfourhub", {accessTokenFactory: () => "testing"})
+        .build();
+        
         this.setState({ hubConnection }, () => {
             this.state.hubConnection
-                .start()
-                .then(() => {
-                    this.state.hubConnection.invoke('JoinRoom', this.state.gameId)
-                        .then(res => {
-                            this.PopulateClientPlayerInfo();
-                        })
-                        .then(res => {
-                            this.PopulateGameState();   
-                        })
-                        .catch(res => console.log(res))
+            .start()
+            .then(() => {
+                this.state.hubConnection.invoke('JoinRoom', this.state.gameId)
+                .then(res => {
+                    this.PopulateClientPlayerInfo();
                 })
-                .catch(err => console.log('Error while establishing connection :(', err))
-
-            this.state.hubConnection.on('PlayerMoved', res => {
-                var playerTurn = res.nextTurnPlayer.id == this.state.playerId ? "your" : res.nextTurnPlayer.playerNick;
-                this.setState({
-                    boardState: res.boardState,
+                .then(res => {
+                    this.PopulateGameState();   
+                })
+                        .catch(res => console.log(res))
+                    })
+                    .catch(err => console.log('Error while establishing connection :(', err))
+                    
+                    this.state.hubConnection.on('PlayerMoved', res => {
+                        var playerTurn = res.nextTurnPlayer.id == this.state.playerId ? "your" : res.nextTurnPlayer.playerNick;
+                        this.setState({
+                            boardState: res.boardState,
                     gameMessage: res.message,
                     playerTurn: playerTurn
                 });
             });
-
+            
             this.state.hubConnection.on('RoomDoesntExist', res => {
                 this.props.history.push("/connectfour/createroom")
             });
-
+            
             this.state.hubConnection.on('IllegalAction', res => {
                 this.setState({
                     gameMessage: res
                 });
             });
-
+            
             this.state.hubConnection.on('PlayerWon', player => {
                 this.setState({
                     gameMessage: `${player.playerNick} won!`,
                     gameState: "finishedgit "
                 });
             });
-
+            
             this.state.hubConnection.on('GameStarted', gameState => {
                 this.setState({
                     gameState: "started",
@@ -97,12 +99,12 @@ export class ConnectFour extends Component {
     {
         this.state.hubConnection.invoke('MakeMove', this.state.gameId, col).catch(err => console.error(err));;
     }
-
+    
     HandleChange(e)
     {
         this.setState({...this.state, [e.target.name]: e.target.value})
     } 
-
+    
     JoinGame() {
         this.state.hubConnection.invoke('JoinGame', this.state.gameId, this.state.playerNick)
             .then(res =>  
@@ -122,12 +124,12 @@ export class ConnectFour extends Component {
         .then(res => 
             {
                 if (res == null) return; 
-                var playerTurn = res.nextTurnPlayer.id == this.state.playerId ? "your" : res.nextTurnPlayer.playerNick;
+                var playerTurn = "";
+                if (res.nextTurnPlayer != null) res.nextTurnPlayer.id == this.state.playerId ? "your" : res.nextTurnPlayer.playerNick;
                 this.setState({
                     gameState: res.status,
                     boardState: res.boardState,
                     playerTurn: playerTurn
-                   
                 })
         })
 
@@ -148,7 +150,6 @@ export class ConnectFour extends Component {
                     })
                 })
     }
-
 
     render()
     {
@@ -208,9 +209,15 @@ export class ConnectFour extends Component {
         }
         
         return (
-            <div>      
+            <div id="ConnectFour" className="vertical_center">      
                 {this.state.playerNick} <br />
-                <Board boardState={this.state.boardState} makeMove={(col) => this.MakeMove(col)}/>
+                    <Board className="vertical_center" 
+                        boardState={this.state.boardState} 
+                        makeMove={(col) => this.MakeMove(col)}
+                        nCols={6}
+                        nRows={7}
+                        boardColor={this.state.boardColor}
+                    />
                 {this.state.gameMessage}
                 {optionsPanel}
             </div>
