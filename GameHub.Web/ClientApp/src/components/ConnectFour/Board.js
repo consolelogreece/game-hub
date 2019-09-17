@@ -58,7 +58,7 @@ export default class Board extends Component {
         }
 
         return (
-            <div ref="board" className="board" style={{backgroundColor: this.props.boardColor}}>
+            <div ref="board" className="board" style={{backgroundColor: this.props.boardColor, border: `4px solid ${this.props.boardColor}`, borderRadius: "5%"}}>
                 {boardRender}
             </div>
         )
