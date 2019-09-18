@@ -6,6 +6,11 @@ using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Distributed;
+using FluentCache;
+using Caching;
+using System.Threading;
 
 namespace GameHub.Web.SignalR.hubs.BoardGames
 {
@@ -18,12 +23,19 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
 
         // todo: if player joins after game starts it still sort of works. fix. to do this make sure to check if game has started BEFORE registering.
         // todo: register signalr connection on reconnect 
-        static ConcurrentDictionary<string, IConnectFour> _games = new ConcurrentDictionary<string, IConnectFour>();
+        //static ConcurrentDictionary<string, IConnectFour> _games = new ConcurrentDictionary<string, IConnectFour>();
+
+        private ConnectFourCache _cache; 
+ 
+        public ConnectFourHub([FromServices] ConnectFourCache cache)
+        {
+            _cache = cache;
+        }
 
         public void StartGame(string gameId)
         {
             // TODO: Don't allow game to start without 2 players.
-            var game = _games[gameId];
+            var game = _cache.Get(gameId);
 
             var playerId = Context.Items["PlayerId"].ToString();
 
@@ -45,25 +57,26 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
                 }     
             }
         }
-    
 
         public GameState GetGameState(string gameId)
         {
-            if (!_games.ContainsKey(gameId)) 
+            var game = _cache.Get(gameId);
+
+            if (game == null) 
             {
                 Clients.Caller.SendAsync("RoomDoesntExist");
 
                 return null;
             }
 
-            var game = _games[gameId];
-
             return game.GetGameState();
         }
 
         public ConnectFourPlayer GetClientPlayerInfo(string gameId)
         {
-            if (!_games.ContainsKey(gameId)) 
+            var game = _cache.Get(gameId);
+
+            if (game == null) 
             {
                 Clients.Caller.SendAsync("RoomDoesntExist");
 
@@ -71,8 +84,6 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
             }
 
             var playerId = Context.Items["PlayerId"].ToString();
-            
-            var game = _games[gameId];
 
             var state = game.GetGameState();
 
@@ -81,9 +92,16 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
 
         public void MakeMove(string gameId, int col)
         {
-            var playerId = Context.Items["PlayerId"].ToString();
+            var game = _cache.Get(gameId);
 
-            var game = _games[gameId];
+            if (game == null) 
+            {
+                Clients.Caller.SendAsync("RoomDoesntExist");
+
+                return;
+            }
+
+            var playerId = Context.Items["PlayerId"].ToString();
 
             var result = game.MakeMove(col, playerId);
 
@@ -112,7 +130,12 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
 
             config.creatorId = playerId;
 
-            var createdSuccessfully = _games.TryAdd(Id, new ConnectFour(config));
+            //TODO: DO CONFIG VALIDATION
+            var createdSuccessfully = true;//_games.TryAdd(Id, new ConnectFour(config));
+
+            var game = new ConnectFour(config);
+
+            _cache.Set(Id, game);
 
             if (!createdSuccessfully)
             {
@@ -125,7 +148,9 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
         {
             var playerId = Context.Items["PlayerId"].ToString();
 
-            if (!_games.ContainsKey(gameId)) 
+            var game = _cache.Get(gameId);
+
+            if (game == null) 
             {
                 Clients.Caller.SendAsync("RoomDoesntExist");
 
@@ -137,15 +162,14 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
 
         public void JoinGame(string gameId, string playerNick)
         {
-            if (!_games.ContainsKey(gameId)) 
+            var game = _cache.Get(gameId);
+
+            if (game == null) 
             {
                 Clients.Caller.SendAsync("RoomDoesntExist");
 
                 return;
             }
-
-            // todo: stop breaking error on front end when player attempts to join but already has. perhaps make a check on componentdidmount and remove join option if already registered too.
-            var game = _games[gameId];
 
             var playerId = Context.Items["PlayerId"].ToString();
 
