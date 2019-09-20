@@ -22,30 +22,29 @@ export class ConnectFour extends Component {
             gameState: "lobby",
             hubConnection: null,
             boardState: [[]],
-            nRows: 6,
-            nCols: 7,
             boardColor: "#0e3363"
         };
     }
       
+    // TODO: FIGURE OUT WHY CHANGING NROWS/NCOLS DURING SETSTATE DOESNT CHANGE BOARD SIZE.
+    // perhaps dont even bother sending nrows and ncols as separate entities and just calculte them from the boardstate.
+    
     componentDidMount() {
         let board = [];
         
-        for (let i = 0; i < this.state.nRows; i++) {
+        for (let i = 0; i < this.state.boardState.length; i++) {
             let row = [];
-            for (let j = 0; j < this.state.nCols; j++) {
+            for (let j = 0; j < this.state.boardState[i].length; j++) {
                 row.push("white");
             }
             board.push(row);
         }
         
-        this.setState({boardState: board})
-        
         const hubConnection = new HubConnectionBuilder()
         .withUrl("/connectfourhub", {accessTokenFactory: () => "testing"})
         .build();
         
-        this.setState({ hubConnection }, () => {
+        this.setState({ boardState : board, hubConnection }, () => {
             this.state.hubConnection
             .start()
             .then(() => {
@@ -214,8 +213,6 @@ export class ConnectFour extends Component {
                     <Board className="vertical_center" 
                         boardState={this.state.boardState} 
                         makeMove={(col) => this.MakeMove(col)}
-                        nCols={6}
-                        nRows={7}
                         boardColor={this.state.boardColor}
                     />
                 {this.state.gameMessage}

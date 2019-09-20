@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Authorization;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
-using FluentCache;
 using Caching;
 using System.Threading;
 
@@ -16,14 +15,7 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
 {
     public class ConnectFourHub : Hub
     {
-        //TODO: Manually purge completed or inactive games to prevent mem leak. maybe extract this functional into own service then inject that 
-        // if a game has had over 5 minutes without a move and no active connections, delete? or just delete after 15 mins without a move.
-
-        //  >>>>> TODO: Find better way to transmit errors to user, throwing exceptions is expensive. <<<<<
-
-        // todo: if player joins after game starts it still sort of works. fix. to do this make sure to check if game has started BEFORE registering.
         // todo: register signalr connection on reconnect 
-        //static ConcurrentDictionary<string, IConnectFour> _games = new ConcurrentDictionary<string, IConnectFour>();
 
         private ConnectFourCache _cache; 
  
@@ -124,23 +116,23 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
         {
             var Id = Guid.NewGuid().ToString();
 
-            if (!config.Validate()) throw new HubException("Invalid game config");
-
             var playerId = Context.Items["PlayerId"].ToString();
 
             config.creatorId = playerId;
 
-            //TODO: DO CONFIG VALIDATION
-            var createdSuccessfully = true;//_games.TryAdd(Id, new ConnectFour(config));
+            var validGameConfig = config.Validate();
+
+            if (!validGameConfig)
+            {
+               Clients.Caller.SendAsync("Config illegal");
+
+               return null;
+            }
 
             var game = new ConnectFour(config);
 
             _cache.Set(Id, game);
 
-            if (!createdSuccessfully)
-            {
-                throw new HubException("Failed to create room");
-            }
             return Id;
         }
 

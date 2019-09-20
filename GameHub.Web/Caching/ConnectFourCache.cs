@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Concurrent;
 using System.Threading;
-using FluentCache;
 using GameHub.Games.BoardGames.ConnectFour;
 
 // TODO: make sure expired games are purged.

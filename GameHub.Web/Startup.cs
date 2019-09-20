@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using FluentCache;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
 using System.Text;
@@ -37,8 +36,6 @@ namespace GameHub.Web
             });
 
             services.AddSingleton<IConnectFour, ConnectFour>();
-
-            services.AddSingleton<ICache>(new FluentCache.Simple.FluentDictionaryCache());
 
             services.AddSingleton<ConnectFourCache>();
 

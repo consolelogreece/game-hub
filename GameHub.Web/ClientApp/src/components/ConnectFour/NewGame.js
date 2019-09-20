@@ -29,6 +29,7 @@ export class NewGame extends Component {
     }
 
     CreateRoom = () => {
+        console.log(this.state)
         this.state.hubConnection.invoke('CreateRoom', this.state.roomConfig)
             .then(gameId => this.props.history.push(gameId))
             .catch(err => console.error(err));
@@ -42,10 +43,10 @@ export class NewGame extends Component {
         return (
             <div>
                 <h6>Rows</h6>
-                <input name="rows" value={this.state.roomConfig.nRows} onChange={e => this.HandleChange(e)} />
+                <input name="nRows" value={this.state.roomConfig.nRows} onChange={e => this.HandleChange(e)} />
                 <br />
                 <h6>Columns</h6>
-                <input name="columns" value={this.state.roomConfig.nCols} onChange={e => this.HandleChange(e)} />
+                <input name="nCols" value={this.state.roomConfig.nCols} onChange={e => this.HandleChange(e)} />
                 <br />
                 <h6>Win Threshold</h6>
                 <input name="winThreshold" value={this.state.roomConfig.winThreshold} onChange={e => this.HandleChange(e)} />
