@@ -43,7 +43,6 @@ export default class Board extends Component {
     render = () => {
         let boardRender = [];
 
-        console.log("rendering", this.state)
         for (let i = this.state.boardState.length - 1; i >= 0; i--) {
             let row = [];
             for (let j = 0; j < this.state.boardState[i].length; j++) {
@@ -65,7 +64,7 @@ export default class Board extends Component {
         }
 
         return (
-            <div ref="board" className="board" style={{backgroundColor: this.props.boardColor, border: `4px solid ${this.props.boardColor}`, borderRadius: "5%"}}>
+            <div ref="board" className="board" style={{backgroundColor: this.props.boardColor, border: `4px solid ${this.props.boardColor}`, borderRadius: "10px"}}>
                 {boardRender}
             </div>
         )

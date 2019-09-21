@@ -5,14 +5,18 @@
 
 .board
 {
-    widows: 100%;
     margin: 0 auto;
     display:"inline-block";
 }
 
 .row
 {
-    margin: 0px 0px 0px 0px;
+    margin: 0 auto;
+}
+
+.tile 
+{
+    margin: 0 auto;
 }
 
 #ConnectFour
