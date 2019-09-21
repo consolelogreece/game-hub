@@ -25,10 +25,7 @@ export class ConnectFour extends Component {
             boardColor: "#0e3363"
         };
     }
-      
-    // TODO: FIGURE OUT WHY CHANGING NROWS/NCOLS DURING SETSTATE DOESNT CHANGE BOARD SIZE.
-    // perhaps dont even bother sending nrows and ncols as separate entities and just calculte them from the boardstate.
-    
+
     componentDidMount() {
         let board = [];
         
@@ -39,7 +36,7 @@ export class ConnectFour extends Component {
             }
             board.push(row);
         }
-        
+
         const hubConnection = new HubConnectionBuilder()
         .withUrl("/connectfourhub", {accessTokenFactory: () => "testing"})
         .build();
