@@ -14,5 +14,7 @@ namespace GameHub.Games.BoardGames.ConnectFour
         public string[][] BoardState { get; set; }
 
         public ConnectFourPlayer NextTurnPlayer{ get; set; }
+
+        public ConnectFourConfiguration Configuration { get; set; }
     }
 }

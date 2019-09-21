@@ -11,8 +11,6 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
         private List<ConnectFourPlayer> _players;
 
-        private string _creatorId;
-
         private List<string> _colors = new List<string>()
         {
             "red",
@@ -31,13 +29,11 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
         private bool _gameStarted = false;
 
-        private int _maxPlayers = 8;
+        private ConnectFourConfiguration _config;
 
         public ConnectFour(ConnectFourConfiguration config)
         {
-            _maxPlayers = config.nPlayersMax;
-
-            _creatorId = config.creatorId;
+            _config = config;
 
             _game = new ConnectFourGame(config);
 
@@ -98,12 +94,12 @@ namespace GameHub.Games.BoardGames.ConnectFour
             var newPlayer = new ConnectFourPlayer { Id = playerId, 
             PlayerNick = playerNick, 
             PlayerColor = _colors[_players.Count], 
-            IsHost = _creatorId == playerId};
+            IsHost = _config.creatorId == playerId};
 
             lock (_players)
             lock(_game)
             {
-                if (_players.Count > _maxPlayers || _players.Any(p => p.Id == newPlayer.Id))
+                if (_players.Count > _config.nPlayersMax || _players.Any(p => p.Id == newPlayer.Id))
                 {
                     return false;
                 }
@@ -118,7 +114,7 @@ namespace GameHub.Games.BoardGames.ConnectFour
         {
             if (_players.Count == 0) return false;
 
-            if (_creatorId == playerId)
+            if (_config.creatorId == playerId)
             {
                 _gameStarted = true;
             }
@@ -167,6 +163,8 @@ namespace GameHub.Games.BoardGames.ConnectFour
                 gameState.Players = _players;
 
                 gameState.NextTurnPlayer = _players.Count != 0 ? _players[_nextPlayerIndex] : null;
+
+                gameState.Configuration = this._config;
 
                 return gameState;
             }

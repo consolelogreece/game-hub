@@ -6,7 +6,7 @@ namespace GameHub.Games.BoardGames.ConnectFour
 {
     public class ConnectFourConfiguration 
     {
-        public string creatorId { get; set; }
+        public string creatorId { get; set;}
 
         public ushort nRows { get; set; }
 
