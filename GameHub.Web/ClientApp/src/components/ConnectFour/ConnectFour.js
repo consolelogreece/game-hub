@@ -1,6 +1,7 @@
 ﻿import React, { Component } from 'react';
 import { HubConnectionBuilder } from '@aspnet/signalr';
 import './ConnectFour.css';
+import JoinGame from '../Common/JoinGame'
 
 import Board from './Board';
 
@@ -157,12 +158,10 @@ export class ConnectFour extends Component {
                 optionsPanel = (
                     <div>                        
                         {!this.state.joined &&
-                            <div>
-                                <h6>Choose your nickname</h6>
-                                <input name="playerNick" value={this.state.playerNick} onChange={e => this.HandleChange(e)} />
-                                <br /> 
-                                <button onClick={() => this.JoinGame()}>Join</button>
-                            </div>
+                            <JoinGame 
+                                title="What's your name?"
+                                JoinGame={() => this.JoinGame()}
+                            />
                         }
                         {this.state.isGameCreator &&
                             <button onClick={() => this.StartGame()}>Start Game</button>    
