@@ -2,6 +2,7 @@
 import { HubConnectionBuilder } from '@aspnet/signalr';
 import './ConnectFour.css';
 import JoinGame from '../Common/JoinGame'
+import Title from '../Common/Title'
 
 import Board from './Board';
 
@@ -204,7 +205,8 @@ export class ConnectFour extends Component {
         }
         
         return (
-            <div id="ConnectFour" className="vertical_center">      
+            <div id="ConnectFour" className="vertical_center">  
+                <Title text="Connect Four"/> 
                 {this.state.playerNick} <br />
                     <Board className="vertical_center" 
                         boardState={this.state.boardState} 
