@@ -103,8 +103,8 @@ export class ConnectFour extends Component {
         this.setState({...this.state, [e.target.name]: e.target.value})
     } 
     
-    JoinGame() {
-        this.state.hubConnection.invoke('JoinGame', this.state.gameId, this.state.playerNick)
+    JoinGame(name) {
+        this.state.hubConnection.invoke('JoinGame', this.state.gameId, name)
             .then(res =>  
                 this.PopulateClientPlayerInfo()
             )
@@ -161,7 +161,7 @@ export class ConnectFour extends Component {
                         {!this.state.joined &&
                             <JoinGame 
                                 title="What's your name?"
-                                JoinGame={() => this.JoinGame()}
+                                JoinGame={(name) => this.JoinGame(name)}
                             />
                         }
                         {this.state.isGameCreator &&

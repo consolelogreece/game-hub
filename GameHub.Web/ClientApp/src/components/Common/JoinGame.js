@@ -17,13 +17,20 @@ export default class JoinGame extends Component
         this.setState({...this.state, [e.target.name]: e.target.value})
     }
 
+    JoinGame()
+    {
+        var name = this.state.text;
+
+        this.props.JoinGame(name);
+    }
+
     render()
     {
         return(
             <div style={{margin: "15px auto 0px auto", textAlign: "center"}}>
                 <h6>{this.props.title}</h6>
                 <input  
-                    name="playerNick" 
+                    name="text" 
                     value={this.state.playerNick} 
                     onChange={e => this.HandleChange(e)}
                     style={{
@@ -42,7 +49,7 @@ export default class JoinGame extends Component
                     margin: "8px 0",
                     padding: "8px"
                 }}
-                onClick={() => this.props.JoinGame()}>Join</button>
+                onClick={() => this.JoinGame()}>Join</button>
             </div>
         )
     }
