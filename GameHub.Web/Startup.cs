@@ -9,8 +9,6 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
-using System.Text;
-using System.Security.Cryptography;
 using Caching;
 
 namespace GameHub.Web
@@ -35,9 +33,9 @@ namespace GameHub.Web
                 configuration.RootPath = "ClientApp/build";
             });
 
-            services.AddSingleton<IConnectFour, ConnectFour>();
-
             services.AddSingleton<ConnectFourCache>();
+
+            services.AddSingleton<ChessCache>();
 
             services.AddSignalR();
         }
