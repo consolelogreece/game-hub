@@ -7,7 +7,7 @@ using GameHub.Games.BoardGames.ConnectFour;
 
 namespace GameHub.Games.BoardGames.Chess
 {
-    class Chess
+    public class Chess
     {
         private ChessGame _game = new ChessGame();
 
