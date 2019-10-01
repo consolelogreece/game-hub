@@ -1,4 +1,3 @@
-using GameHub.Games.BoardGames.ConnectFour;
 using GameHub.Web.SignalR.hubs.BoardGames;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -96,6 +95,8 @@ namespace GameHub.Web
             app.UseSignalR(routes =>
             {
                 routes.MapHub<ConnectFourHub>("/connectfourhub");
+
+                routes.MapHub<ChessHub>("/chesshub");
             });
 
             app.UseMvc(routes =>
