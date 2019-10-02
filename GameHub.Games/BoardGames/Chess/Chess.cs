@@ -2,6 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using ChessDotNet;
 using GameHub.Games.BoardGames.ConnectFour;
 
@@ -19,13 +20,11 @@ namespace GameHub.Games.BoardGames.Chess
 
         private string _creatorId;
 
-        void MakeMove(string playerId, ChessMove move)
+        void MakeMove(string playerId, Move move)
         {
             var player = GetPlayer(playerId);
 
-            var m = new Move(move.From, move.To, player.player, move.Promotion);
-
-            var x = _game.MakeMove(m, false);
+            var result = _game.MakeMove(move, false);
         }
 
         public bool StartGame()
@@ -72,16 +71,22 @@ namespace GameHub.Games.BoardGames.Chess
 
         public ChessPlayer GetPlayer(string Id)
         {
+            if (White == null) return null;
+
             if (White.Id == Id) return White;
+
+            if (Black == null) return null;
         
             else if (Black.Id == Id) return Black;
             
             return null;
         }
 
-        public ReadOnlyCollection<Move> GetMoves(ChessPlayer ChessPlayer)
+        public List<Move> GetMoves(ChessPlayer ChessPlayer)
         {
-            return _game.GetValidMoves(ChessPlayer.player);
+            var moves = _game.GetValidMoves(ChessPlayer.player);
+
+            return moves.ToList();
         }
 
         public GameState GetGameState()

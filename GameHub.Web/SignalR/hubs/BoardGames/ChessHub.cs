@@ -4,12 +4,17 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Caching;
 using GameHub.Games.BoardGames.Chess;
+using System.Collections.ObjectModel;
+using System.Collections.Generic;
+using ChessDotNet;
 
 namespace GameHub.Web.SignalR.hubs.BoardGames
 {
     public class ChessHub : Hub
     {
         // todo: register signalr connection on reconnect 
+
+        private Chess game = new Chess();
 
         private ChessCache _cache; 
  
@@ -25,7 +30,25 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
 
         public GameState GetGameState(string gameId)
         {
-            throw new NotImplementedException();
+            return game.GetGameState();
+        }
+
+        public List<Move> GetMoves(string gameId)
+        {
+            return game.GetMoves(new ChessPlayer{player = ChessDotNet.Player.White});
+
+            var playerId = Context.Items["PlayerId"].ToString();
+            
+            var player = game.GetPlayer(playerId);
+
+            var moves = new List<Move>();
+
+            if (player != null)
+            {
+                moves = game.GetMoves(player);
+            }
+
+            return moves;
         }
 
         public ChessPlayer GetClientPlayerInfo(string gameId)
@@ -33,7 +56,7 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
             throw new NotImplementedException();     
         }
 
-        public void MakeMove(string gameId)
+        public void MakeMove(Move move, string gameId)
         {
             throw new NotImplementedException();
         }
