@@ -9,16 +9,8 @@ export default class Chess extends Component {
             hubConnection: null,
             fen: "empty",
             gameId: props.match.params.gameId,
-            // square styles for active drop square
-            dropSquareStyle: {},
-            // custom square styles
-            squareStyles: {},
-            // square with the currently clicked piece
-            pieceSquare: "",
-            // currently clicked square
-            square: "",
-            // array of past game moves
-            history: []
+            legalMoves: {},
+            squareStyles: {}
         }
     }
 
@@ -45,7 +37,49 @@ export default class Chess extends Component {
 
     mapMoves(moves)
     {
-        console.log("moves", moves);
+        if (moves == null) return;
+
+        let files = "abcdefgh"
+
+        let map = {};
+
+        let mappedMoves = moves.forEach(el => {
+            let key = `${files[el.originalPosition.file]}${el.originalPosition.rank}`;
+
+            if (!(key in map))
+            {
+                map[key] = [];
+            }
+
+            let value = `${files[el.newPosition.file]}${el.newPosition.rank}`;
+
+            map[key].push(value);
+        });
+
+        this.setState({legalMoves: map})
+    }
+
+    onMouseOverSquare = square =>
+    {
+        let moves = this.state.legalMoves[square];
+
+        if (moves === undefined) return;
+
+        var styles = {};
+
+        moves.forEach(el => {
+          styles[el] = {
+                background: "radial-gradient(circle, #fffc00 36%, transparent 40%)",
+                borderRadius: "50%"
+          };
+        });
+
+        this.setState({squareStyles: styles});
+    }
+
+    onMouseOutSquare = square => 
+    {
+        this.setState({squareStyles: {}});
     }
 
     render()
@@ -53,27 +87,13 @@ export default class Chess extends Component {
         return (
             <div>
                 <h3>CHESS</h3>
-                <Chessboard position={this.state.fen}/>
+                <Chessboard 
+                    onMouseOverSquare = {this.onMouseOverSquare}
+                    onMouseOutSquare = {this.onMouseOutSquare}
+                    squareStyles = {this.state.squareStyles}
+                    position = {this.state.fen}
+                />
             </div>
             )
     }
 }
-
-const squareStyling = ({ pieceSquare, history }) => {
-  const sourceSquare = history.length && history[history.length - 1].from;
-  const targetSquare = history.length && history[history.length - 1].to;
-
-  return {
-    [pieceSquare]: { backgroundColor: "rgba(255, 255, 0, 0.4)" },
-    ...(history.length && {
-      [sourceSquare]: {
-        backgroundColor: "rgba(255, 255, 0, 0.4)"
-      }
-    }),
-    ...(history.length && {
-      [targetSquare]: {
-        backgroundColor: "rgba(255, 255, 0, 0.4)"
-      }
-    })
-  };
-};
