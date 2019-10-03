@@ -10,7 +10,8 @@ export default class Chess extends Component {
             fen: "empty",
             gameId: props.match.params.gameId,
             legalMoves: {},
-            squareStyles: {}
+            squareStyles: {},
+            pieceSquare:""
         }
     }
 
@@ -61,25 +62,78 @@ export default class Chess extends Component {
 
     onMouseOverSquare = square =>
     {
-        let moves = this.state.legalMoves[square];
+        if (this.state.pieceSquare != "") return; 
 
-        if (moves === undefined) return;
+        var moves = this.getLegalMoves(square);
 
-        var styles = {};
-
-        moves.forEach(el => {
-          styles[el] = {
-                background: "radial-gradient(circle, #fffc00 36%, transparent 40%)",
-                borderRadius: "50%"
-          };
-        });
+        var styles = this.highlightLegalMoves(moves);
 
         this.setState({squareStyles: styles});
     }
 
     onMouseOutSquare = square => 
     {
-        this.setState({squareStyles: {}});
+        if (this.state.pieceSquare == "")
+        {
+            this.setState({squareStyles: {}});
+        }
+    }
+
+    onSquareRightClick = square =>
+    {
+        this.setState({squareStyles: {}, pieceSquare: ""});
+    }
+
+    getLegalMoves(square)
+    {
+        let moves = this.state.legalMoves[square];
+
+        if (moves === undefined) return [];
+
+        return moves;
+    }
+
+    highlightLegalMoves(moves)
+    {
+        let styles = {};
+        moves.forEach(el => {
+            styles[el] = {
+                    background: "radial-gradient(circle, #fffc00 36%, transparent 40%)",
+                    borderRadius: "50%"
+            };
+        });
+
+        return styles;
+    }
+
+    onSquareClick = square => 
+    {
+        var moves = this.getLegalMoves(square);
+
+        // square clicked already, meaning this is a moving move
+        if (this.state.pieceSquare != "")
+        {
+            this.makeMove(this.state.pieceSquare, square);
+            return;
+        }
+
+        var styles = this.highlightLegalMoves(moves);
+
+        styles[square] = {
+            backgroundColor:"pink"
+        }
+
+        this.setState({squareStyles: styles, pieceSquare: square}); 
+    }
+
+    makeMove = (from, to) =>
+    {
+        var legalMoves = this.getLegalMoves(from);
+
+        if (!legalMoves.includes(to))
+        {
+            this.setState({pieceSquare: "", squareStyles: {}})
+        }
     }
 
     render()
@@ -90,9 +144,13 @@ export default class Chess extends Component {
                 <Chessboard 
                     onMouseOverSquare = {this.onMouseOverSquare}
                     onMouseOutSquare = {this.onMouseOutSquare}
+                    onSquareClick = {this.onSquareClick}
+                    onSquareRightClick = {this.onSquareRightClick}
                     squareStyles = {this.state.squareStyles}
                     position = {this.state.fen}
                 />
+
+                <button onClick={() => console.log(this.state)}>log state</button>
             </div>
             )
     }
