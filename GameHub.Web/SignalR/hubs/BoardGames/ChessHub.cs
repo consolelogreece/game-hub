@@ -66,15 +66,15 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
             return player;
         }
 
-        public string MakeMove(Move move, string gameId)
+        public void MakeMove(Move move, string gameId)
         {
             var playerId = Context.Items["PlayerId"].ToString();
 
             var game = _cache.Get(gameId);
 
-            game.MakeMove(playerId, move);
+            var result = game.MakeMove(playerId, move);
 
-            return game.GetGameState().BoardStateFen;
+            Clients.Group(gameId).SendAsync("PlayerMoved", result);
         }
 
         public string CreateRoom()

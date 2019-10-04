@@ -14,11 +14,9 @@ export default class Chess extends Component {
             squareStyles: {},
             pieceSquare:"",
             gameState: "lobby",
-            playerInfo: {
-                isHost: false,
-                playerNick: "",
-                Id: ""
-            }
+            playerInfo: null,
+            gameMessage: "",
+            playerTurn: ""
         }
     }
 
@@ -29,15 +27,31 @@ export default class Chess extends Component {
         .withUrl("/chesshub", {accessTokenFactory: () => "testing"})
         .build();
 
+        hubConnection.on('PlayerMoved', this.playerMoved);
+
         this.setState({ hubConnection }, () => {
             this.state.hubConnection
             .start()
             .then(() => {
-                this.populateGameState().then(this.populatePlayerClientInfo())
-                .then(this.state.hubConnection.invoke('GetMoves', this.state.gameId)
-                .then(res => this.mapMoves(res)))
+                this.state.hubConnection.invoke('JoinRoom', this.state.gameId)
+                .then(this.populateGameState())
+                .then(this.populatePlayerClientInfo())
+                .then(this.populateAvailableMoves());
             })
         });
+    }
+
+    playerMoved = res =>
+    {
+        var playerTurn = res.nextTurnPlayer.id == this.state.playerId ? "your" : res.nextTurnPlayer.playerNick + "'s";
+
+        this.setState({
+            fen: res.fen,
+            gameMessage: res.message,
+            playerTurn: playerTurn
+        });
+
+        this.populateAvailableMoves();
     }
 
     populateGameState()
@@ -53,21 +67,27 @@ export default class Chess extends Component {
             });
     }
 
+    populateAvailableMoves()
+    {
+        var gameId = this.state.gameId;
+
+        this.state.hubConnection.invoke('GetMoves', this.state.gameId).then(res => this.mapMoves(res))
+    }
+
     populatePlayerClientInfo()
     {
         var gameId = this.state.gameId;
 
         return this.state.hubConnection.invoke('GetClientPlayerInfo', gameId)
-            .then(res => {
-                this.setState({
-                    playerInfo: res
-                })
-            });
+        .then(res => {
+            this.setState({
+                playerInfo: res
+            })
+        });
     }
 
     mapMoves(moves)
     {
-        console.log("mapping", moves)
         if (moves == null) return;
 
         let map = {};
@@ -169,9 +189,8 @@ export default class Chess extends Component {
         if (move)
         {
             this.state.hubConnection.invoke('MakeMove', move, this.state.gameId)
-                .then(fen => this.setState({fen: fen}))
-                .then(this.state.hubConnection.invoke('GetMoves', this.state.gameId)
-                .then(res => this.mapMoves(res)));
+            .then(this.state.hubConnection.invoke('GetMoves', this.state.gameId)
+            .then(res => this.mapMoves(res)));
         }
 
         this.setState({pieceSquare: "", squareStyles: {}})
@@ -186,22 +205,29 @@ export default class Chess extends Component {
             .catch(() => this.setState({gameMessage: "oopsie daisy"}));
     }
 
+    StartGame()
+    {
+        this.state.hubConnection.invoke('StartGame', this.state.gameId).catch(res => this.setState({gameMessage:res}));
+    }
+
     render()
     {
         let optionsPanel;
+
+        let isHost = this.state.playerInfo != null && this.state.playerInfo.isHost;
 
         switch (this.state.gameState)
         {
             case "lobby":
                 optionsPanel = (
                     <div>                        
-                        {!this.state.joined &&
+                        {!this.state.playerInfo &&
                             <JoinGame 
                                 title="What's your name?"
                                 JoinGame={(name) => this.JoinGame(name)}
                             />
                         }
-                        {this.state.isGameCreator &&
+                        {isHost &&
                             <button onClick={() => this.StartGame()}>Start Game</button>    
                         }
                        
@@ -236,6 +262,7 @@ export default class Chess extends Component {
         return (
             <div>
                 <h3>CHESS</h3>
+                {(this.state.gameState == "started") && <div>it's {this.state.playerTurn} turn</div>}
                 <Chessboard 
                     onMouseOverSquare = {this.onMouseOverSquare}
                     onMouseOutSquare = {this.onMouseOutSquare}

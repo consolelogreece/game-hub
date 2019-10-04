@@ -28,11 +28,25 @@ namespace GameHub.Games.BoardGames.Chess
             _creatorId = config.creatorId;
         }
 
-        public void MakeMove(string playerId, Move move)
+        public MoveResult MakeMove(string playerId, Move move)
         {
             var player = GetPlayer(playerId);
 
             var result = _game.MakeMove(move, false);
+
+            var wasValid = result != MoveType.Invalid;
+
+            var moveResult = new MoveResult
+            {
+                DidMoveWin = _game.IsWinner(player.player),
+                Fen = _game.GetFen(),
+                NextTurnPlayer = result == MoveType.Invalid ? player : player.player == Player.White ? Black : White,
+                Message = wasValid ? "" : "INVALID MOVE",
+                Player = player,
+                WasValidMove = wasValid
+            };
+
+            return moveResult;
         }
 
         public bool StartGame()
