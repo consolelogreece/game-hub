@@ -33,7 +33,7 @@ export default class Chess extends Component {
             this.state.hubConnection
             .start()
             .then(() => {
-                this.populateGameState()
+                this.populateGameState().then(this.populatePlayerClientInfo())
                 .then(this.state.hubConnection.invoke('GetMoves', this.state.gameId)
                 .then(res => this.mapMoves(res)))
             })
@@ -44,7 +44,7 @@ export default class Chess extends Component {
     {
         var gameId = this.state.gameId;
 
-        this.state.hubConnection.invoke('GetGameState', gameId)
+        return this.state.hubConnection.invoke('GetGameState', gameId)
             .then(res => {
                 this.setState({
                     fen: res.boardStateFen, 
@@ -57,7 +57,7 @@ export default class Chess extends Component {
     {
         var gameId = this.state.gameId;
 
-        this.state.hubConnection.invoke('GetPlayerClientInfo', gameId)
+        return this.state.hubConnection.invoke('GetClientPlayerInfo', gameId)
             .then(res => {
                 this.setState({
                     playerInfo: res
