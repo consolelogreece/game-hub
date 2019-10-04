@@ -1,6 +1,7 @@
 ﻿import React, { Component } from "react";
 import Chessboard from "chessboardjsx";
 import { HubConnectionBuilder } from '@aspnet/signalr';
+import JoinGame from '../Common/JoinGame'
 
 export default class Chess extends Component {
     constructor(props) {
@@ -11,7 +12,8 @@ export default class Chess extends Component {
             gameId: props.match.params.gameId,
             legalMoves: {},
             squareStyles: {},
-            pieceSquare:""
+            pieceSquare:"",
+            gameState: "lobby"
         }
     }
 
@@ -26,38 +28,52 @@ export default class Chess extends Component {
             this.state.hubConnection
             .start()
             .then(() => {
-                this.state.hubConnection.invoke('GetGameState', this.state.gameId)
-                .then(res => {
-                    this.setState({fen: res.boardStateFen})
-                })
+                this.populateGameState()
                 .then(this.state.hubConnection.invoke('GetMoves', this.state.gameId)
                 .then(res => this.mapMoves(res)))
             })
         });
     }
 
+    populateGameState()
+    {
+        var gameId = this.state.gameId;
+
+        this.state.hubConnection.invoke('GetGameState', gameId)
+            .then(res => {
+                this.setState({
+                    fen: res.boardStateFen, 
+                    gameState: res.status
+                })
+            });
+    }
+
     mapMoves(moves)
     {
+        console.log("mapping", moves)
         if (moves == null) return;
-
-        let files = "abcdefgh"
 
         let map = {};
 
-        let mappedMoves = moves.forEach(el => {
-            let key = `${files[el.originalPosition.file]}${el.originalPosition.rank}`;
+        moves.forEach(el => {
+            let key = this.convertPositionToSquare(el.originalPosition);
 
             if (!(key in map))
             {
                 map[key] = [];
             }
 
-            let value = `${files[el.newPosition.file]}${el.newPosition.rank}`;
-
-            map[key].push(value);
+            map[key].push(el);
         });
 
         this.setState({legalMoves: map})
+    }
+
+    convertPositionToSquare(pos)
+    {
+        let files = "abcdefgh"
+
+        return `${files[pos.file]}${pos.rank}`;
     }
 
     onMouseOverSquare = square =>
@@ -97,7 +113,8 @@ export default class Chess extends Component {
     {
         let styles = {};
         moves.forEach(el => {
-            styles[el] = {
+            var sq = this.convertPositionToSquare(el.newPosition);
+            styles[sq] = {
                     background: "radial-gradient(circle, #fffc00 36%, transparent 40%)",
                     borderRadius: "50%"
             };
@@ -110,7 +127,7 @@ export default class Chess extends Component {
     {
         var moves = this.getLegalMoves(square);
 
-        // square clicked already, meaning this is a moving move
+        // a square has already been clicked, meaning this is must be a move
         if (this.state.pieceSquare != "")
         {
             this.makeMove(this.state.pieceSquare, square);
@@ -130,14 +147,75 @@ export default class Chess extends Component {
     {
         var legalMoves = this.getLegalMoves(from);
 
-        if (!legalMoves.includes(to))
+        var move = legalMoves.find(el => this.convertPositionToSquare(el.newPosition) == to);
+
+        if (move)
         {
-            this.setState({pieceSquare: "", squareStyles: {}})
+            this.state.hubConnection.invoke('MakeMove', move, this.state.gameId)
+                .then(fen => this.setState({fen: fen}))
+                .then(this.state.hubConnection.invoke('GetMoves', this.state.gameId)
+                .then(res => this.mapMoves(res)));
         }
+
+        this.setState({pieceSquare: "", squareStyles: {}})
+    }
+
+    JoinGame(name) {
+        console.log("eet")
+        this.state.hubConnection.invoke('JoinGame', this.state.gameId, name)
+            .then(res =>  
+                this.setState({gameState: "joined"})
+            )
+            .catch(() => this.setState({gameMessage: "oopsie daisy"}));
     }
 
     render()
     {
+        let optionsPanel;
+
+        switch (this.state.gameState)
+        {
+            case "lobby":
+                optionsPanel = (
+                    <div>                        
+                        {!this.state.joined &&
+                            <JoinGame 
+                                title="What's your name?"
+                                JoinGame={(name) => this.JoinGame(name)}
+                            />
+                        }
+                        {this.state.isGameCreator &&
+                            <button onClick={() => this.StartGame()}>Start Game</button>    
+                        }
+                       
+                    </div>
+                )
+                break;
+
+            case "started":
+                optionsPanel = (
+                    <div>
+                        <h6>its {this.state.playerTurn}'s turn</h6>   
+                    </div>
+                )
+                break;
+
+            case "finished":
+                optionsPanel = (
+                    <div>
+                        <h6>Game over!</h6>
+                        <button onClick={() => { }}>Re-match</button>
+                    </div>
+                )
+                break;
+
+            default:
+                optionsPanel = (
+                <div>
+                </div>
+            )
+        }
+
         return (
             <div>
                 <h3>CHESS</h3>
@@ -149,7 +227,7 @@ export default class Chess extends Component {
                     squareStyles = {this.state.squareStyles}
                     position = {this.state.fen}
                 />
-
+                {optionsPanel}
                 <button onClick={() => console.log(this.state)}>log state</button>
             </div>
             )

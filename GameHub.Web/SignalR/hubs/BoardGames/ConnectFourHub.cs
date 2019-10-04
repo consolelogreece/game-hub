@@ -1,15 +1,11 @@
 ﻿using GameHub.Games.BoardGames.ConnectFour;
 using Microsoft.AspNetCore.SignalR;
 using System;
-using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using System.Linq;
-using Microsoft.AspNetCore.Authorization;
-using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Caching.Distributed;
 using Caching;
-using System.Threading;
+using GameHub.Games.BoardGames.Common;
 
 namespace GameHub.Web.SignalR.hubs.BoardGames
 {
@@ -26,7 +22,6 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
 
         public void StartGame(string gameId)
         {
-            // TODO: Don't allow game to start without 2 players.
             var game = _cache.Get(gameId);
 
             var playerId = Context.Items["PlayerId"].ToString();

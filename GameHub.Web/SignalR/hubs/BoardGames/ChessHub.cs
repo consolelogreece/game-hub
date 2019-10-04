@@ -7,14 +7,14 @@ using GameHub.Games.BoardGames.Chess;
 using System.Collections.ObjectModel;
 using System.Collections.Generic;
 using ChessDotNet;
+using GameHub.Games.BoardGames.Common;
 
 namespace GameHub.Web.SignalR.hubs.BoardGames
 {
     public class ChessHub : Hub
     {
         // todo: register signalr connection on reconnect 
-
-        private Chess game = new Chess();
+        // todo: make sure to check whether game exists where neccessary such as in makemove.
 
         private ChessCache _cache; 
  
@@ -23,19 +23,23 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
             _cache = cache;
         }
 
-        public void StartGame(string gameId)
+        public bool StartGame(string gameId)
         {
-            // TODO: Don't allow game to start without 2 players.
+            var game = _cache.Get(gameId);
+
+            var started = game.StartGame();
+
+            return started;
         }
 
         public GameState GetGameState(string gameId)
         {
-            return game.GetGameState();
+            return _cache.Get(gameId).GetGameState();
         }
 
         public List<Move> GetMoves(string gameId)
         {
-            return game.GetMoves(new ChessPlayer{player = ChessDotNet.Player.White});
+            var game = _cache.Get(gameId);
 
             var playerId = Context.Items["PlayerId"].ToString();
             
@@ -56,24 +60,70 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
             throw new NotImplementedException();     
         }
 
-        public void MakeMove(Move move, string gameId)
+        public string MakeMove(Move move, string gameId)
         {
-            throw new NotImplementedException();
+            var playerId = Context.Items["PlayerId"].ToString();
+
+            var game = _cache.Get(gameId);
+
+            game.MakeMove(playerId, move);
+
+            return game.GetGameState().BoardStateFen;
         }
 
         public string CreateRoom()
         {
-            throw new NotImplementedException();
+            var Id = Guid.NewGuid().ToString();
+
+            var playerId = Context.Items["PlayerId"].ToString();
+
+            var game = new Chess(new ChessConfig
+            {
+                creatorId = playerId
+            });
+
+            _cache.Set(Id, game);
+
+            return Id;
         }
 
         public void JoinRoom(string gameId)
         {
-            throw new NotImplementedException();
+            var playerId = Context.Items["PlayerId"].ToString();
+
+            var game = _cache.Get(gameId);
+
+            if (game == null) 
+            {
+                Clients.Caller.SendAsync("RoomDoesntExist");
+
+                return;
+            }
+
+            Groups.AddToGroupAsync(Context.ConnectionId, gameId);
         }
 
         public void JoinGame(string gameId, string playerNick)
         {
-            throw new NotImplementedException();
+            var game = _cache.Get(gameId);
+
+            if (game == null) 
+            {
+                Clients.Caller.SendAsync("RoomDoesntExist");
+
+                return;
+            }
+
+            var playerId = Context.Items["PlayerId"].ToString();
+
+            var gamestate = game.GetGameState();  
+
+            var registeredSuccessfully = false;
+
+            if (gamestate.Status == GameStatus.lobby.ToString())
+            {
+                registeredSuccessfully = game.RegisterPlayer(playerId, playerNick);
+            }
         }
 
         public override Task OnConnectedAsync()

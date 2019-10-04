@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using GameHub.Games.BoardGames.Common;
 
 namespace GameHub.Games.BoardGames.ConnectFour
 {

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using ChessDotNet;
+using GameHub.Games.BoardGames.Common;
 using GameHub.Games.BoardGames.ConnectFour;
 
 namespace GameHub.Games.BoardGames.Chess
@@ -20,7 +21,14 @@ namespace GameHub.Games.BoardGames.Chess
 
         private string _creatorId;
 
-        void MakeMove(string playerId, Move move)
+        private bool _gameOver = false;
+
+        public Chess(ChessConfig config)
+        {
+            _creatorId = config.creatorId;
+        }
+
+        public void MakeMove(string playerId, Move move)
         {
             var player = GetPlayer(playerId);
 
@@ -54,7 +62,7 @@ namespace GameHub.Games.BoardGames.Chess
 
                     White = cp;
                 }
-                else if (Black == null)
+                else if (Black == null && White.Id != playerId)
                 {
                     cp.player = Player.Black;
 
@@ -91,9 +99,12 @@ namespace GameHub.Games.BoardGames.Chess
 
         public GameState GetGameState()
         {
+            var status = _gameOver ? GameStatus.finished : _started ? GameStatus.started : GameStatus.lobby;
+            
             return new GameState
             {
-                BoardStateFen = _game.GetFen()
+                BoardStateFen = _game.GetFen(),
+                Status = status.ToString()
             };
         }
     }
