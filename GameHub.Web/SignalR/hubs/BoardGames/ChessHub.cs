@@ -57,7 +57,13 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
 
         public ChessPlayer GetClientPlayerInfo(string gameId)
         {    
-            throw new NotImplementedException();     
+            var playerId = Context.Items["PlayerId"].ToString();
+
+            var game = _cache.Get(gameId);
+
+            var player = game.GetPlayer(playerId);
+
+            return player;
         }
 
         public string MakeMove(Move move, string gameId)
