@@ -57,15 +57,16 @@ export class ConnectFour extends Component {
                         .catch(res => console.log(res))
                     })
                     .catch(err => console.log('Error while establishing connection :(', err))
-                    
-                    this.state.hubConnection.on('PlayerMoved', res => {
-                        var playerTurn = res.nextTurnPlayer.id == this.state.playerId ? "your" : res.nextTurnPlayer.playerNick;
-                        this.setState({
-                            boardState: res.boardState,
+            });
+
+            this.state.hubConnection.on('PlayerMoved', res => 
+            {
+                var playerTurn = res.nextTurnPlayer.id == this.state.playerId ? "your" : res.nextTurnPlayer.playerNick;
+                this.setState({
+                    boardState: res.boardState,
                     gameMessage: res.message,
                     playerTurn: playerTurn
                 });
-            });
             
             this.state.hubConnection.on('RoomDoesntExist', res => {
                 this.props.history.push("/connectfour/createroom")
@@ -80,7 +81,7 @@ export class ConnectFour extends Component {
             this.state.hubConnection.on('PlayerWon', player => {
                 this.setState({
                     gameMessage: `${player.playerNick} won!`,
-                    gameState: "finishedgit "
+                    gameState: "finished"
                 });
             });
             
