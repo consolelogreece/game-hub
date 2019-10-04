@@ -13,7 +13,12 @@ export default class Chess extends Component {
             legalMoves: {},
             squareStyles: {},
             pieceSquare:"",
-            gameState: "lobby"
+            gameState: "lobby",
+            playerInfo: {
+                isHost: false,
+                playerNick: "",
+                Id: ""
+            }
         }
     }
 
@@ -44,6 +49,18 @@ export default class Chess extends Component {
                 this.setState({
                     fen: res.boardStateFen, 
                     gameState: res.status
+                })
+            });
+    }
+
+    populatePlayerClientInfo()
+    {
+        var gameId = this.state.gameId;
+
+        this.state.hubConnection.invoke('GetPlayerClientInfo', gameId)
+            .then(res => {
+                this.setState({
+                    playerInfo: res
                 })
             });
     }
