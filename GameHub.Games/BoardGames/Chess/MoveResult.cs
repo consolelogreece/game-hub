@@ -16,6 +16,6 @@ namespace GameHub.Games.BoardGames.Chess
 
         public bool DidMoveWin { get; internal set; }
 
-        public ChessPlayer NextTurnPlayer { get; internal set; }
+        public ChessPlayer CurrentTurnPlayer { get; internal set; }
     }
 }

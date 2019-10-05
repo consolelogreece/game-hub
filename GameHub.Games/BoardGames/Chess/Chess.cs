@@ -40,7 +40,7 @@ namespace GameHub.Games.BoardGames.Chess
             {
                 DidMoveWin = _game.IsWinner(player.player),
                 Fen = _game.GetFen(),
-                NextTurnPlayer = result == MoveType.Invalid ? player : player.player == Player.White ? Black : White,
+                CurrentTurnPlayer = result == MoveType.Invalid ? player : player.player == Player.White ? Black : White,
                 Message = wasValid ? "" : "INVALID MOVE",
                 Player = player,
                 WasValidMove = wasValid

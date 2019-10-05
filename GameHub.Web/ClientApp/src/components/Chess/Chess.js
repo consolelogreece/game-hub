@@ -31,6 +31,7 @@ export default class Chess extends Component {
 
         hubConnection.on('GameStarted', this.gameStarted);
 
+     
         hubConnection.on('IllegalAction', this.illegalAction);
 
         this.setState({ hubConnection }, () => {
@@ -45,23 +46,27 @@ export default class Chess extends Component {
 
     initilaize()
     {
-        return this.populateGameState()
-        .then(this.populatePlayerClientInfo())
+        return this.populatePlayerClientInfo()
+        .then(this.populateGameState())
         .then(this.populateAvailableMoves());
     }
 
     playerMoved = res =>
     {
-        console.log(res);
-        var playerTurn = res.nextTurnPlayer.id == this.state.playerInfo.id ? "your" : (res.nextTurnPlayer.playerNick + "'s");
-
         this.setState({
             fen: res.fen,
             gameMessage: res.message,
-            playerTurn: playerTurn
+            playerTurn: this.getTurnIndicator(res.currentTurnPlayer)
         });
 
         this.populateAvailableMoves();
+    }
+
+    getTurnIndicator = player => 
+    {
+        if (this.state.playerInfo === null) return "";
+
+        return player.id == this.state.playerInfo.id ? "your" : (player.playerNick + "'s");
     }
 
     gameStarted = res => 
@@ -89,7 +94,8 @@ export default class Chess extends Component {
             .then(res => {
                 this.setState({
                     fen: res.boardStateFen, 
-                    gameState: res.status
+                    gameState: res.status,
+                    playerTurn: this.getTurnIndicator(res.currentTurnPlayer)
                 })
             });
     }
