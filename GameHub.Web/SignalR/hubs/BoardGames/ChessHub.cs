@@ -37,7 +37,6 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
             {
                 Clients.Caller.SendAsync("IllegalAction", "Couldn't start game");
             }
-
         }
 
         public GameState GetGameState(string gameId)
