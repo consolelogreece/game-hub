@@ -114,11 +114,14 @@ namespace GameHub.Games.BoardGames.Chess
         public GameState GetGameState()
         {
             var status = _gameOver ? GameStatus.finished : _started ? GameStatus.started : GameStatus.lobby;
+
+            var currentTurnPlayer = _game.WhoseTurn == Player.White ? White : Black;
             
             return new GameState
             {
                 BoardStateFen = _game.GetFen(),
-                Status = status.ToString()
+                Status = status.ToString(),
+                CurrentTurnPlayer = currentTurnPlayer
             };
         }
     }

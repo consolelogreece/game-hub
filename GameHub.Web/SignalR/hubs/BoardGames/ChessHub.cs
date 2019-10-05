@@ -31,7 +31,7 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
 
             if (started)
             {
-                Clients.Group(gameId).SendAsync("GameStarted");
+                Clients.Group(gameId).SendAsync("GameStarted", game.GetGameState());
             }
             else
             {
