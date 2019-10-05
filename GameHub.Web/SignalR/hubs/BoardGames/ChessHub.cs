@@ -116,7 +116,7 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
             Groups.AddToGroupAsync(Context.ConnectionId, gameId);
         }
 
-        public void JoinGame(string gameId, string playerNick)
+        public bool JoinGame(string gameId, string playerNick)
         {
             var game = _cache.Get(gameId);
 
@@ -124,7 +124,9 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
             {
                 Clients.Caller.SendAsync("RoomDoesntExist");
 
-                return;
+                this.Context.Abort();
+
+                return false;
             }
 
             var playerId = Context.Items["PlayerId"].ToString();
@@ -137,6 +139,8 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
             {
                 registeredSuccessfully = game.RegisterPlayer(playerId, playerNick);
             }
+
+            return registeredSuccessfully;
         }
 
         public override Task OnConnectedAsync()

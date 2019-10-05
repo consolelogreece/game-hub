@@ -131,7 +131,7 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
             return Id;
         }
 
-        public void JoinRoom(string gameId)
+        public bool JoinRoom(string gameId)
         {
             var playerId = Context.Items["PlayerId"].ToString();
 
@@ -141,10 +141,12 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
             {
                 Clients.Caller.SendAsync("RoomDoesntExist");
 
-                return;
+                return false;
             }
 
             Groups.AddToGroupAsync(Context.ConnectionId, gameId);
+
+            return true;
         }
 
         public void JoinGame(string gameId, string playerNick)

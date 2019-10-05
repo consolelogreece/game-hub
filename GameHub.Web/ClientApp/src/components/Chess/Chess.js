@@ -52,7 +52,8 @@ export default class Chess extends Component {
 
     playerMoved = res =>
     {
-        var playerTurn = res.nextTurnPlayer.id == this.state.playerId ? "your" : res.nextTurnPlayer.playerNick + "'s";
+        console.log(res);
+        var playerTurn = res.nextTurnPlayer.id == this.state.playerInfo.id ? "your" : (res.nextTurnPlayer.playerNick + "'s");
 
         this.setState({
             fen: res.fen,
@@ -65,9 +66,12 @@ export default class Chess extends Component {
 
     gameStarted = res => 
     {
+        this.populateAvailableMoves();
+
         this.setState({
             gameState: "started"
-        });
+        })
+        
     }
 
     illegalAction = message => 
@@ -90,7 +94,7 @@ export default class Chess extends Component {
             });
     }
 
-    populateAvailableMoves()
+    populateAvailableMoves = () =>
     {
         var gameId = this.state.gameId;
 
@@ -211,20 +215,18 @@ export default class Chess extends Component {
 
         if (move)
         {
-            this.state.hubConnection.invoke('MakeMove', move, this.state.gameId)
-            .then(this.state.hubConnection.invoke('GetMoves', this.state.gameId)
-            .then(res => this.mapMoves(res)));
+            this.state.hubConnection.invoke('MakeMove', move, this.state.gameId);
         }
 
         this.setState({pieceSquare: "", squareStyles: {}})
     }
 
     JoinGame(name) {
-        console.log("eet")
         this.state.hubConnection.invoke('JoinGame', this.state.gameId, name)
             .then(res =>  
-                this.setState({gameState: "joined"})
+                console.log("joined")
             )
+            .then(this.populatePlayerClientInfo())
             .catch(() => this.setState({gameMessage: "oopsie daisy"}));
     }
 
@@ -261,7 +263,7 @@ export default class Chess extends Component {
             case "started":
                 optionsPanel = (
                     <div>
-                        <h6>its {this.state.playerTurn}'s turn</h6>   
+                        <h6>it's {this.state.playerTurn} turn</h6>   
                     </div>
                 )
                 break;
@@ -285,7 +287,6 @@ export default class Chess extends Component {
         return (
             <div>
                 <h3>CHESS</h3>
-                {(this.state.gameState == "started") && <div>it's {this.state.playerTurn} turn</div>}
                 <Chessboard 
                     onMouseOverSquare = {this.onMouseOverSquare}
                     onMouseOutSquare = {this.onMouseOutSquare}
@@ -296,6 +297,7 @@ export default class Chess extends Component {
                 />
                 {optionsPanel}
                 <button onClick={() => console.log(this.state)}>log state</button>
+                <button onClick={() => this.forceUpdate()}>force update</button>
             </div>
             )
     }
