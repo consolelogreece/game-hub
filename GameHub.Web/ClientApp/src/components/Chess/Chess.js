@@ -31,6 +31,8 @@ export default class Chess extends Component {
 
         hubConnection.on('GameStarted', this.gameStarted);
 
+        hubConnection.on('IllegalAction', this.illegalAction);
+
         this.setState({ hubConnection }, () => {
             this.state.hubConnection
             .start()
@@ -60,6 +62,13 @@ export default class Chess extends Component {
     {
         this.setState({
             gameState: "started"
+        });
+    }
+
+    illegalAction = message => 
+    {
+        this.setState({
+           gameMessage: message 
         });
     }
 
