@@ -29,6 +29,8 @@ export default class Chess extends Component {
 
         hubConnection.on('PlayerMoved', this.playerMoved);
 
+        hubConnection.on('GameStarted', this.gameStarted);
+
         this.setState({ hubConnection }, () => {
             this.state.hubConnection
             .start()
@@ -52,6 +54,13 @@ export default class Chess extends Component {
         });
 
         this.populateAvailableMoves();
+    }
+
+    gameStarted = res => 
+    {
+        this.setState({
+            gameState: "started"
+        });
     }
 
     populateGameState()
@@ -88,7 +97,7 @@ export default class Chess extends Component {
 
     mapMoves(moves)
     {
-        if (moves == null) return;
+        if (moves == null || this.state.gameState != "started") return;
 
         let map = {};
 

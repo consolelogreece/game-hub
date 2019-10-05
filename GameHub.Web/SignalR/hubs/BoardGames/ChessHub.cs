@@ -23,13 +23,21 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
             _cache = cache;
         }
 
-        public bool StartGame(string gameId)
+        public void StartGame(string gameId)
         {
             var game = _cache.Get(gameId);
 
             var started = game.StartGame();
 
-            return started;
+            if (started)
+            {
+                Clients.Group(gameId).SendAsync("GameStarted");
+            }
+            else
+            {
+                Clients.Caller.SendAsync("IllegalAction", "Couldn't start game");
+            }
+
         }
 
         public GameState GetGameState(string gameId)
