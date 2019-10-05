@@ -38,11 +38,16 @@ export default class Chess extends Component {
             .start()
             .then(() => {
                 this.state.hubConnection.invoke('JoinRoom', this.state.gameId)
-                .then(this.populateGameState())
-                .then(this.populatePlayerClientInfo())
-                .then(this.populateAvailableMoves());
+                .then(this.initilaize())
             })
         });
+    }
+
+    initilaize()
+    {
+        return this.populateGameState()
+        .then(this.populatePlayerClientInfo())
+        .then(this.populateAvailableMoves());
     }
 
     playerMoved = res =>
