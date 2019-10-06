@@ -38,7 +38,7 @@ namespace GameHub.Games.BoardGames.Chess
 
             var moveResult = new MoveResult
             {
-                DidMoveWin = _game.IsWinner(player.player),
+                //GameConclusionResult = _game.IsWinner(player.player),
                 Fen = _game.GetFen(),
                 CurrentTurnPlayer = result == MoveType.Invalid ? player : player.player == Player.White ? Black : White,
                 Message = wasValid ? "" : "INVALID MOVE",
@@ -47,6 +47,11 @@ namespace GameHub.Games.BoardGames.Chess
             };
 
             return moveResult;
+        }
+
+        private GameConclusionResult GetConclusionResult(Player player)
+        {
+            return null;//bool isGameOver = _game.IsWinner(player) || _game.IsStalemated(player) || _game.;
         }
 
         public bool StartGame()

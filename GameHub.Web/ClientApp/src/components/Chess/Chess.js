@@ -1,7 +1,17 @@
 ﻿import React, { Component } from "react";
 import Chessboard from "chessboardjsx";
 import { HubConnectionBuilder } from '@aspnet/signalr';
-import JoinGame from '../Common/JoinGame'
+import JoinGame from '../Common/JoinGame';
+import Popup from '../Common/Popup'
+
+/*
+    todos:
+        popup with promotion options. this has to be validated i think, because an error is thrown if trying to promote to something illegal like a pawn.
+        win detection
+        stalement detection
+        offer draw
+
+*/
 
 export default class Chess extends Component {
     constructor(props) {
@@ -16,7 +26,9 @@ export default class Chess extends Component {
             gameState: "lobby",
             playerInfo: null,
             gameMessage: "",
-            playerTurn: ""
+            playerTurn: "",
+            displayPromotionPrompt: false,
+            promotionMove: null
         }
     }
 
@@ -31,8 +43,9 @@ export default class Chess extends Component {
 
         hubConnection.on('GameStarted', this.gameStarted);
 
-     
         hubConnection.on('IllegalAction', this.illegalAction);
+
+        hubConnection.on('GameOver', this.gameOverHandler);
 
         this.setState({ hubConnection }, () => {
             this.state.hubConnection
@@ -84,6 +97,11 @@ export default class Chess extends Component {
         this.setState({
            gameMessage: message 
         });
+    }
+
+    gameOverHandler = details =>
+    {
+        var type = details.type;
     }
 
     populateGameState()
@@ -221,10 +239,35 @@ export default class Chess extends Component {
 
         if (move)
         {
+            if (move.promotion != null)
+            {
+                this.setState({displayPromotionPrompt: true, promotionMove: move});
+
+                return;
+            }
+
             this.state.hubConnection.invoke('MakeMove', move, this.state.gameId);
         }
 
         this.setState({pieceSquare: "", squareStyles: {}})
+    }
+
+    makePromotion = promotion =>
+    {
+        console.log(promotion);
+        if (promotion !=  'R' && promotion != 'B' && promotion != 'Q' && promotion != 'K')
+        {
+            return;
+        }
+
+        var move = this.state.promotionMove;
+
+        move.promotion = promotion;
+
+        this.state.hubConnection.invoke('MakeMove', move, this.state.gameId)
+        .then(res => {
+            this.setState({displayPromotionPrompt: false, promotionMove: null})
+        });
     }
 
     JoinGame(name) {
@@ -293,6 +336,9 @@ export default class Chess extends Component {
         return (
             <div>
                 <h3>CHESS</h3>
+                {this.state.displayPromotionPrompt &&
+                    <Popup title="promotion" items={['Q', 'K', 'R', 'B']} callback={this.makePromotion} />
+                }
                 <Chessboard 
                     onMouseOverSquare = {this.onMouseOverSquare}
                     onMouseOutSquare = {this.onMouseOutSquare}
