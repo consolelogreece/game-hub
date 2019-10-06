@@ -3,6 +3,7 @@ import Chessboard from "chessboardjsx";
 import { HubConnectionBuilder } from '@aspnet/signalr';
 import JoinGame from '../Common/JoinGame';
 import Popup from '../Common/Popup'
+import PromotionSelection from './PromotionSelection';
 
 /*
     todos:
@@ -337,7 +338,9 @@ export default class Chess extends Component {
             <div>
                 <h3>CHESS</h3>
                 {this.state.displayPromotionPrompt &&
-                    <Popup title="promotion" items={['Q', 'K', 'R', 'B']} callback={this.makePromotion} />
+                    <Popup title="promotion" content={
+                        <PromotionSelection callback={this.makePromotion} />
+                    } />
                 }
                 <Chessboard 
                     onMouseOverSquare = {this.onMouseOverSquare}
@@ -350,6 +353,7 @@ export default class Chess extends Component {
                 {optionsPanel}
                 <button onClick={() => console.log(this.state)}>log state</button>
                 <button onClick={() => this.forceUpdate()}>force update</button>
+                <button onClick={() => this.setState({displayPromotionPrompt: true})}>toggle promotion window</button>
             </div>
             )
     }

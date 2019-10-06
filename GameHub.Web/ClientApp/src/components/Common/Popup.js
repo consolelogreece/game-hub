@@ -2,14 +2,6 @@ import React from 'react';
 
 export default props => 
 {
-    var x = props.items.map(item => {
-        return (
-            <button onClick={() => props.callback(item)}>
-                {item}
-            </button>
-        )
-    });
-
     return (
         <div style={{
                 position: "fixed",
@@ -25,15 +17,16 @@ export default props =>
             }}>
             <div style={{
                  position: "absolute",
-                 left: "25%",
-                 right: "25%",
+                 left: "10%",
+                 right: "10%",
                  top: "25%",
                  bottom: "25%",
                  margin: "auto",
-                 background: "white"
+                 background: "#f0d9b5",
+                 borderRadius: "2%"
             }}>
-                <h1>{props.title}</h1>
-                {x}
+                <h1 style={{textAlign: "center"}}>{props.title}</h1>
+                {props.content}
             </div>
         </div>
     )
