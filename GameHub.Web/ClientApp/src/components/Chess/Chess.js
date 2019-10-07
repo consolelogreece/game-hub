@@ -7,10 +7,12 @@ import PromotionSelection from './PromotionSelection';
 
 /*
     todos:
-        popup with promotion options. this has to be validated i think, because an error is thrown if trying to promote to something illegal like a pawn.
         win detection
         stalement detection
         offer draw
+        center board
+        fix bug, for some reason on initial start, it doesnt indicate whos turn it is properly
+        try to reduce the amount of hub calls made.
 
 */
 
@@ -350,8 +352,10 @@ export default class Chess extends Component {
                         <PromotionSelection callback={this.makePromotion} />
                     } />
                 }
-                <div style={{margin: "0 auto", backgroundColor: "red"}}>
+                <div style={{margin: "0 auto", Width: "100%", backgroundColor: "red"}}>
                     <Chessboard 
+                        width={400}
+                        draggable={false}
                         orientation={orientation}
                         onMouseOverSquare = {this.onMouseOverSquare}
                         onMouseOutSquare = {this.onMouseOutSquare}
