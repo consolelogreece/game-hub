@@ -340,6 +340,8 @@ export default class Chess extends Component {
             )
         }
 
+        let orientation = this.state.playerInfo != null && this.state.playerInfo.player == 0 ? "black" : "white";
+
         return (
             <div>
                 <h3>CHESS</h3>
@@ -348,14 +350,17 @@ export default class Chess extends Component {
                         <PromotionSelection callback={this.makePromotion} />
                     } />
                 }
-                <Chessboard 
-                    onMouseOverSquare = {this.onMouseOverSquare}
-                    onMouseOutSquare = {this.onMouseOutSquare}
-                    onSquareClick = {this.onSquareClick}
-                    onSquareRightClick = {this.onSquareRightClick}
-                    squareStyles = {this.state.squareStyles}
-                    position = {this.state.fen}
-                />
+                <div style={{margin: "0 auto", backgroundColor: "red"}}>
+                    <Chessboard 
+                        orientation={orientation}
+                        onMouseOverSquare = {this.onMouseOverSquare}
+                        onMouseOutSquare = {this.onMouseOutSquare}
+                        onSquareClick = {this.onSquareClick}
+                        onSquareRightClick = {this.onSquareRightClick}
+                        squareStyles = {this.state.squareStyles}
+                        position = {this.state.fen}
+                    />
+                </div>
                 {optionsPanel}
                 <button onClick={() => console.log(this.state)}>log state</button>
                 <button onClick={() => this.forceUpdate()}>force update</button>
