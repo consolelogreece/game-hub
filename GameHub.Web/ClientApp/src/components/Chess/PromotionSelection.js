@@ -18,7 +18,7 @@ export default props =>
                 <button className="button-promotion" onClick={() => props.callback("B")}> 
                     ♗
                 </button>
-                <button className="button-promotion" onClick={() => props.callback("K")}>
+                <button className="button-promotion" onClick={() => props.callback("N")}>
                     ♘
                 </button>
             </div>

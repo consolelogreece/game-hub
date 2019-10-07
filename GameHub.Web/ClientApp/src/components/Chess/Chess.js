@@ -255,9 +255,15 @@ export default class Chess extends Component {
 
     makePromotion = promotion =>
     {
-        console.log(promotion);
-        if (promotion !=  'R' && promotion != 'B' && promotion != 'Q' && promotion != 'K')
+        if (promotion !=  'R' && promotion != 'B' && promotion != 'Q' && promotion != 'N')
         {
+            return;
+        }
+
+        if (this.state.promotionMove == null)
+        {
+            this.setState({displayPromotionPrompt: false});
+
             return;
         }
 
