@@ -344,6 +344,8 @@ export default class Chess extends Component {
 
         let orientation = this.state.playerInfo != null && this.state.playerInfo.player == 0 ? "black" : "white";
 
+        var width = this.props.windowWidth <= 800 ? this.props.windowWidth : 800;
+
         return (
             <div>
                 <h3>CHESS</h3>
@@ -354,7 +356,7 @@ export default class Chess extends Component {
                 }
                 <div style={{margin: "0 auto", Width: "100%", backgroundColor: "red"}}>
                     <Chessboard 
-                        width={400}
+                        width={width}
                         draggable={false}
                         orientation={orientation}
                         onMouseOverSquare = {this.onMouseOverSquare}

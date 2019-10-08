@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-export default function(component)
+export default function(WrappedComponent)
 {
     return class ResizeWithWindow extends Component
     {
@@ -11,12 +11,13 @@ export default function(component)
             this.state = {
                 width: 0
             }
+
+            this.wCom = React.createRef();
         }
     
         componentDidMount = () =>
-        {           
+        {        
             window.addEventListener('resize', this.updateDimensions);
-            //this.updateDimensions();
         }
     
         componentWillUnmount = () =>
@@ -26,12 +27,13 @@ export default function(component)
     
         updateDimensions = event =>
         {
-            console.log("\nevent: " + event.originalTarget.innerWidth + "\nref: " + this.refs.component.clientWidth)
+            var width = event == null ? 0 : event.srcElement.innerWidth;
+            this.setState({width});
         }
     
-        render()
+        render = () =>
         {
-            return <component ref="component" {...this.props} windowWidth={this.state.width} />
+            return (<WrappedComponent {...this.props} windowWidth={this.state.width} />);
         }
     }
 }

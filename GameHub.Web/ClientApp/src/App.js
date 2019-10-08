@@ -19,7 +19,7 @@ export default class App extends Component {
                 <Route path='/connectfour/createroom' component={NewGameC4} />
                 <Route path='/connectfour/:gameId' component={ConnectFour} />
                 <Route path='/chess/createroom' component={ResizeWithWindowHOC(NewGameChess)} />
-                <Route path='/chess/:gameId' component={Chess} />
+                <Route path='/chess/:gameId' component={ResizeWithWindowHOC(Chess)} />
             </Switch>
       </Layout>
     );
