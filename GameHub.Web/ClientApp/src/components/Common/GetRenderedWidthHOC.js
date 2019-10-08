@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 export default function(WrappedComponent)
 {
-    return class ResizeWithWindow extends Component
+    return class GetRenderedWidth extends Component
     {
         constructor(props)
         {
@@ -18,6 +18,7 @@ export default function(WrappedComponent)
         componentDidMount = () =>
         {        
             window.addEventListener('resize', this.updateDimensions);
+            this.updateDimensions();
         }
     
         componentWillUnmount = () =>
@@ -25,15 +26,18 @@ export default function(WrappedComponent)
             window.removeEventListener('resize', this.updateDimensions);
         }
     
-        updateDimensions = event =>
+        updateDimensions = () =>
         {
-            var width = event == null ? 0 : event.srcElement.innerWidth;
-            this.setState({width});
+            this.setState({width: this.wCom.current.clientWidth});
         }
     
         render = () =>
         {
-            return (<WrappedComponent {...this.props} windowWidth={this.state.width} />);
+            return (
+                <div style={{width: "100%"}} ref={this.wCom}>
+                    <WrappedComponent {...this.props} windowWidth={this.state.width} />
+                </div>
+                );
         }
     }
 }
