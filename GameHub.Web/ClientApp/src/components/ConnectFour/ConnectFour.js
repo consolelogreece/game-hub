@@ -175,7 +175,7 @@ export class ConnectFour extends Component {
                 />
                 {this.state.gameMessage}
                 <OptionPanel
-                    player = {playerNick}
+                    playerName = {playerNick}
                     isHost = {isHost}
                     JoinGame = {this.JoinGame}
                     gameState = {gameState}

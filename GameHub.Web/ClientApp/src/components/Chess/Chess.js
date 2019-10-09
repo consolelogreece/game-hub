@@ -14,8 +14,6 @@ import Title from '../Common/Title';
         center board
         fix bug, for some reason on initial start, it doesnt indicate whos turn it is properly
         try to reduce the amount of hub calls made.
-        NEXT: use newly made HOC and make the board resize properly and stay central.
-
 */
 
 export default class Chess extends Component {
@@ -82,7 +80,10 @@ export default class Chess extends Component {
 
     getTurnIndicator = player => 
     {
+        console.log(player.playerNick, "::" , this.state, "||")
         if (this.state.playerInfo === null) return "";
+
+        console.log("RRRRRRRRRRRRREEEEEEEEEEEEEEEEEEEEE")
 
         return player.id == this.state.playerInfo.id ? "your" : (player.playerNick + "'s");
     }
@@ -115,6 +116,7 @@ export default class Chess extends Component {
 
         return this.state.hubConnection.invoke('GetGameState', gameId)
             .then(res => {
+                console.log(res);
                 this.setState({
                     fen: res.boardStateFen, 
                     gameState: res.status,
@@ -331,7 +333,7 @@ export default class Chess extends Component {
                     />
                 </div>
                 <OptionPanel
-                    player = {playerNick}
+                    playerName = {playerNick}
                     isHost = {isHost}
                     JoinGame = {this.JoinGame}
                     gameState = {gameState}
