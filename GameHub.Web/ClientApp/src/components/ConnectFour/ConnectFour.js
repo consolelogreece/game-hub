@@ -3,6 +3,7 @@ import { HubConnectionBuilder } from '@aspnet/signalr';
 import './ConnectFour.css';
 import JoinGame from '../Common/JoinGame'
 import Title from '../Common/Title'
+import ResizeWithWindowHOC from '../Common/GetRenderedWidthHOC';
 
 import Board from './Board';
 
@@ -42,6 +43,40 @@ export class ConnectFour extends Component {
         const hubConnection = new HubConnectionBuilder()
         .withUrl("/connectfourhub", {accessTokenFactory: () => "testing"})
         .build();
+
+        hubConnection.on('PlayerMoved', res => 
+        {
+            var playerTurn = res.nextTurnPlayer.id == this.state.playerId ? "your" : res.nextTurnPlayer.playerNick;
+            this.setState({
+                boardState: res.boardState,
+                gameMessage: res.message,
+                playerTurn: playerTurn
+            });
+        });
+        
+        hubConnection.on('RoomDoesntExist', res => {
+            this.props.history.push("/connectfour/createroom")
+        });
+        
+        hubConnection.on('IllegalAction', res => {
+            this.setState({
+                gameMessage: res
+            });
+        });
+        
+        hubConnection.on('PlayerWon', player => {
+            this.setState({
+                gameMessage: `${player.playerNick} won!`,
+                gameState: "finished"
+            });
+        });
+        
+        hubConnection.on('GameStarted', gameState => {
+            this.setState({
+                gameState: "started",
+                playerTurn: gameState.nextTurnPlayer.playerNick
+            });
+        });
         
         this.setState({ boardState : board, hubConnection }, () => {
             this.state.hubConnection
@@ -58,40 +93,6 @@ export class ConnectFour extends Component {
                     })
                     .catch(err => console.log('Error while establishing connection :(', err))
             });
-
-            this.state.hubConnection.on('PlayerMoved', res => 
-            {
-                var playerTurn = res.nextTurnPlayer.id == this.state.playerId ? "your" : res.nextTurnPlayer.playerNick;
-                this.setState({
-                    boardState: res.boardState,
-                    gameMessage: res.message,
-                    playerTurn: playerTurn
-                });
-            
-            this.state.hubConnection.on('RoomDoesntExist', res => {
-                this.props.history.push("/connectfour/createroom")
-            });
-            
-            this.state.hubConnection.on('IllegalAction', res => {
-                this.setState({
-                    gameMessage: res
-                });
-            });
-            
-            this.state.hubConnection.on('PlayerWon', player => {
-                this.setState({
-                    gameMessage: `${player.playerNick} won!`,
-                    gameState: "finished"
-                });
-            });
-            
-            this.state.hubConnection.on('GameStarted', gameState => {
-                this.setState({
-                    gameState: "started",
-                    playerTurn: gameState.nextTurnPlayer.playerNick
-                });
-            });
-        });
     }
 
     MakeMove(col)
@@ -106,10 +107,10 @@ export class ConnectFour extends Component {
     
     JoinGame(name) {
         this.state.hubConnection.invoke('JoinGame', this.state.gameId, name)
-            .then(res =>  
-                this.PopulateClientPlayerInfo()
-            )
-            .catch(() => this.setState({gameMessage: "oopsie daisy"}));
+        .then(res =>  
+            this.PopulateClientPlayerInfo()
+        )
+        .catch(() => this.setState({gameMessage: "oopsie daisy"}));
     }
 
     StartGame()
@@ -205,15 +206,18 @@ export class ConnectFour extends Component {
             )
         }
         
+        var Aboard = ResizeWithWindowHOC(Board);
+
         return (
             <div id="ConnectFour" className="vertical_center">  
                 <Title text="Connect Four"/> 
                 {this.state.playerNick} <br />
-                    <Board className="vertical_center" 
-                        boardState={this.state.boardState} 
-                        makeMove={(col) => this.MakeMove(col)}
-                        boardColor={this.state.boardColor}
-                    />
+                <Aboard  
+                    className="vertical_center" 
+                    boardState={this.state.boardState} 
+                    makeMove={(col) => this.MakeMove(col)}
+                    boardColor={this.state.boardColor} 
+                />
                 {this.state.gameMessage}
                 {optionsPanel}
             </div>

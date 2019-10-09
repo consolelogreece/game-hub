@@ -7,37 +7,23 @@ export default class Board extends Component {
         this.state = {
             render: false,
             boardState: props.boardState,
-            tileWidth: 0
+            tileWidth: 0,
+            borderThickness: 0
         };
-
-        this.count = 0;
- 
-        this.updateDimensions = this.updateDimensions.bind(this);
     }
 
     componentWillReceiveProps(props)
     {
-        this.setState({boardState: props.boardState}, () => this.updateDimensions());    
-    }
+        var borderThickness = props.containerWidth / 20;
 
-    componentDidMount()
-    {           
-        window.addEventListener('resize', this.updateDimensions);
-        this.updateDimensions();
-    }
+        // in order for the board to appear properly, the tile width must take in to consideration the border thickness. if it doesnt, the containerWidth prop wont be adjusted properly, meaning tiles dont all fit into the row.
+        var tileWidth = Math.floor(props.containerWidth / props.boardState[0].length) - (borderThickness / props.boardState[0].length);
 
-    componentWillUnmount()
-    {
-        window.removeEventListener('resize', this.updateDimensions);
-    }
-
-    updateDimensions() 
-    {
-        var containerWidth = this.refs.board.clientWidth;
-
-        var tileWidth = Math.floor(containerWidth / this.state.boardState[0].length)
-
-        this.setState({tileWidth: tileWidth});
+        this.setState({
+            boardState: props.boardState, 
+            tileWidth: tileWidth,
+            borderThickness: borderThickness
+        });    
     }
 
     render = () => {
@@ -64,7 +50,11 @@ export default class Board extends Component {
         }
 
         return (
-            <div ref="board" className="board" style={{backgroundColor: this.props.boardColor, border: `4px solid ${this.props.boardColor}`, borderRadius: "10px"}}>
+            <div className="board" style={{
+                backgroundColor: this.props.boardColor, 
+                border:`${this.state.borderThickness} solid ${this.props.boardColor}`, 
+                borderRadius: "10px"
+            }}>
                 {boardRender}
             </div>
         )
