@@ -35,7 +35,7 @@ export default function(WrappedComponent)
         {
             return (
                 <div style={{width: "100%"}} ref={this.wCom}>
-                    <WrappedComponent {...this.props} windowWidth={this.state.width} />
+                    <WrappedComponent {...this.props} containerWidth={this.state.width} />
                 </div>
                 );
         }
