@@ -1,9 +1,9 @@
 ﻿import React, { Component } from 'react';
 import { HubConnectionBuilder } from '@aspnet/signalr';
 import './ConnectFour.css';
-import JoinGame from '../Common/JoinGame'
 import Title from '../Common/Title'
-import ResizeWithWindowHOC from '../Common/GetRenderedWidthHOC';
+import ResizeWithContainerHOC from '../Common/GetRenderedWidthHOC';
+import OptionPanel from '../Common/OptionPanel';
 
 import Board from './Board';
 
@@ -95,17 +95,17 @@ export class ConnectFour extends Component {
             });
     }
 
-    MakeMove(col)
+    MakeMove = col =>
     {
         this.state.hubConnection.invoke('MakeMove', this.state.gameId, col).catch(err => console.error(err));;
     }
     
-    HandleChange(e)
+    HandleChange = e =>
     {
         this.setState({...this.state, [e.target.name]: e.target.value})
     } 
     
-    JoinGame(name) {
+    JoinGame = name => {
         this.state.hubConnection.invoke('JoinGame', this.state.gameId, name)
         .then(res =>  
             this.PopulateClientPlayerInfo()
@@ -113,12 +113,12 @@ export class ConnectFour extends Component {
         .catch(() => this.setState({gameMessage: "oopsie daisy"}));
     }
 
-    StartGame()
+    StartGame = () =>
     {
         this.state.hubConnection.invoke('StartGame', this.state.gameId).catch(res => this.setState({gameMessage:res}));
     }
 
-    PopulateGameState()
+    PopulateGameState = () =>
     {
         this.state.hubConnection.invoke('GetGameState', this.state.gameId)
         .then(res => 
@@ -136,7 +136,7 @@ export class ConnectFour extends Component {
         this.forceUpdate();
     }
 
-    PopulateClientPlayerInfo()
+    PopulateClientPlayerInfo = () =>
     {
         return this.state.hubConnection.invoke('GetClientPlayerInfo', this.state.gameId)
             .then(res => 
@@ -153,60 +153,15 @@ export class ConnectFour extends Component {
 
     render()
     {
-        let optionsPanel;
+        var Aboard = ResizeWithContainerHOC(Board);
 
-        switch (this.state.gameState)
-        {
-            case "lobby":
-                optionsPanel = (
-                    <div>                        
-                        {!this.state.joined &&
-                            <JoinGame 
-                                title="What's your name?"
-                                JoinGame={(name) => this.JoinGame(name)}
-                            />
-                        }
-                        {this.state.isGameCreator &&
-                            <button onClick={() => this.StartGame()}>Start Game</button>    
-                        }
-                       
-                    </div>
-                )
-                break;
+        let isHost = this.state.isGameCreator;
 
-            case "started":
-                optionsPanel = (
-                    <div>
-                        <h6>its {this.state.playerTurn}'s turn</h6>   
-                    </div>
-                )
-                break;
+        let playerNick = this.state.playerTurn;
 
-            case "finished":
-                optionsPanel = (
-                    <div>
-                        <h6>Game over!</h6>
-                        <button onClick={() => { }}>Re-match</button>
-                    </div>
-                )
-                break;
+        let isPlayerRegistered = this.state.joined;
 
-            default:
-                optionsPanel = (
-                <div>
-                </div>
-            )
-        }
-
-        if (!this.state.joined && this.state.gameState != "lobby")
-        {
-            optionsPanel = (
-                <div>
-                </div>
-            )
-        }
-        
-        var Aboard = ResizeWithWindowHOC(Board);
+        let gameState = this.state.gameState;
 
         return (
             <div id="ConnectFour" className="vertical_center">  
@@ -219,7 +174,14 @@ export class ConnectFour extends Component {
                     boardColor={this.state.boardColor} 
                 />
                 {this.state.gameMessage}
-                {optionsPanel}
+                <OptionPanel
+                    player = {playerNick}
+                    isHost = {isHost}
+                    JoinGame = {this.JoinGame}
+                    gameState = {gameState}
+                    isPlayerRegistered = {isPlayerRegistered}
+                    StartGame = {this.StartGame}
+                />
             </div>
         )
     }

@@ -1,9 +1,10 @@
 ﻿import React, { Component } from "react";
 import Chessboard from "chessboardjsx";
 import { HubConnectionBuilder } from '@aspnet/signalr';
-import JoinGame from '../Common/JoinGame';
+import OptionPanel from '../Common/OptionPanel';
 import Popup from '../Common/Popup'
 import PromotionSelection from './PromotionSelection';
+import Title from '../Common/Title';
 
 /*
     todos:
@@ -13,6 +14,7 @@ import PromotionSelection from './PromotionSelection';
         center board
         fix bug, for some reason on initial start, it doesnt indicate whos turn it is properly
         try to reduce the amount of hub calls made.
+        NEXT: use newly made HOC and make the board resize properly and stay central.
 
 */
 
@@ -107,7 +109,7 @@ export default class Chess extends Component {
         var type = details.type;
     }
 
-    populateGameState()
+    populateGameState = () =>
     {
         var gameId = this.state.gameId;
 
@@ -128,7 +130,7 @@ export default class Chess extends Component {
         this.state.hubConnection.invoke('GetMoves', this.state.gameId).then(res => this.mapMoves(res))
     }
 
-    populatePlayerClientInfo()
+    populatePlayerClientInfo = () =>
     {
         var gameId = this.state.gameId;
 
@@ -140,7 +142,7 @@ export default class Chess extends Component {
         });
     }
 
-    mapMoves(moves)
+    mapMoves = moves =>
     {
         if (moves == null || this.state.gameState != "started") return;
 
@@ -160,7 +162,7 @@ export default class Chess extends Component {
         this.setState({legalMoves: map})
     }
 
-    convertPositionToSquare(pos)
+    convertPositionToSquare = pos =>
     {
         let files = "abcdefgh"
 
@@ -191,7 +193,7 @@ export default class Chess extends Component {
         this.setState({squareStyles: {}, pieceSquare: ""});
     }
 
-    getLegalMoves(square)
+    getLegalMoves = square =>
     {
         let moves = this.state.legalMoves[square];
 
@@ -200,7 +202,7 @@ export default class Chess extends Component {
         return moves;
     }
 
-    highlightLegalMoves(moves)
+    highlightLegalMoves = moves =>
     {
         let styles = {};
         moves.forEach(el => {
@@ -279,7 +281,7 @@ export default class Chess extends Component {
         });
     }
 
-    JoinGame(name) {
+    JoinGame = name => {
         this.state.hubConnection.invoke('JoinGame', this.state.gameId, name)
             .then(res =>  
                 console.log("joined")
@@ -288,67 +290,28 @@ export default class Chess extends Component {
             .catch(() => this.setState({gameMessage: "oopsie daisy"}));
     }
 
-    StartGame()
+    StartGame = () =>
     {
         this.state.hubConnection.invoke('StartGame', this.state.gameId).catch(res => this.setState({gameMessage:res}));
     }
 
     render()
     {
-        let optionsPanel;
-
         let isHost = this.state.playerInfo != null && this.state.playerInfo.isHost;
-
-        switch (this.state.gameState)
-        {
-            case "lobby":
-                optionsPanel = (
-                    <div>                        
-                        {!this.state.playerInfo &&
-                            <JoinGame 
-                                title="What's your name?"
-                                JoinGame={(name) => this.JoinGame(name)}
-                            />
-                        }
-                        {isHost &&
-                            <button onClick={() => this.StartGame()}>Start Game</button>    
-                        }
-                       
-                    </div>
-                )
-                break;
-
-            case "started":
-                optionsPanel = (
-                    <div>
-                        <h6>it's {this.state.playerTurn} turn</h6>   
-                    </div>
-                )
-                break;
-
-            case "finished":
-                optionsPanel = (
-                    <div>
-                        <h6>Game over!</h6>
-                        <button onClick={() => { }}>Re-match</button>
-                    </div>
-                )
-                break;
-
-            default:
-                optionsPanel = (
-                <div>
-                </div>
-            )
-        }
 
         let orientation = this.state.playerInfo != null && this.state.playerInfo.player == 0 ? "black" : "white";
 
-        var width = this.props.windowWidth <= 800 ? this.props.windowWidth : 800;
+        let width = this.props.containerWidth <= 600 ? this.props.containerWidth : 600;
+
+        let gameState = this.state.gameState;
+
+        let playerNick = this.state.playerTurn;
+
+        let isPlayerRegistered = !!this.state.playerInfo;
 
         return (
-            <div>
-                <h3>CHESS</h3>
+            <div style={{width: width, margin: "0 auto"}}>
+                <Title text="CHESS" />
                 {this.state.displayPromotionPrompt &&
                     <Popup title="promotion" content={
                         <PromotionSelection callback={this.makePromotion} />
@@ -367,10 +330,14 @@ export default class Chess extends Component {
                         position = {this.state.fen}
                     />
                 </div>
-                {optionsPanel}
-                <button onClick={() => console.log(this.state)}>log state</button>
-                <button onClick={() => this.forceUpdate()}>force update</button>
-                <button onClick={() => this.setState({displayPromotionPrompt: true})}>toggle promotion window</button>
+                <OptionPanel
+                    player = {playerNick}
+                    isHost = {isHost}
+                    JoinGame = {this.JoinGame}
+                    gameState = {gameState}
+                    isPlayerRegistered = {isPlayerRegistered}
+                    StartGame = {this.StartGame}
+                />
             </div>
             )
     }
