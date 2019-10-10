@@ -107,6 +107,22 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
             }
         }
 
+        public void Rematch(string gameId)
+        {
+            var game = _cache.Get(gameId);
+
+            var playerId = Context.Items["PlayerId"].ToString();
+
+            if (game == null) return;
+
+            var resetSuccessful = game.Reset(playerId);
+
+            if (resetSuccessful)
+            {
+                Clients.Group(gameId).SendAsync("GameStarted", this.GetGameState(gameId));
+            }
+        }
+
         public string CreateRoom(ConnectFourConfiguration config)
         {
             var Id = Guid.NewGuid().ToString();

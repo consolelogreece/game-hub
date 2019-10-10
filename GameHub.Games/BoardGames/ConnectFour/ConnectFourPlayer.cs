@@ -13,5 +13,7 @@ namespace GameHub.Games.BoardGames.ConnectFour
         public string PlayerNick { get; set; }
 
         public string PlayerColor { get; set; }
+
+        public int Wins { get; set; }
     }
 }

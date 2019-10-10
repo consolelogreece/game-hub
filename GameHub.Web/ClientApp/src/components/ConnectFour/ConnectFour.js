@@ -7,6 +7,8 @@ import OptionPanel from '../Common/OptionPanel';
 
 import Board from './Board';
 
+// TODO: WHEN REMATCH IS CHOSEN, MAKE SURE TO CLEAR BOARDS OF ALL CLIENTS
+
 export class ConnectFour extends Component {
     constructor(props) {
         super(props);
@@ -74,7 +76,9 @@ export class ConnectFour extends Component {
         hubConnection.on('GameStarted', gameState => {
             this.setState({
                 gameState: "started",
-                playerTurn: gameState.nextTurnPlayer.playerNick
+                playerTurn: gameState.nextTurnPlayer.playerNick,
+                boardState: gameState.boardState,
+                gameMessage: ""
             });
         });
         
@@ -116,6 +120,11 @@ export class ConnectFour extends Component {
     StartGame = () =>
     {
         this.state.hubConnection.invoke('StartGame', this.state.gameId).catch(res => this.setState({gameMessage:res}));
+    }
+
+    Rematch = () =>
+    {
+        this.state.hubConnection.invoke('Rematch', this.state.gameId);
     }
 
     PopulateGameState = () =>
@@ -181,6 +190,7 @@ export class ConnectFour extends Component {
                     gameState = {gameState}
                     isPlayerRegistered = {isPlayerRegistered}
                     StartGame = {this.StartGame}
+                    Rematch = {this.Rematch}
                 />
             </div>
         )

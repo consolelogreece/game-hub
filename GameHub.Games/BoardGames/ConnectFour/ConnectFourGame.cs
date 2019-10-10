@@ -23,7 +23,11 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
             _winThreshold = config.winThreshold;
 
-            // Initialize board
+            InitializeBoard();
+        }
+
+        private void InitializeBoard()
+        {
             _board = new string[_rowCount][];
 
             for (int i = 0; i < _rowCount; i++)
@@ -32,8 +36,6 @@ namespace GameHub.Games.BoardGames.ConnectFour
                 _board[i] = row;
             }
         }
-
-
 
         public MoveResult MakeMove(int col, string playerId)
         {
@@ -159,6 +161,11 @@ namespace GameHub.Games.BoardGames.ConnectFour
         public string[][] GetBoardState()
         {
             return _board;
+        }
+
+        public void ClearBoard()
+        {
+            InitializeBoard();
         }
     }
 }

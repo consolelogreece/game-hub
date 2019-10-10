@@ -37,7 +37,7 @@ export default props =>
             optionsPanel = (
                 <div>
                     <h6>Game over!</h6>
-                    <button onClick={() => { }}>Re-match</button>
+                    <button onClick={() => props.Rematch()}>Re-match</button>
                 </div>
             )
             break;

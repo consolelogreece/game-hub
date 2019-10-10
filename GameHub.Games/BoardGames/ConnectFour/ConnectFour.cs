@@ -84,6 +84,7 @@ namespace GameHub.Games.BoardGames.ConnectFour
                     // TODO: sanitize nickname
                     moveResult.Message = $"{player.PlayerNick} won!";
                     _gameOver = true;
+                    player.Wins++;
                 }
 
                 return moveResult;
@@ -121,6 +122,22 @@ namespace GameHub.Games.BoardGames.ConnectFour
             }
 
             return _gameStarted;
+        }
+
+        // returns true if reset was successful.
+        public bool Reset(string playerId)
+        {
+            if( _config.creatorId != playerId) return false;
+
+            _game.ClearBoard();
+
+            _gameOver = false;
+
+            _gameStarted = true;
+
+            _nextPlayerIndex = 0;
+
+            return true;
         }
 
         public string[][] GetBoardStateColors()
