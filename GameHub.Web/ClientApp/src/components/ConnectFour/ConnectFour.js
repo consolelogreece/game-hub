@@ -7,8 +7,6 @@ import OptionPanel from '../Common/OptionPanel';
 
 import Board from './Board';
 
-// TODO: WHEN REMATCH IS CHOSEN, MAKE SURE TO CLEAR BOARDS OF ALL CLIENTS
-
 export class ConnectFour extends Component {
     constructor(props) {
         super(props);
