@@ -4,7 +4,7 @@ import { HubConnectionBuilder } from '@aspnet/signalr';
 import OptionPanel from '../Common/OptionPanel';
 import Popup from '../Common/Popup'
 import PromotionSelection from './PromotionSelection';
-import { Title } from '../Common/Text';
+import { Title, Subtitle } from '../Common/Text';
 
 /*
     todos:
@@ -80,10 +80,7 @@ export default class Chess extends Component {
 
     getTurnIndicator = player => 
     {
-        console.log(player.playerNick, "::" , this.state, "||")
         if (this.state.playerInfo === null) return "";
-
-        console.log("RRRRRRRRRRRRREEEEEEEEEEEEEEEEEEEEE")
 
         return player.id == this.state.playerInfo.id ? "your" : (player.playerNick + "'s");
     }
@@ -92,8 +89,11 @@ export default class Chess extends Component {
     {
         this.populateAvailableMoves();
 
+        let turnIndicator = this.getTurnIndicator(res.currentTurnPlayer);
+
         this.setState({
-            gameState: "started"
+            gameState: "started",
+            playerTurn: turnIndicator
         })
         
     }
@@ -116,7 +116,6 @@ export default class Chess extends Component {
 
         return this.state.hubConnection.invoke('GetGameState', gameId)
             .then(res => {
-                console.log(res);
                 this.setState({
                     fen: res.boardStateFen, 
                     gameState: res.status,
@@ -314,6 +313,7 @@ export default class Chess extends Component {
         return (
             <div style={{width: width, margin: "0 auto"}}>
                 <Title text="CHESS" />
+                <Subtitle text={this.state.playerNick} />
                 {this.state.displayPromotionPrompt &&
                     <Popup title="promotion" content={
                         <PromotionSelection callback={this.makePromotion} />

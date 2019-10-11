@@ -1,7 +1,7 @@
 ﻿import React, { Component } from 'react';
 import { HubConnectionBuilder } from '@aspnet/signalr';
 import './ConnectFour.css';
-import { Title } from '../Common/Text';
+import { Title, Subtitle } from '../Common/Text';
 import ResizeWithContainerHOC from '../Common/GetRenderedWidthHOC';
 import OptionPanel from '../Common/OptionPanel';
 
@@ -175,7 +175,7 @@ export class ConnectFour extends Component {
         return (
             <div id="ConnectFour" className="vertical_center">  
                 <Title text="Connect Four"/> 
-                {this.state.playerNick} <br />
+                <Subtitle text={this.state.playerNick} />
                 <Aboard  
                     className="vertical_center" 
                     boardState={this.state.boardState} 
