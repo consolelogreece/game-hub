@@ -1,7 +1,7 @@
 ﻿import React, { Component } from 'react';
 import { HubConnectionBuilder } from '@aspnet/signalr';
 import './ConnectFour.css';
-import Title from '../Common/Title'
+import { Title } from '../Common/Text';
 import ResizeWithContainerHOC from '../Common/GetRenderedWidthHOC';
 import OptionPanel from '../Common/OptionPanel';
 

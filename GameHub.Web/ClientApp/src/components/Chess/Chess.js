@@ -4,7 +4,7 @@ import { HubConnectionBuilder } from '@aspnet/signalr';
 import OptionPanel from '../Common/OptionPanel';
 import Popup from '../Common/Popup'
 import PromotionSelection from './PromotionSelection';
-import Title from '../Common/Title';
+import { Title } from '../Common/Text';
 
 /*
     todos:
