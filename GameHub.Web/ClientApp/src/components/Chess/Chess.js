@@ -11,7 +11,6 @@ import { Title, Subtitle } from '../Common/Text';
         win detection
         stalement detection
         offer draw
-        center board
         fix bug, for some reason on initial start, it doesnt indicate whos turn it is properly
         try to reduce the amount of hub calls made.
 */
@@ -284,9 +283,6 @@ export default class Chess extends Component {
 
     JoinGame = name => {
         this.state.hubConnection.invoke('JoinGame', this.state.gameId, name)
-            .then(res =>  
-                console.log("joined")
-            )
             .then(this.populatePlayerClientInfo())
             .catch(() => this.setState({gameMessage: "oopsie daisy"}));
     }
@@ -306,14 +302,16 @@ export default class Chess extends Component {
 
         let gameState = this.state.gameState;
 
-        let playerNick = this.state.playerTurn;
+        let nextPlayerName = this.state.playerTurn;
+
+        let clientName = this.state.playerInfo != null ? this.state.playerInfo.playerNick : "";
 
         let isPlayerRegistered = !!this.state.playerInfo;
 
         return (
             <div style={{width: width, margin: "0 auto"}}>
                 <Title text="CHESS" />
-                <Subtitle text={this.state.playerNick} />
+                <Subtitle text={clientName} />
                 {this.state.displayPromotionPrompt &&
                     <Popup title="promotion" content={
                         <PromotionSelection callback={this.makePromotion} />
@@ -333,7 +331,7 @@ export default class Chess extends Component {
                     />
                 </div>
                 <OptionPanel
-                    playerName = {playerNick}
+                    playerName = {nextPlayerName}
                     isHost = {isHost}
                     JoinGame = {this.JoinGame}
                     gameState = {gameState}
