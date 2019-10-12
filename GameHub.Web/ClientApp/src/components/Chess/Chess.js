@@ -80,17 +80,11 @@ export default class Chess extends Component {
         return player.id == this.state.playerInfo.id ? "your" : (player.playerNick + "'s");
     }
 
-    gameStarted = res => 
+    gameStarted = gameState => 
     {
         this.populateAvailableMoves();
 
-        let turnIndicator = this.getTurnIndicator(res.currentTurnPlayer);
-
-        this.setState({
-            gameState: "started",
-            playerTurn: turnIndicator
-        })
-        
+        this.updateStateWithNewGameState(gameState);
     }
 
     illegalAction = message => 
@@ -115,19 +109,46 @@ export default class Chess extends Component {
 
     updateStateWithNewGameState = gameState =>
     {
-        console.log(gameState)
-        let message = "";
-        if (gameState.status.winner != undefined)
-        {
-            message =  `${gameState.status.winner.playerNick} has won!`
-        }
-
+        var message = this.generateGameMessageFromGameState(gameState);
         this.setState({
             fen: gameState.boardStateFen, 
             gameState: gameState.status.status,
             playerTurn: this.getTurnIndicator(gameState.currentTurnPlayer),
             gameMessage: message
         })
+    }
+
+    generateGameMessageFromGameState = gameState =>
+    {
+        let message = "";
+
+        let {status, winner} = gameState.status;
+
+        if ( winner != undefined) message =  `${gameState.status.winner.playerNick} has won!`;
+    
+        // if the game has finished and there is no winner, must be stalemate.
+        if (status == "finished" && winner == undefined) message = "Stalemate!"
+
+        if (status == "lobby")
+        {
+            if (this.state.playerInfo == null)
+            {
+                message = "Please enter your name"
+            }
+            else if (!this.isHost())
+            {
+                message = "Waiting for host to start...";
+            } 
+        }
+
+        if (status == "started")
+        {
+            let playerTurn = this.getTurnIndicator(gameState.currentTurnPlayer);
+            
+            message = `It's ${playerTurn} turn`;
+        }
+
+        return message;
     }
 
     populateAvailableMoves = () =>
@@ -291,6 +312,7 @@ export default class Chess extends Component {
     JoinGame = name => {
         this.state.hubConnection.invoke('JoinGame', this.state.gameId, name)
             .then(this.populatePlayerClientInfo())
+            .then(this.populateGameState())
             .catch(() => this.setState({gameMessage: "oopsie daisy"}));
     }
 
@@ -299,9 +321,14 @@ export default class Chess extends Component {
         this.state.hubConnection.invoke('StartGame', this.state.gameId).catch(res => this.setState({gameMessage:res}));
     }
 
+    isHost = () =>
+    {
+        return this.state.playerInfo != null && this.state.playerInfo.isHost;
+    }
+
     render()
     {
-        let isHost = this.state.playerInfo != null && this.state.playerInfo.isHost;
+        let isHost = this.isHost();
 
         let orientation = this.state.playerInfo != null && this.state.playerInfo.player == 0 ? "black" : "white";
 
@@ -337,11 +364,7 @@ export default class Chess extends Component {
                         position = {this.state.fen}
                     />
                 </div>
-                {(this.state.gameState == "started") && 
-                    `it's ${nextPlayerName} turn`
-                }
-                <br />
-                {this.state.gameMessage + "o"}
+                {this.state.gameMessage}
                 <OptionPanel
                     playerName = {nextPlayerName}
                     isHost = {isHost}
