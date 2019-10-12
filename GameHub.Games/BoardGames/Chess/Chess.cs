@@ -21,37 +21,41 @@ namespace GameHub.Games.BoardGames.Chess
 
         private string _creatorId;
 
-        private bool _gameOver = false;
-
         public Chess(ChessConfig config)
         {
             _creatorId = config.creatorId;
         }
 
-        public MoveResult MakeMove(string playerId, Move move)
+        public bool MakeMove(string playerId, Move move)
         {
-            var player = GetPlayer(playerId);
-
             var result = _game.MakeMove(move, false);
 
-            var wasValid = result != MoveType.Invalid;
-
-            var moveResult = new MoveResult
-            {
-                //GameConclusionResult = _game.IsWinner(player.player),
-                Fen = _game.GetFen(),
-                CurrentTurnPlayer = result == MoveType.Invalid ? player : player.player == Player.White ? Black : White,
-                Message = wasValid ? "" : "INVALID MOVE",
-                Player = player,
-                WasValidMove = wasValid
-            };
-
-            return moveResult;
+            return result != MoveType.Invalid;
         }
 
-        private GameConclusionResult GetConclusionResult(Player player)
+        private GameStatus GetGameStatus()
         {
-            return null;//bool isGameOver = _game.IsWinner(player) || _game.IsStalemated(player) || _game.;
+            var IsStalemated = (White != null && _game.IsStalemated(White.player) || Black != null && _game.IsStalemated(Black.player));
+
+            var winner = GetWinner();
+
+            var isOver = IsStalemated || winner != null;
+
+            var status = (isOver ? Common.GameStatus.finished : _started ? Common.GameStatus.started : Common.GameStatus.lobby).ToString();
+            
+            var result = new GameStatus(status, winner);
+
+            return result;
+        }
+
+        private ChessPlayer GetWinner()
+        {
+            ChessPlayer winner = null;
+
+            if (White != null && _game.IsWinner(White.player)) winner = White;
+            else if (Black != null && _game.IsWinner(Black.player)) winner = Black;
+
+            return winner;
         }
 
         public bool StartGame()
@@ -118,15 +122,13 @@ namespace GameHub.Games.BoardGames.Chess
 
         public GameState GetGameState()
         {
-            var status = _gameOver ? GameStatus.finished : _started ? GameStatus.started : GameStatus.lobby;
-
             var currentTurnPlayer = _game.WhoseTurn == Player.White ? White : Black;
             
             return new GameState
             {
                 BoardStateFen = _game.GetFen(),
-                Status = status.ToString(),
-                CurrentTurnPlayer = currentTurnPlayer
+                CurrentTurnPlayer = currentTurnPlayer,
+                Status = GetGameStatus()
             };
         }
     }

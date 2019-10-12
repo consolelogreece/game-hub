@@ -79,9 +79,16 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
 
             var game = _cache.Get(gameId);
 
-            var result = game.MakeMove(playerId, move);
+            var isValid = game.MakeMove(playerId, move);
 
-            Clients.Group(gameId).SendAsync("PlayerMoved", result);
+            if (isValid)
+            {
+                Clients.Group(gameId).SendAsync("PlayerMoved", GetGameState(gameId));
+            }
+            else
+            {
+                Clients.Caller.SendAsync("IllegalAction", "Invalid move");
+            }
         }
 
         public string CreateRoom()
@@ -135,7 +142,7 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
 
             var registeredSuccessfully = false;
 
-            if (gamestate.Status == GameStatus.lobby.ToString())
+            if (gamestate.Status.Status == GameHub.Games.BoardGames.Common.GameStatus.lobby.ToString())
             {
                 registeredSuccessfully = game.RegisterPlayer(playerId, playerNick);
             }

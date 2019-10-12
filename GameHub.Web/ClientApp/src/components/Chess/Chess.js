@@ -8,11 +8,12 @@ import { Title, Subtitle } from '../Common/Text';
 
 /*
     todos:
-        win detection
-        stalement detection
-        offer draw
+        win detection -PRIORITY
+        stalement detection -PRIORITY   ========= use conclusionstatus to display whether someone has one or whatever. it used to work unless i refreshed. 
+        offer draw -PRIORITY
         fix bug, for some reason on initial start, it doesnt indicate whos turn it is properly
         try to reduce the amount of hub calls made.
+
 */
 
 export default class Chess extends Component {
@@ -34,9 +35,8 @@ export default class Chess extends Component {
         }
     }
 
-    componentDidMount() {
-        let gameState = [];
-
+    componentDidMount() 
+    {
         const hubConnection = new HubConnectionBuilder()
         .withUrl("/chesshub", {accessTokenFactory: () => "testing"})
         .build();
@@ -68,11 +68,7 @@ export default class Chess extends Component {
 
     playerMoved = res =>
     {
-        this.setState({
-            fen: res.fen,
-            gameMessage: res.message,
-            playerTurn: this.getTurnIndicator(res.currentTurnPlayer)
-        });
+        this.updateStateWithNewGameState(res);
 
         this.populateAvailableMoves();
     }
@@ -114,20 +110,31 @@ export default class Chess extends Component {
         var gameId = this.state.gameId;
 
         return this.state.hubConnection.invoke('GetGameState', gameId)
-            .then(res => {
-                this.setState({
-                    fen: res.boardStateFen, 
-                    gameState: res.status,
-                    playerTurn: this.getTurnIndicator(res.currentTurnPlayer)
-                })
-            });
+            .then(res => this.updateStateWithNewGameState(res));
+    }
+
+    updateStateWithNewGameState = gameState =>
+    {
+        console.log(gameState)
+        let message = "";
+        if (gameState.status.winner != undefined)
+        {
+            message =  `${gameState.status.winner.playerNick} has won!`
+        }
+
+        this.setState({
+            fen: gameState.boardStateFen, 
+            gameState: gameState.status.status,
+            playerTurn: this.getTurnIndicator(gameState.currentTurnPlayer),
+            gameMessage: message
+        })
     }
 
     populateAvailableMoves = () =>
     {
         var gameId = this.state.gameId;
 
-        this.state.hubConnection.invoke('GetMoves', this.state.gameId).then(res => this.mapMoves(res))
+        this.state.hubConnection.invoke('GetMoves', gameId).then(res => this.mapMoves(res))
     }
 
     populatePlayerClientInfo = () =>
@@ -208,8 +215,8 @@ export default class Chess extends Component {
         moves.forEach(el => {
             var sq = this.convertPositionToSquare(el.newPosition);
             styles[sq] = {
-                    background: "radial-gradient(circle, #fffc00 36%, transparent 40%)",
-                    borderRadius: "50%"
+                background: "radial-gradient(circle, #fffc00 36%, transparent 40%)",
+                borderRadius: "50%"
             };
         });
 
@@ -330,6 +337,11 @@ export default class Chess extends Component {
                         position = {this.state.fen}
                     />
                 </div>
+                {(this.state.gameState == "started") && 
+                    `it's ${nextPlayerName} turn`
+                }
+                <br />
+                {this.state.gameMessage + "o"}
                 <OptionPanel
                     playerName = {nextPlayerName}
                     isHost = {isHost}

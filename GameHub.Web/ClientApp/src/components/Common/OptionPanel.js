@@ -25,18 +25,9 @@ export default props =>
             )
             break;
 
-        case "started":
-            optionsPanel = (
-                <div>
-                    <h6>it's {playerName} turn</h6>   
-                </div>
-            )
-            break;
-
         case "finished":
             optionsPanel = (
                 <div>
-                    <h6>Game over!</h6>
                     {isHost &&
                         <button onClick={() => props.Rematch()}>Re-match</button>
                     }
