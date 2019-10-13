@@ -94,9 +94,9 @@ export default class Chess extends Component {
         });
     }
 
-    gameOverHandler = details =>
+    gameOverHandler = gameState =>
     {
-        var type = details.type;
+        this.updateStateWithNewGameState(gameState);
     }
 
     populateGameState = () =>
@@ -122,12 +122,9 @@ export default class Chess extends Component {
     {
         let message = "";
 
-        let {status, winner} = gameState.status;
+        let {status, endReason} = gameState.status;
 
-        if ( winner != undefined) message =  `${gameState.status.winner.playerNick} has won!`;
-    
-        // if the game has finished and there is no winner, must be stalemate.
-        if (status == "finished" && winner == undefined) message = "Stalemate!"
+        if (status == "finished") message = endReason;
 
         if (status == "lobby")
         {
@@ -326,6 +323,11 @@ export default class Chess extends Component {
         this.state.hubConnection.invoke('Rematch', this.state.gameId);
     }
 
+    Resign = () =>
+    {
+        this.state.hubConnection.invoke('Resign', this.state.gameId);
+    }
+
     isHost = () =>
     {
         return this.state.playerInfo != null && this.state.playerInfo.isHost;
@@ -375,6 +377,7 @@ export default class Chess extends Component {
                     isPlayerRegistered = {isPlayerRegistered}
                     StartGame = {this.StartGame}
                     Rematch = {this.Rematch}
+                    Resign = {this.Resign}
                 />
             </div>
             )

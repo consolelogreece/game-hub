@@ -34,11 +34,34 @@ namespace GameHub.Games.BoardGames.Chess
 
             var winner = GetWinner();
 
-            var isOver = IsStalemated || winner != null;
+            var playerResigned = _game.Resigned;
+
+            var isOver = false;
+
+            var endReason = "";
+
+            
+            if (IsStalemated)
+            {
+                isOver = true;
+                endReason = "Stalemate";
+            }
+            else if(playerResigned != Player.None)
+            {
+                isOver = true;
+                var resignedPlayer = this.GetPlayer(playerResigned);
+
+                endReason = resignedPlayer.PlayerNick + " resigned";
+            }
+            else if (winner != null)
+            {
+                isOver = true;
+                endReason = winner.PlayerNick + " has won!";
+            }
 
             var status = (isOver ? Common.GameStatus.finished : _started ? Common.GameStatus.started : Common.GameStatus.lobby).ToString();
             
-            var result = new GameStatus(status, winner);
+            var result = new GameStatus(status, endReason);
 
             return result;
         }
@@ -108,6 +131,19 @@ namespace GameHub.Games.BoardGames.Chess
             return null;
         }
 
+        public ChessPlayer GetPlayer(Player player)
+        {
+            if (White == null) return null;
+
+            if (player == Player.White) return White;
+
+            if (Black == null) return null;
+        
+            if (player == Player.Black) return Black;
+            
+            return null;
+        }
+
         public List<Move> GetMoves(ChessPlayer ChessPlayer)
         {
             var moves = _game.GetValidMoves(ChessPlayer.player);
@@ -123,6 +159,15 @@ namespace GameHub.Games.BoardGames.Chess
             if (!_started) return false;
 
             _game = new ChessGame();
+
+            return true;
+        }
+
+        public bool Resign(string playerId)
+        {
+            var player = this.GetPlayer(playerId);
+
+            _game.Resign(player.player);
 
             return true;
         }

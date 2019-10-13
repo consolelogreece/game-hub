@@ -166,6 +166,17 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
             }
         }
 
+        public void Resign(string gameId)
+        {
+            var game = _cache.Get(gameId);
+
+            var playerId = Context.Items["PlayerId"].ToString();
+
+            game.Resign(playerId);
+
+            Clients.Group(gameId).SendAsync("GameOver", GetGameState(gameId));
+        }
+
         public override Task OnConnectedAsync()
         {
             // Get player id from http context. This is taken from a cookie and put in httpcontext items dictionary in an earlier piece of middleware.
