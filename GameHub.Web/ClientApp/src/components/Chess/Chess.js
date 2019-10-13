@@ -321,6 +321,11 @@ export default class Chess extends Component {
         this.state.hubConnection.invoke('StartGame', this.state.gameId).catch(res => this.setState({gameMessage:res}));
     }
 
+    Rematch = () =>
+    {
+        this.state.hubConnection.invoke('Rematch', this.state.gameId);
+    }
+
     isHost = () =>
     {
         return this.state.playerInfo != null && this.state.playerInfo.isHost;
@@ -335,8 +340,6 @@ export default class Chess extends Component {
         let width = this.props.containerWidth <= 600 ? this.props.containerWidth : 600;
 
         let gameState = this.state.gameState;
-
-        let nextPlayerName = this.state.playerTurn;
 
         let clientName = this.state.playerInfo != null ? this.state.playerInfo.playerNick : "";
 
@@ -371,6 +374,7 @@ export default class Chess extends Component {
                     gameState = {gameState}
                     isPlayerRegistered = {isPlayerRegistered}
                     StartGame = {this.StartGame}
+                    Rematch = {this.Rematch}
                 />
             </div>
             )

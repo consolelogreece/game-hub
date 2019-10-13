@@ -1,11 +1,6 @@
-using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using ChessDotNet;
-using GameHub.Games.BoardGames.Common;
-using GameHub.Games.BoardGames.ConnectFour;
 
 namespace GameHub.Games.BoardGames.Chess
 {
@@ -19,11 +14,11 @@ namespace GameHub.Games.BoardGames.Chess
 
         private bool _started = false;
 
-        private string _creatorId;
+        private ChessConfig _config;
 
         public Chess(ChessConfig config)
         {
-            _creatorId = config.creatorId;
+           _config = config;
         }
 
         public bool MakeMove(string playerId, Move move)
@@ -74,7 +69,7 @@ namespace GameHub.Games.BoardGames.Chess
             {
                 Id = playerId,
                 PlayerNick = playerNick,
-                IsHost = playerId == _creatorId
+                IsHost = playerId == _config.creatorId
             };
 
             lock(_game)
@@ -118,6 +113,18 @@ namespace GameHub.Games.BoardGames.Chess
             var moves = _game.GetValidMoves(ChessPlayer.player);
 
             return moves.ToList();
+        }
+
+        public bool Reset(string playerId)
+        {
+            if( _config.creatorId != playerId) return false;
+
+            // cant rematch if the game hasn't even started.
+            if (!_started) return false;
+
+            _game = new ChessGame();
+
+            return true;
         }
 
         public GameState GetGameState()
