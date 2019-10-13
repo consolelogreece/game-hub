@@ -94,9 +94,9 @@ export default class Chess extends Component {
         });
     }
 
-    gameOverHandler = details =>
+    gameOverHandler = gameState =>
     {
-        var type = details.type;
+        this.updateStateWithNewGameState(gameState);
     }
 
     populateGameState = () =>
@@ -122,12 +122,9 @@ export default class Chess extends Component {
     {
         let message = "";
 
-        let {status, winner} = gameState.status;
+        let {status, endReason} = gameState.status;
 
-        if ( winner != undefined) message =  `${gameState.status.winner.playerNick} has won!`;
-    
-        // if the game has finished and there is no winner, must be stalemate.
-        if (status == "finished" && winner == undefined) message = "Stalemate!"
+        if (status == "finished") message = endReason;
 
         if (status == "lobby")
         {
@@ -321,6 +318,16 @@ export default class Chess extends Component {
         this.state.hubConnection.invoke('StartGame', this.state.gameId).catch(res => this.setState({gameMessage:res}));
     }
 
+    Rematch = () =>
+    {
+        this.state.hubConnection.invoke('Rematch', this.state.gameId);
+    }
+
+    Resign = () =>
+    {
+        this.state.hubConnection.invoke('Resign', this.state.gameId);
+    }
+
     isHost = () =>
     {
         return this.state.playerInfo != null && this.state.playerInfo.isHost;
@@ -335,8 +342,6 @@ export default class Chess extends Component {
         let width = this.props.containerWidth <= 600 ? this.props.containerWidth : 600;
 
         let gameState = this.state.gameState;
-
-        let nextPlayerName = this.state.playerTurn;
 
         let clientName = this.state.playerInfo != null ? this.state.playerInfo.playerNick : "";
 
@@ -366,12 +371,13 @@ export default class Chess extends Component {
                 </div>
                 {this.state.gameMessage}
                 <OptionPanel
-                    playerName = {nextPlayerName}
                     isHost = {isHost}
                     JoinGame = {this.JoinGame}
                     gameState = {gameState}
                     isPlayerRegistered = {isPlayerRegistered}
                     StartGame = {this.StartGame}
+                    Rematch = {this.Rematch}
+                    Resign = {this.Resign}
                 />
             </div>
             )

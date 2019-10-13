@@ -2,15 +2,15 @@ namespace GameHub.Games.BoardGames.Chess
 {
     public class GameStatus
     {
-        public GameStatus(string status = "", ChessPlayer winner = null)
+        public GameStatus(string status = "", string endReason = "")
         {
             Status = status;
 
-            Winner = winner;
+            EndReason = endReason;
         }
         
         public string Status { get; private set; }
 
-        public ChessPlayer Winner { get; private set; }
+        public string EndReason { get; private set; }
     }
 }

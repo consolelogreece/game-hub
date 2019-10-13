@@ -1,11 +1,6 @@
-using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using ChessDotNet;
-using GameHub.Games.BoardGames.Common;
-using GameHub.Games.BoardGames.ConnectFour;
 
 namespace GameHub.Games.BoardGames.Chess
 {
@@ -19,11 +14,11 @@ namespace GameHub.Games.BoardGames.Chess
 
         private bool _started = false;
 
-        private string _creatorId;
+        private ChessConfig _config;
 
         public Chess(ChessConfig config)
         {
-            _creatorId = config.creatorId;
+           _config = config;
         }
 
         public bool MakeMove(string playerId, Move move)
@@ -39,11 +34,34 @@ namespace GameHub.Games.BoardGames.Chess
 
             var winner = GetWinner();
 
-            var isOver = IsStalemated || winner != null;
+            var playerResigned = _game.Resigned;
+
+            var isOver = false;
+
+            var endReason = "";
+
+            
+            if (IsStalemated)
+            {
+                isOver = true;
+                endReason = "Stalemate";
+            }
+            else if(playerResigned != Player.None)
+            {
+                isOver = true;
+                var resignedPlayer = this.GetPlayer(playerResigned);
+
+                endReason = resignedPlayer.PlayerNick + " resigned";
+            }
+            else if (winner != null)
+            {
+                isOver = true;
+                endReason = winner.PlayerNick + " has won!";
+            }
 
             var status = (isOver ? Common.GameStatus.finished : _started ? Common.GameStatus.started : Common.GameStatus.lobby).ToString();
             
-            var result = new GameStatus(status, winner);
+            var result = new GameStatus(status, endReason);
 
             return result;
         }
@@ -74,7 +92,7 @@ namespace GameHub.Games.BoardGames.Chess
             {
                 Id = playerId,
                 PlayerNick = playerNick,
-                IsHost = playerId == _creatorId
+                IsHost = playerId == _config.creatorId
             };
 
             lock(_game)
@@ -113,11 +131,45 @@ namespace GameHub.Games.BoardGames.Chess
             return null;
         }
 
+        public ChessPlayer GetPlayer(Player player)
+        {
+            if (White == null) return null;
+
+            if (player == Player.White) return White;
+
+            if (Black == null) return null;
+        
+            if (player == Player.Black) return Black;
+            
+            return null;
+        }
+
         public List<Move> GetMoves(ChessPlayer ChessPlayer)
         {
             var moves = _game.GetValidMoves(ChessPlayer.player);
 
             return moves.ToList();
+        }
+
+        public bool Reset(string playerId)
+        {
+            if( _config.creatorId != playerId) return false;
+
+            // cant rematch if the game hasn't even started.
+            if (!_started) return false;
+
+            _game = new ChessGame();
+
+            return true;
+        }
+
+        public bool Resign(string playerId)
+        {
+            var player = this.GetPlayer(playerId);
+
+            _game.Resign(player.player);
+
+            return true;
         }
 
         public GameState GetGameState()
