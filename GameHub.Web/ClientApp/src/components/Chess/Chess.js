@@ -366,7 +366,6 @@ export default class Chess extends Component {
                 </div>
                 {this.state.gameMessage}
                 <OptionPanel
-                    playerName = {nextPlayerName}
                     isHost = {isHost}
                     JoinGame = {this.JoinGame}
                     gameState = {gameState}
