@@ -46,7 +46,7 @@ namespace Caching
                 return null;
             
 
-            var cachedValue = entry.ToCachedValue<T>();
+            var cachedValue = entry.ToCachedValue();
 
             return cachedValue.Value;
         }
