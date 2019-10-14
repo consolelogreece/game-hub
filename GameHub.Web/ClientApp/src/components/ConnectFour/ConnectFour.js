@@ -116,7 +116,7 @@ export class ConnectFour extends Component {
         console.log("player", player)
         if (this.state.playerInfo === null) return "";
 
-        return player.id == this.state.playerInfo.id ? "your" : (player.playerNick + "'s");
+        return player.id === this.state.playerInfo.id ? "your" : (player.playerNick + "'s");
     }
 
     generateGameMessageFromGameState = gameState =>
@@ -125,11 +125,11 @@ export class ConnectFour extends Component {
 
         let {status, endReason} = gameState.status;
 
-        if (status == "finished") message = endReason;
+        if (status === "finished") message = endReason;
 
-        if (status == "lobby")
+        if (status === "lobby")
         {
-            if (this.state.playerInfo == null)
+            if (this.state.playerInfo === null)
             {
                 message = "Please enter your name"
             }
@@ -139,7 +139,7 @@ export class ConnectFour extends Component {
             } 
         }
 
-        if (status == "started")
+        if (status === "started")
         {
             let playerTurn = this.getTurnIndicator(gameState.currentTurnPlayer);
             
@@ -154,7 +154,7 @@ export class ConnectFour extends Component {
         return this.state.hubConnection.invoke('GetClientPlayerInfo', this.state.gameId)
             .then(res => 
                 {
-                    if (res == null) return; 
+                    if (res === null) return; 
                     this.setState ({
                         playerInfo: res
                     })

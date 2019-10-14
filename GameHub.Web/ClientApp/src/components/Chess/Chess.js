@@ -9,7 +9,7 @@ import { Title, Subtitle } from '../Common/Text';
 /*
     todos:
         win detection -PRIORITY
-        stalement detection -PRIORITY   ========= use conclusionstatus to display whether someone has one or whatever. it used to work unless i refreshed. 
+        stalement detection -PRIORITY   ============= use conclusionstatus to display whether someone has one or whatever. it used to work unless i refreshed. 
         offer draw -PRIORITY
         fix bug, for some reason on initial start, it doesnt indicate whos turn it is properly
         try to reduce the amount of hub calls made.
@@ -77,7 +77,7 @@ export default class Chess extends Component {
     {
         if (this.state.playerInfo === null) return "";
 
-        return player.id == this.state.playerInfo.id ? "your" : (player.playerNick + "'s");
+        return player.id === this.state.playerInfo.id ? "your" : (player.playerNick + "'s");
     }
 
     gameStarted = gameState => 
@@ -124,11 +124,11 @@ export default class Chess extends Component {
 
         let {status, endReason} = gameState.status;
 
-        if (status == "finished") message = endReason;
+        if (status === "finished") message = endReason;
 
-        if (status == "lobby")
+        if (status === "lobby")
         {
-            if (this.state.playerInfo == null)
+            if (this.state.playerInfo === null)
             {
                 message = "Please enter your name"
             }
@@ -138,7 +138,7 @@ export default class Chess extends Component {
             } 
         }
 
-        if (status == "started")
+        if (status === "started")
         {
             let playerTurn = this.getTurnIndicator(gameState.currentTurnPlayer);
             
@@ -169,7 +169,7 @@ export default class Chess extends Component {
 
     mapMoves = moves =>
     {
-        if (moves == null || this.state.gameState != "started") return;
+        if (moves === null || this.state.gameState !== "started") return;
 
         let map = {};
 
@@ -196,7 +196,7 @@ export default class Chess extends Component {
 
     onMouseOverSquare = square =>
     {
-        if (this.state.pieceSquare != "") return; 
+        if (this.state.pieceSquare !== "") return; 
 
         var moves = this.getLegalMoves(square);
 
@@ -207,7 +207,7 @@ export default class Chess extends Component {
 
     onMouseOutSquare = square => 
     {
-        if (this.state.pieceSquare == "")
+        if (this.state.pieceSquare === "")
         {
             this.setState({squareStyles: {}});
         }
@@ -246,7 +246,7 @@ export default class Chess extends Component {
         var moves = this.getLegalMoves(square);
 
         // a square has already been clicked, meaning this is must be a move
-        if (this.state.pieceSquare != "")
+        if (this.state.pieceSquare !== "")
         {
             this.makeMove(this.state.pieceSquare, square);
             return;
@@ -265,11 +265,11 @@ export default class Chess extends Component {
     {
         var legalMoves = this.getLegalMoves(from);
 
-        var move = legalMoves.find(el => this.convertPositionToSquare(el.newPosition) == to);
+        var move = legalMoves.find(el => this.convertPositionToSquare(el.newPosition) === to);
 
         if (move)
         {
-            if (move.promotion != null)
+            if (move.promotion !== null)
             {
                 this.setState({displayPromotionPrompt: true, promotionMove: move});
 
@@ -284,12 +284,12 @@ export default class Chess extends Component {
 
     makePromotion = promotion =>
     {
-        if (promotion !=  'R' && promotion != 'B' && promotion != 'Q' && promotion != 'N')
+        if (promotion !==  'R' && promotion !== 'B' && promotion !== 'Q' && promotion !== 'N')
         {
             return;
         }
 
-        if (this.state.promotionMove == null)
+        if (this.state.promotionMove === null)
         {
             this.setState({displayPromotionPrompt: false});
 
@@ -330,20 +330,20 @@ export default class Chess extends Component {
 
     isHost = () =>
     {
-        return this.state.playerInfo != null && this.state.playerInfo.isHost;
+        return this.state.playerInfo !== null && this.state.playerInfo.isHost;
     }
 
     render()
     {
         let isHost = this.isHost();
 
-        let orientation = this.state.playerInfo != null && this.state.playerInfo.player == 0 ? "black" : "white";
+        let orientation = this.state.playerInfo !== null && this.state.playerInfo.player === 0 ? "black" : "white";
 
         let width = this.props.containerWidth <= 600 ? this.props.containerWidth : 600;
 
         let gameState = this.state.gameState;
 
-        let clientName = this.state.playerInfo != null ? this.state.playerInfo.playerNick : "";
+        let clientName = this.state.playerInfo !== null ? this.state.playerInfo.playerNick : "";
 
         let isPlayerRegistered = !!this.state.playerInfo;
 
