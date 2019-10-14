@@ -2,9 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Threading;
 using Caching.Common;
-using GameHub.Games.BoardGames.ConnectFour;
 
-// TODO: make sure expired games are purged.
 namespace Caching
 {
     public abstract class CacheBase<T> where T : class
