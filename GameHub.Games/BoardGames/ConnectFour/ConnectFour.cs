@@ -91,6 +91,11 @@ namespace GameHub.Games.BoardGames.ConnectFour
             }      
         }
 
+        public ConnectFourPlayer GetPlayer(string playerId)
+        {
+            return _players.FirstOrDefault(p => p.Id == playerId);    
+        }
+
         public bool RegisterPlayer(string playerId, string playerNick)
         {
             var newPlayer = new ConnectFourPlayer { Id = playerId, 
