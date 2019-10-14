@@ -9,7 +9,7 @@ namespace Caching.Common
         public object Value { get; set; }
         public DateTimeOffset ExpirationDate { get; set; }
 
-        public CachedValue<T> ToCachedValue<T>()
+        public CachedValue<T> ToCachedValue()
         {
             return new CachedValue<T>
             {
