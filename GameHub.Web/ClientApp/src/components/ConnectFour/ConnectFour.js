@@ -102,7 +102,6 @@ export class ConnectFour extends Component {
 
     updateStateWithNewGameState = gameState =>
     {
-        console.log(gameState)
         var message = this.generateGameMessageFromGameState(gameState);
         this.setState({
             boardState: gameState.boardState,
@@ -139,8 +138,16 @@ export class ConnectFour extends Component {
                 message = "Waiting for host to start...";
             } 
         }
-    }
 
+        if (status == "started")
+        {
+            let playerTurn = this.getTurnIndicator(gameState.currentTurnPlayer);
+            
+            message = `It's ${playerTurn} turn`;
+        }
+
+        return message;
+    }
 
     populatePlayerClientInfo = () =>
     {
