@@ -14,16 +14,13 @@ export class ConnectFour extends Component {
         let gameId = this.props.match.params.gameId;
 
         this.state = {
-            playerNick: "",
-            playerId: "",
-            joined:false,
             column: 0,
             gameId: gameId,
-            isGameCreator: false,
             gameMessage: "",
             playerTurn: "",
             gameState: "lobby",
             hubConnection: null,
+            playerInfo: null,
             boardState: [[]],
             boardColor: "#0e3363"
         };
@@ -44,15 +41,7 @@ export class ConnectFour extends Component {
         .withUrl("/connectfourhub", {accessTokenFactory: () => "testing"})
         .build();
 
-        hubConnection.on('PlayerMoved', res => 
-        {
-            var playerTurn = res.nextTurnPlayer.id == this.state.playerId ? "your" : res.nextTurnPlayer.playerNick;
-            this.setState({
-                boardState: res.boardState,
-                gameMessage: res.message,
-                playerTurn: playerTurn
-            });
-        });
+        hubConnection.on('PlayerMoved', gameState => this.updateStateWithNewGameState(gameState));
         
         hubConnection.on('RoomDoesntExist', res => {
             this.props.history.push("/connectfour/createroom")
@@ -64,21 +53,7 @@ export class ConnectFour extends Component {
             });
         });
         
-        hubConnection.on('PlayerWon', player => {
-            this.setState({
-                gameMessage: `${player.playerNick} won!`,
-                gameState: "finished"
-            });
-        });
-        
-        hubConnection.on('GameStarted', gameState => {
-            this.setState({
-                gameState: "started",
-                playerTurn: gameState.nextTurnPlayer.playerNick,
-                boardState: gameState.boardState,
-                gameMessage: ""
-            });
-        });
+        hubConnection.on('GameStarted', gameState => this.updateStateWithNewGameState(gameState));
         
         this.setState({ boardState : board, hubConnection }, () => {
             this.state.hubConnection
@@ -86,10 +61,10 @@ export class ConnectFour extends Component {
             .then(() => {
                 this.state.hubConnection.invoke('JoinRoom', this.state.gameId)
                 .then(res => {
-                    this.PopulateClientPlayerInfo();
+                    this.populatePlayerClientInfo();
                 })
                 .then(res => {
-                    this.PopulateGameState();   
+                    this.populateGameState();   
                 })
                         .catch(res => console.log(res))
                     })
@@ -102,17 +77,11 @@ export class ConnectFour extends Component {
         this.state.hubConnection.invoke('MakeMove', this.state.gameId, col).catch(err => console.error(err));;
     }
     
-    HandleChange = e =>
-    {
-        this.setState({...this.state, [e.target.name]: e.target.value})
-    } 
-    
     JoinGame = name => {
         this.state.hubConnection.invoke('JoinGame', this.state.gameId, name)
-        .then(res =>  
-            this.PopulateClientPlayerInfo()
-        )
-        .catch(() => this.setState({gameMessage: "oopsie daisy"}));
+            .then(this.populatePlayerClientInfo())
+            .then(this.populateGameState())
+            .catch(() => this.setState({gameMessage: "oopsie daisy"}));
     }
 
     StartGame = () =>
@@ -125,55 +94,88 @@ export class ConnectFour extends Component {
         this.state.hubConnection.invoke('Rematch', this.state.gameId);
     }
 
-    PopulateGameState = () =>
+    populateGameState = () =>
     {
         this.state.hubConnection.invoke('GetGameState', this.state.gameId)
-        .then(res => 
-            {
-                if (res == null) return; 
-                var playerTurn = "";
-                if (res.nextTurnPlayer != null) res.nextTurnPlayer.id == this.state.playerId ? "your" : res.nextTurnPlayer.playerNick;
-                this.setState({
-                    gameState: res.status,
-                    boardState: res.boardState,
-                    playerTurn: playerTurn
-                })
-        })
-
-        this.forceUpdate();
+        .then(gameState => this.updateStateWithNewGameState(gameState));
     }
 
-    PopulateClientPlayerInfo = () =>
+    updateStateWithNewGameState = gameState =>
+    {
+        console.log(gameState)
+        var message = this.generateGameMessageFromGameState(gameState);
+        this.setState({
+            boardState: gameState.boardState,
+            gameState: gameState.status.status,
+            playerTurn: this.getTurnIndicator(gameState.currentTurnPlayer),
+            gameMessage: message
+        })
+    }
+
+    getTurnIndicator = player => 
+    {
+        console.log("player", player)
+        if (this.state.playerInfo === null) return "";
+
+        return player.id == this.state.playerInfo.id ? "your" : (player.playerNick + "'s");
+    }
+
+    generateGameMessageFromGameState = gameState =>
+    {
+        let message = "";
+
+        let {status, endReason} = gameState.status;
+
+        if (status == "finished") message = endReason;
+
+        if (status == "lobby")
+        {
+            if (this.state.playerInfo == null)
+            {
+                message = "Please enter your name"
+            }
+            else if (!this.isHost())
+            {
+                message = "Waiting for host to start...";
+            } 
+        }
+    }
+
+
+    populatePlayerClientInfo = () =>
     {
         return this.state.hubConnection.invoke('GetClientPlayerInfo', this.state.gameId)
             .then(res => 
                 {
                     if (res == null) return; 
                     this.setState ({
-                        joined: res != null,
-                        playerNick: res.playerNick,
-                        playerId: res.id,
-                        isGameCreator: res.isHost
+                        playerInfo: res
                     })
                 })
     }
+
+    isHost = () =>
+    {
+        return this.state.playerInfo != null && this.state.playerInfo.isHost;
+    }
+
 
     render()
     {
         var Aboard = ResizeWithContainerHOC(Board);
 
-        let isHost = this.state.isGameCreator;
-
-        let playerNick = this.state.playerTurn;
-
-        let isPlayerRegistered = this.state.joined;
-
         let gameState = this.state.gameState;
+
+        let isHost = this.isHost();
+
+        let clientName = this.state.playerInfo != null ? this.state.playerInfo.playerNick : "";
+
+        let isPlayerRegistered = !!this.state.playerInfo;
 
         return (
             <div id="ConnectFour" className="vertical_center">  
                 <Title text="Connect Four"/> 
-                <Subtitle text={this.state.playerNick} />
+                <Subtitle text={clientName} />
                 <Aboard  
                     className="vertical_center" 
                     boardState={this.state.boardState} 
@@ -182,7 +184,6 @@ export class ConnectFour extends Component {
                 />
                 {this.state.gameMessage}
                 <OptionPanel
-                    playerName = {playerNick}
                     isHost = {isHost}
                     JoinGame = {this.JoinGame}
                     gameState = {gameState}
@@ -190,6 +191,7 @@ export class ConnectFour extends Component {
                     StartGame = {this.StartGame}
                     Rematch = {this.Rematch}
                 />
+                <button onClick={() => console.log(this.state)}>log state</button>
             </div>
         )
     }

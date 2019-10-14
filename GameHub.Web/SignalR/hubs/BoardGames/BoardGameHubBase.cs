@@ -73,6 +73,7 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
 
             var registeredSuccessfully = false;
 
+            // todo: dont do this check here, check in the game and return a value indicating success.
             if (gamestate.Status.Status == GameHub.Games.BoardGames.Common.GameStatus.lobby.ToString())
             {
                 registeredSuccessfully = game.RegisterPlayer(playerId, playerNick);

@@ -43,22 +43,18 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
 
             var playerId = Context.Items["PlayerId"].ToString();
 
-            var result = game.MakeMove(col, playerId);
+            var wasValidMove = game.MakeMove(col, playerId);
 
-            if (result.WasValidMove)
+            if (wasValidMove)
             {
-                Clients.Group(gameId).SendAsync("PlayerMoved", result);
-
-                if (result.DidMoveWin)
-                {
-                    Clients.Group(gameId).SendAsync("PlayerWon", result.Player);
-                }        
+                Clients.Group(gameId).SendAsync("PlayerMoved", this.GetGameState(gameId));      
             }
             else
             {
-                Clients.Caller.SendAsync("IllegalAction", result.Message);
+                Clients.Caller.SendAsync("IllegalAction", "Invalid move");
             }
         }
+        
         public string CreateRoom(ConnectFourConfiguration config)
         {
             var Id = Guid.NewGuid().ToString();

@@ -28,6 +28,8 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
         private bool _gameOver = false;
 
+        private ConnectFourPlayer _winner;
+
         private bool _gameStarted = false;
 
         private ConnectFourConfiguration _config;
@@ -41,23 +43,8 @@ namespace GameHub.Games.BoardGames.ConnectFour
             _players = new List<ConnectFourPlayer>();
         }
 
-        public MoveResult MakeMove(int col, string playerId)
+        public bool MakeMove(int col, string playerId)
         {
-            var error = new MoveResult();
-
-            if (_gameStarted == false)
-            {
-                error.Message = "Game has not started";
-                return error;
-            }
-
-            // todo check for draws
-            if (_gameOver)
-            {
-                error.Message = "Game is over";
-                return error;
-            };
-   
             lock (_game)
             lock (_players)
             {
@@ -65,30 +52,22 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
                 if (player.Id != playerId)
                 {
-                    error.Message = "It is not your turn.";
-                    return error;
+                    return false;
                 }
 
                 var moveResult = _game.MakeMove(col, playerId);
 
-                moveResult.Player = _players.FirstOrDefault(p => p.Id == playerId);
-
                 _nextPlayerIndex = (_nextPlayerIndex + 1) % _players.Count;
 
-                moveResult.NextTurnPlayer = _players[_nextPlayerIndex];
-
-                moveResult.BoardState = GetBoardStateColors();
-              
-                if (moveResult.DidMoveWin)
+                if (moveResult.DidMoveWin) 
                 {
-                    // TODO: sanitize nickname
-                    moveResult.Message = $"{player.PlayerNick} won!";
+                    _winner = player;
+                    _winner.Wins++;
                     _gameOver = true;
-                    player.Wins++;
                 }
 
-                return moveResult;
-            }      
+                return moveResult.WasValidMove;
+            }
         }
 
         public ConnectFourPlayer GetPlayer(string playerId)
@@ -171,21 +150,33 @@ namespace GameHub.Games.BoardGames.ConnectFour
             }
         }
 
+        private GameProgress GetGameStatus()
+        {
+            var endReason = "";
+
+            var status = (_gameOver ? GameStatus.finished : _gameStarted ? GameStatus.started : GameStatus.lobby).ToString();
+
+            if (_gameOver && _winner != null)
+            {
+                endReason = _winner.PlayerNick + " has won!";
+            }
+
+            return new GameProgress(status, endReason);
+        }
+
         public GameStateBase GetGameState()
         {
             lock (_players)
             {
                 var gameState = new GameState();
 
-                var status = _gameOver ? GameStatus.finished : _gameStarted ? GameStatus.started : GameStatus.lobby;
-
-                //gameState.Status = status.ToString();
+                gameState.Status = this.GetGameStatus();
 
                 gameState.BoardState = GetBoardStateColors();
 
                 gameState.Players = _players;
 
-                gameState.NextTurnPlayer = _players.Count != 0 ? _players[_nextPlayerIndex] : null;
+                gameState.CurrentTurnPlayer = _players.Count != 0 ? _players[_nextPlayerIndex] : null;
 
                 gameState.Configuration = this._config;
 
@@ -194,11 +185,6 @@ namespace GameHub.Games.BoardGames.ConnectFour
         }
 
         public bool Resign(string playerId)
-        {
-            throw new NotImplementedException();
-        }
-
-        GameStateBase IBoardGame.GetGameState()
         {
             throw new NotImplementedException();
         }

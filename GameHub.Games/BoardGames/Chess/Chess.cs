@@ -178,7 +178,7 @@ namespace GameHub.Games.BoardGames.Chess
 
         public GameStateBase GetGameState()
         {
-            var currentTurnPlayer = _game.WhoseTurn == Player.White ? White : Black;
+            var currentTurnPlayer =  this.GetPlayer(_game.WhoseTurn);
             
             return new GameState
             {
