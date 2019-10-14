@@ -28,8 +28,7 @@ export default props =>
         case "started":
             optionsPanel = (
                 <div>
-                    <button onClick={() => props.Resign()}>Resign</button>  
-                    <button onClick={() => props.OfferDraw()}>Offer draw</button>  
+                    <button onClick={() => props.Resign()}>Resign</button>
                 </div>
             )
             break;
