@@ -1,8 +1,8 @@
-namespace GameHub.Games.BoardGames.Chess
+namespace GameHub.Games.BoardGames.Common
 {
-    public class GameStatus
+    public class GameProgress
     {
-        public GameStatus(string status = "", string endReason = "")
+        public GameProgress(string status = "", string endReason = "")
         {
             Status = status;
 

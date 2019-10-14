@@ -1,10 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using ChessDotNet;
+using GameHub.Games.BoardGames.Common;
 
 namespace GameHub.Games.BoardGames.Chess
 {
-    public class Chess
+    public class Chess : IBoardGame
     {
         private ChessGame _game = new ChessGame();
 
@@ -28,7 +29,7 @@ namespace GameHub.Games.BoardGames.Chess
             return result != MoveType.Invalid;
         }
 
-        private GameStatus GetGameStatus()
+        private GameProgress GetGameStatus()
         {
             var IsStalemated = (White != null && _game.IsStalemated(White.player) || Black != null && _game.IsStalemated(Black.player));
 
@@ -61,7 +62,7 @@ namespace GameHub.Games.BoardGames.Chess
 
             var status = (isOver ? Common.GameStatus.finished : _started ? Common.GameStatus.started : Common.GameStatus.lobby).ToString();
             
-            var result = new GameStatus(status, endReason);
+            var result = new GameProgress(status, endReason);
 
             return result;
         }
@@ -172,7 +173,7 @@ namespace GameHub.Games.BoardGames.Chess
             return true;
         }
 
-        public GameState GetGameState()
+        public GameStateBase GetGameState()
         {
             var currentTurnPlayer = _game.WhoseTurn == Player.White ? White : Black;
             
