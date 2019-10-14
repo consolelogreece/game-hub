@@ -1,11 +1,8 @@
 ﻿using GameHub.Games.BoardGames.ConnectFour;
 using Microsoft.AspNetCore.SignalR;
 using System;
-using System.Threading.Tasks;
-using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Caching;
-using GameHub.Games.BoardGames.Common;
 
 namespace GameHub.Web.SignalR.hubs.BoardGames
 {

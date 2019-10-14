@@ -1,13 +1,10 @@
 using Microsoft.AspNetCore.SignalR;
 using System;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Caching;
 using GameHub.Games.BoardGames.Chess;
-using System.Collections.ObjectModel;
 using System.Collections.Generic;
 using ChessDotNet;
-using GameHub.Games.BoardGames.Common;
 
 namespace GameHub.Web.SignalR.hubs.BoardGames
 {
