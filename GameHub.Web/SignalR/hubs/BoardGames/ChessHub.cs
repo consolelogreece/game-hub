@@ -10,9 +10,6 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
 {
     public class ChessHub : BoardGameHubBase<Chess>
     {
-        // todo: register signalr connection on reconnect 
-        // todo: make sure to check whether game exists where neccessary such as in makemove.
-
         public ChessHub([FromServices] ICache<Chess> cache) : base(cache)
         {
         }
