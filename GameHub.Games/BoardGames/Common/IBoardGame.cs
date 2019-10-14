@@ -5,7 +5,7 @@ namespace GameHub.Games.BoardGames.Common
         bool Resign(string playerId);
         bool Reset(string playerId);
         bool RegisterPlayer(string playerId, string playerNick);
-        bool StartGame();
+        bool StartGame(string playerId);
         GameStateBase GetGameState();
     }
 }

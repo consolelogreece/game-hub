@@ -9,6 +9,7 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
     public abstract class BoardGameHubBase<T> : Hub where T : IBoardGame
     {
         protected ICache<T> _cache;
+
         public BoardGameHubBase(ICache<T> cache)
         {
             _cache = cache;
@@ -18,7 +19,9 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
         {
             var game = _cache.Get(gameId);
 
-            var started = game.StartGame();
+            var playerId = Context.Items["PlayerId"].ToString();
+
+            var started = game.StartGame(playerId);
 
             if (started)
             {

@@ -6,7 +6,7 @@ using GameHub.Games.BoardGames.Common;
 
 namespace GameHub.Games.BoardGames.ConnectFour
 {
-    public class ConnectFour : IConnectFour
+    public class ConnectFour : IBoardGame
     {
         private ConnectFourGame _game;
 
@@ -112,7 +112,7 @@ namespace GameHub.Games.BoardGames.ConnectFour
             }
         }
 
-        public bool Start(string playerId)
+        public bool StartGame(string playerId)
         {
             if (_players.Count == 0) return false;
 
@@ -166,7 +166,7 @@ namespace GameHub.Games.BoardGames.ConnectFour
             }
         }
 
-        public GameState GetGameState()
+        public GameStateBase GetGameState()
         {
             lock (_players)
             {
@@ -174,7 +174,7 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
                 var status = _gameOver ? GameStatus.finished : _gameStarted ? GameStatus.started : GameStatus.lobby;
 
-                gameState.Status = status.ToString();
+                //gameState.Status = status.ToString();
 
                 gameState.BoardState = GetBoardStateColors();
 
@@ -186,6 +186,16 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
                 return gameState;
             }
+        }
+
+        public bool Resign(string playerId)
+        {
+            throw new NotImplementedException();
+        }
+
+        GameStateBase IBoardGame.GetGameState()
+        {
+            throw new NotImplementedException();
         }
     }
 }

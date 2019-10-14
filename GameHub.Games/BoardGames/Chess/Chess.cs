@@ -77,8 +77,11 @@ namespace GameHub.Games.BoardGames.Chess
             return winner;
         }
 
-        public bool StartGame()
+        public bool StartGame(string playerId)
         {
+            // only game creator can start the game.
+            if (playerId != _config.creatorId) return false;
+
             if (_started) return true;
 
             if (Black == null || White == null) _started = false;
