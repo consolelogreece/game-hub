@@ -98,6 +98,7 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
             }
         }
 
+        // todo: have a player resigned method on front end hub. resignations dont necessarily mean the game is over.
         public virtual void Resign(string gameId)
         {
             var game = _cache.Get(gameId);

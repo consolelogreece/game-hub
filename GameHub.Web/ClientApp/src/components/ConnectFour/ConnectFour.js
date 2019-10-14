@@ -46,6 +46,8 @@ export class ConnectFour extends Component {
         hubConnection.on('RoomDoesntExist', res => {
             this.props.history.push("/connectfour/createroom")
         });
+
+        hubConnection.on('GameOver', gameState => this.updateStateWithNewGameState(gameState));
         
         hubConnection.on('IllegalAction', res => {
             this.setState({
@@ -92,6 +94,11 @@ export class ConnectFour extends Component {
     Rematch = () =>
     {
         this.state.hubConnection.invoke('Rematch', this.state.gameId);
+    }
+
+    Resign = () =>
+    {
+        this.state.hubConnection.invoke('Resign', this.state.gameId);
     }
 
     populateGameState = () =>
@@ -196,6 +203,7 @@ export class ConnectFour extends Component {
                     isPlayerRegistered = {isPlayerRegistered}
                     StartGame = {this.StartGame}
                     Rematch = {this.Rematch}
+                    Resign = {this.Resign}
                 />
                 <button onClick={() => console.log(this.state)}>log state</button>
             </div>

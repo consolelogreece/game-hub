@@ -186,7 +186,21 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
         public bool Resign(string playerId)
         {
-            throw new NotImplementedException();
+            var player = this.GetPlayer(playerId);
+
+            lock(_players)
+            {
+                _players.Remove(player);
+            }
+
+            if (_players.Count < 2)
+            {
+                _gameOver = true;
+                _winner = _players.FirstOrDefault();
+                _winner.Wins++;
+            }
+
+            return true;
         }
     }
 }
