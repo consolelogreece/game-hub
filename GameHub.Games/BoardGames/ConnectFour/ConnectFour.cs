@@ -98,7 +98,7 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
         public bool StartGame(string playerId)
         {
-            if (_players.Count == 0) return false;
+            if (_players.Count < 2) return false;
 
             if (_config.creatorId == playerId)
             {
