@@ -166,7 +166,6 @@ export class ConnectFour extends Component {
         return this.state.playerInfo != null && this.state.playerInfo.isHost;
     }
 
-
     render()
     {
         var Aboard = ResizeWithContainerHOC(Board);
