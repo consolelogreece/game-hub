@@ -18,6 +18,15 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
         {
             var game = _cache.Get(gameId);
 
+            if (game == null) 
+            {
+                Clients.Caller.SendAsync("RoomDoesntExist");
+
+                this.Context.Abort();
+
+                return null;
+            }
+
             var playerId = Context.Items["PlayerId"].ToString();
             
             var player = game.GetPlayer(playerId);
@@ -37,6 +46,15 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
             var playerId = Context.Items["PlayerId"].ToString();
 
             var game = _cache.Get(gameId);
+
+            if (game == null) 
+            {
+                Clients.Caller.SendAsync("RoomDoesntExist");
+
+                this.Context.Abort();
+
+                return null;
+            }
 
             var player = game.GetPlayer(playerId);
 

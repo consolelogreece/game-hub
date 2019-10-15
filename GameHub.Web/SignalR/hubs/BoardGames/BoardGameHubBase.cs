@@ -19,6 +19,15 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
         {
             var game = _cache.Get(gameId);
 
+            if (game == null) 
+            {
+                Clients.Caller.SendAsync("RoomDoesntExist");
+
+                this.Context.Abort();
+
+                return;
+            }
+
             var playerId = Context.Items["PlayerId"].ToString();
 
             var started = game.StartGame(playerId);
@@ -35,8 +44,20 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
 
         public GameStateBase GetGameState(string gameId)
         {
-            return _cache.Get(gameId).GetGameState();
+            var game = _cache.Get(gameId);
+
+            if (game == null) 
+            {
+                Clients.Caller.SendAsync("RoomDoesntExist");
+
+                this.Context.Abort();
+
+                return null;
+            }
+            
+            return game.GetGameState();
         }
+
 
         public virtual void JoinRoom(string gameId)
         {
@@ -47,6 +68,8 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
             if (game == null) 
             {
                 Clients.Caller.SendAsync("RoomDoesntExist");
+
+                this.Context.Abort();
 
                 return;
             }
@@ -86,6 +109,15 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
         {
             var game = _cache.Get(gameId);
 
+            if (game == null) 
+            {
+                Clients.Caller.SendAsync("RoomDoesntExist");
+
+                this.Context.Abort();
+
+                return;
+            }
+
             var playerId = Context.Items["PlayerId"].ToString();
 
             if (game == null) return;
@@ -102,6 +134,15 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
         public virtual void Resign(string gameId)
         {
             var game = _cache.Get(gameId);
+
+            if (game == null) 
+            {
+                Clients.Caller.SendAsync("RoomDoesntExist");
+
+                this.Context.Abort();
+
+                return;
+            }
 
             var playerId = Context.Items["PlayerId"].ToString();
 
