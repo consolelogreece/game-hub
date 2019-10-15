@@ -41,26 +41,6 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
             return moves;
         }
 
-        public ChessPlayer GetClientPlayerInfo(string gameId)
-        {    
-            var playerId = Context.Items["PlayerId"].ToString();
-
-            var game = _cache.Get(gameId);
-
-            if (game == null) 
-            {
-                Clients.Caller.SendAsync("RoomDoesntExist");
-
-                this.Context.Abort();
-
-                return null;
-            }
-
-            var player = game.GetPlayer(playerId);
-
-            return player;
-        }
-
         public virtual void MakeMove(Move move, string gameId)
         {
             var playerId = Context.Items["PlayerId"].ToString();

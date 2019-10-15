@@ -60,6 +60,24 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
             return game.GetGameState();
         }
 
+        public GamePlayer GetClientPlayerInfo(string gameId)
+        {    
+            var playerId = Context.Items["PlayerId"].ToString();
+
+            var game = _cache.Get(gameId);
+
+            if (game == null) 
+            {
+                Clients.Caller.SendAsync("RoomDoesntExist");
+
+                this.Context.Abort();
+
+                return null;
+            }
+
+            return game.GetPlayer(playerId);
+        }
+
         public virtual void JoinRoom(string gameId)
         {
             var playerId = Context.Items["PlayerId"].ToString();

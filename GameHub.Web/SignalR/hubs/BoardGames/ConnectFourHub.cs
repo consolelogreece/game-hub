@@ -11,22 +11,6 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
         public ConnectFourHub([FromServices] ICache<ConnectFour> cache) : base(cache)
         {}
 
-        public ConnectFourPlayer GetClientPlayerInfo(string gameId)
-        {
-            var game = _cache.Get(gameId);
-
-            if (game == null) 
-            {
-                Clients.Caller.SendAsync("RoomDoesntExist");
-
-                return null;
-            }
-
-            var playerId = Context.Items["PlayerId"].ToString();
-
-            return game.GetPlayer(playerId);      
-        }
-
         public void MakeMove(string gameId, int col)
         {
             var game = _cache.Get(gameId);
