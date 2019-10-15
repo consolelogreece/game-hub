@@ -77,6 +77,8 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
         public bool RegisterPlayer(string playerId, string playerNick)
         {
+            if (_gameStarted) return false;
+            
             var newPlayer = new ConnectFourPlayer { Id = playerId, 
             PlayerNick = playerNick, 
             PlayerColor = _colors[_players.Count], 
