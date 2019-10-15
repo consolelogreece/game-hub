@@ -6,6 +6,6 @@ namespace GameHub.Games.BoardGames.Common
         bool Reset(string playerId);
         bool RegisterPlayer(string playerId, string playerNick);
         bool StartGame(string playerId);
-        GameStateBase GetGameState();
+        GameState GetGameState();
     }
 }

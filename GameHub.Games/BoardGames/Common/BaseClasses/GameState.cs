@@ -1,6 +1,6 @@
 namespace GameHub.Games.BoardGames.Common
 {
-    public class GameStateBase
+    public class GameState
     {
         public GameProgress Status { get; set; }
     }

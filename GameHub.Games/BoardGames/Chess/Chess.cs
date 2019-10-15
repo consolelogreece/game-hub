@@ -176,11 +176,11 @@ namespace GameHub.Games.BoardGames.Chess
             return true;
         }
 
-        public GameStateBase GetGameState()
+        public GameState GetGameState()
         {
             var currentTurnPlayer =  this.GetPlayer(_game.WhoseTurn);
             
-            return new GameState
+            return new GameStateChess
             {
                 BoardStateFen = _game.GetFen(),
                 CurrentTurnPlayer = currentTurnPlayer,

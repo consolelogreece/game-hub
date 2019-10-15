@@ -164,11 +164,11 @@ namespace GameHub.Games.BoardGames.ConnectFour
             return new GameProgress(status, endReason);
         }
 
-        public GameStateBase GetGameState()
+        public GameState GetGameState()
         {
             lock (_players)
             {
-                var gameState = new GameState();
+                var gameState = new GameStateConnectFour();
 
                 gameState.Status = this.GetGameStatus();
 

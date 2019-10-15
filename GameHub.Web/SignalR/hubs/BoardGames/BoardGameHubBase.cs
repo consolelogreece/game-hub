@@ -42,7 +42,9 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
             }
         }
 
-        public GameStateBase GetGameState(string gameId)
+        // currently this is both a hub endpoint and used by endpoints themselves to get the game state. 
+        // todo: make them separate, may not want to send roomdoesntexist.
+        public GameState GetGameState(string gameId)
         {
             var game = _cache.Get(gameId);
 
