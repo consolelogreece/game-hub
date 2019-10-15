@@ -1,6 +1,6 @@
 namespace GameHub.Games.BoardGames.Common
 {
-    public interface IBoardGame<TGameState, TGamePlayer> 
+    public interface IBoardGame<out TGameState, out TGamePlayer> 
         where TGameState: GameState
         where TGamePlayer : GamePlayer
     {
