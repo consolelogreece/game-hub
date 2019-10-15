@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace GameHub.Web.SignalR.hubs.BoardGames
 {
-    public abstract class BoardGameHubBase<T> : Hub where T : IBoardGame
+    public abstract class BoardGameHubBase<T> : Hub where T : IBoardGame<GameState, GamePlayer>
     {
         protected ICache<T> _cache;
 

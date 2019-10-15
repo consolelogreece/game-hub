@@ -1,19 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using GameHub.Games.BoardGames.Common;
 
 namespace GameHub.Games.BoardGames.ConnectFour
 {
-    public class ConnectFourPlayer
+    public class ConnectFourPlayer : GamePlayer
     {
-        public string Id { get; set; }
-
-        public bool IsHost {get; set;}
-
-        public string PlayerNick { get; set; }
-
         public string PlayerColor { get; set; }
-
-        public int Wins { get; set; }
     }
 }

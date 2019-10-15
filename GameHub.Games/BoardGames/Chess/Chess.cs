@@ -5,7 +5,7 @@ using GameHub.Games.BoardGames.Common;
 
 namespace GameHub.Games.BoardGames.Chess
 {
-    public class Chess : IBoardGame
+    public class Chess : IBoardGame<GameStateChess, ChessPlayer>
     {
         private ChessGame _game = new ChessGame();
 
@@ -176,7 +176,7 @@ namespace GameHub.Games.BoardGames.Chess
             return true;
         }
 
-        public GameState GetGameState()
+        public GameStateChess GetGameState()
         {
             var currentTurnPlayer =  this.GetPlayer(_game.WhoseTurn);
             

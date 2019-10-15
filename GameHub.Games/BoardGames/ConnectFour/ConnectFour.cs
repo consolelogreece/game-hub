@@ -6,7 +6,7 @@ using GameHub.Games.BoardGames.Common;
 
 namespace GameHub.Games.BoardGames.ConnectFour
 {
-    public class ConnectFour : IBoardGame
+    public class ConnectFour : IBoardGame<GameStateConnectFour, ConnectFourPlayer>
     {
         private ConnectFourGame _game;
 
@@ -164,7 +164,7 @@ namespace GameHub.Games.BoardGames.ConnectFour
             return new GameProgress(status, endReason);
         }
 
-        public GameState GetGameState()
+        public GameStateConnectFour GetGameState()
         {
             lock (_players)
             {
