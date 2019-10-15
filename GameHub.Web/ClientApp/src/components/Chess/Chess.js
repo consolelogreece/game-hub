@@ -8,11 +8,10 @@ import { Title, Subtitle } from '../Common/Text';
 
 /*
     todos:
-        win detection -PRIORITY
-        stalement detection -PRIORITY   ============= use conclusionstatus to display whether someone has one or whatever. it used to work unless i refreshed. 
         offer draw -PRIORITY
-        fix bug, for some reason on initial start, it doesnt indicate whos turn it is properly
         try to reduce the amount of hub calls made.
+
+        NEXT: make game base class to reduce duplicate code
 
 */
 
