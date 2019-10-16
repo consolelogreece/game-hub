@@ -87,7 +87,7 @@ namespace GameHub.Games.BoardGames.ConnectFour
             lock (_players)
             lock(_game)
             {
-                if (_players.Count > _config.nPlayersMax || _players.Any(p => p.Id == newPlayer.Id))
+                if (_players.Count >= _config.nPlayersMax || _players.Any(p => p.Id == newPlayer.Id))
                 {
                     return false;
                 }
