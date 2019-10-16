@@ -8,7 +8,7 @@ using System;
 
 namespace GameHub.Test.Cache
 {
-    public class Getting
+    public class GettingSetting
     {
         [Fact]
         public void GetsSetsProperly()
