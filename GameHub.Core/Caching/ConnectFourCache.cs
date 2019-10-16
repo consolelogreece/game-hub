@@ -3,7 +3,7 @@ using GameHub.Games.BoardGames.ConnectFour;
 
 namespace Caching
 {
-    public class ConnectFourCache : CacheBase<ConnectFour>
+    public class ConnectFourCache : Cache<ConnectFour>
     {
         public ConnectFourCache() : base(TimeSpan.FromMinutes(10))
         {       

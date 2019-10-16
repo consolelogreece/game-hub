@@ -5,7 +5,7 @@ using Caching.Common;
 
 namespace Caching
 {
-    public abstract class Cache<T> : ICache<T> where T : class
+    public class Cache<T> : ICache<T> where T : class
     {
         internal readonly ConcurrentDictionary<string, Entry<T>> _cache;
 
