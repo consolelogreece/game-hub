@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using GameHub.Games.BoardGames.Common;
 
@@ -189,6 +187,9 @@ namespace GameHub.Games.BoardGames.ConnectFour
         public bool Resign(string playerId)
         {
             var player = this.GetPlayer(playerId);
+
+            // cant resign if player does not exist.
+            if (player == null || !_gameStarted) return false;
 
             lock(_players)
             {
