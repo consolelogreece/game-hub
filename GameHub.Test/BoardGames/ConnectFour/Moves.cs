@@ -61,15 +61,84 @@ namespace GameHub.Test.BoardGames
 
         public void CantMoveOnInvalidColumn()
         {
-                // arrange
+            // arrange
             var game = GetInitiatedGame();
             game.StartGame(player1Id);
 
             // act
-            // Important to node that game is using the default configuration, which is 7 columns.
+            // Important to note that game is using the default configuration, which is 7 columns.
             var moveSuccessful = game.MakeMove(100, player1Id);
 
             Assert.False(moveSuccessful, "Was able to move on a column that does not exist");
+        }
+
+        [Fact]
+        public void DetectsWinVertical()
+        {
+            // arrange
+            var game = GetInitiatedGame();
+            game.StartGame(player1Id);
+
+            // act
+            game.MakeMove(1, player1Id);
+            game.MakeMove(2, player2Id);
+            game.MakeMove(1, player1Id);
+            game.MakeMove(2, player2Id);
+            game.MakeMove(1, player1Id);
+            game.MakeMove(2, player2Id);
+            game.MakeMove(1, player1Id);
+
+            var gameState = game.GetGameState();
+
+            Assert.Equal(gameState.Status.Status,"finished");
+        }
+
+
+        [Fact]
+        public void DetectsWinHorizontal()
+        {
+            // arrange
+            var game = GetInitiatedGame();
+            game.StartGame(player1Id);
+
+            // act
+            game.MakeMove(3, player1Id);
+            game.MakeMove(2, player2Id);
+            game.MakeMove(4, player1Id);
+            game.MakeMove(2, player2Id);
+            game.MakeMove(5, player1Id);
+            game.MakeMove(2, player2Id);
+            game.MakeMove(6, player1Id);
+
+            var gameState = game.GetGameState();
+
+            Assert.Equal(gameState.Status.Status,"finished");
+        }
+
+        [Fact]
+        public void DetectsWinDiagonal()
+        {
+            // arrange
+            var game = GetInitiatedGame();
+            game.StartGame(player1Id);
+
+            // act
+            game.MakeMove(1, player1Id);
+            game.MakeMove(2, player2Id);
+            game.MakeMove(2, player1Id);
+            game.MakeMove(3, player2Id);
+            game.MakeMove(4, player1Id);
+            game.MakeMove(3, player2Id);
+            game.MakeMove(4, player1Id);
+            game.MakeMove(4, player2Id);
+            game.MakeMove(3, player1Id);
+            game.MakeMove(5, player2Id);
+            game.MakeMove(4, player1Id);
+            
+
+            var gameState = game.GetGameState();
+
+            Assert.Equal(gameState.Status.Status,"finished");
         }
     }
 }

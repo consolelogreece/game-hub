@@ -36,6 +36,37 @@ namespace GameHub.Test.BoardGames
         }
 
         [Fact]
+        public void CantRegisterMoreThanMaxPlayers()
+        {
+            // arrange
+            var game = ConnectFourTestHelpers.GetGame(ConnectFourTestHelpers.GetDefaultConfig("1234"));
+
+            // act
+            game.RegisterPlayer("1234", "user");
+            game.RegisterPlayer("abcd", "user2");
+
+            var isRegistrationSuccessful = game.RegisterPlayer("zxcv", "user3");
+
+            // assert
+            Assert.False(isRegistrationSuccessful, "Was able to register player despite game being full");
+        }
+
+        [Fact]
+        public void CantRegisterSameIDTwice()
+        {
+          // arrange
+            var game = ConnectFourTestHelpers.GetGame(ConnectFourTestHelpers.GetDefaultConfig("1234"));
+
+            // act
+            game.RegisterPlayer("1234", "user");
+            
+            var isRegistrationSuccessful = game.RegisterPlayer("1234", "user2");
+
+            // assert
+            Assert.False(isRegistrationSuccessful, "Was able to register player ID already being in use");  
+        }
+
+        [Fact]
         public void CanGetPlayer()
         {
             // arrange
