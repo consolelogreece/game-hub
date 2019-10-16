@@ -5,7 +5,7 @@ using Caching.Common;
 
 namespace Caching
 {
-    public abstract class CacheBase<T> : ICache<T> where T : class
+    public abstract class Cache<T> : ICache<T> where T : class
     {
         internal readonly ConcurrentDictionary<string, Entry<T>> _cache;
 
@@ -13,10 +13,10 @@ namespace Caching
 
         internal Timer _purgeTimer;
 
-        public CacheBase() : this(TimeSpan.FromMinutes(15))
+        public Cache() : this(TimeSpan.FromMinutes(15))
         {}
 
-        public CacheBase(TimeSpan expirationPeriod)
+        public Cache(TimeSpan expirationPeriod)
         {
             _expirationPeriod = expirationPeriod;
 
