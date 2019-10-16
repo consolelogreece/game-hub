@@ -25,6 +25,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\GameHub.Games\GameHub.Games.csproj" />
+    <ProjectReference Include="..\GameHub.Core\GameHub.Core.csproj" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
