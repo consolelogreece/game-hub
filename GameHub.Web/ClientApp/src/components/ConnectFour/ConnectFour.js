@@ -2,7 +2,7 @@
 import { HubConnectionBuilder } from '@aspnet/signalr';
 import './ConnectFour.css';
 import { Title, Subtitle } from '../Common/Text';
-import ResizeWithContainerHOC from '../Common/GetRenderedWidthHOC';
+import ResizeWithContainerHOC from '../HigherOrder/GetRenderedWidthHOC';
 import OptionPanel from '../Common/OptionPanel';
 
 import Board from './Board';

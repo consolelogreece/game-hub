@@ -6,7 +6,7 @@ import { ConnectFour } from './components/ConnectFour/ConnectFour';
 import { NewGameC4 } from './components/ConnectFour/NewGameC4';
 import Chess from './components/Chess/Chess';
 import { NewGameChess } from './components/Chess/NewGameChess';
-import ResizeWithContainerHOC from './components/Common/GetRenderedWidthHOC';
+import ResizeWithContainerHOC from './components/HigherOrder/GetRenderedWidthHOC';
 
 export default class App extends Component {
   static displayName = App.name;
