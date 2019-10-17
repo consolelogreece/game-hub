@@ -25,16 +25,34 @@ export default class Board extends Component {
             borderThickness: borderThickness
         });    
     }
+    
+    getDefaultBoard = () =>
+    {
+        let board = [];
 
-    render = () => {
+        for (let i = 0; i < 6; i++) {
+            let row = [];
+            for (let j = 0; j < 7; j++) {
+                row.push("white");
+            }
+            board.push(row);
+        }
+
+        return board
+    }
+
+    generateBoard = (boardState) => 
+    {
+        if (boardState == null) return this.getDefaultBoard();
+
         let boardRender = [];
 
-        for (let i = this.state.boardState.length - 1; i >= 0; i--) {
+        for (let i = boardState.length - 1; i >= 0; i--) {
             let row = [];
-            for (let j = 0; j < this.state.boardState[i].length; j++) {
+            for (let j = 0; j < boardState[i].length; j++) {
                 row.push(<Tile 
                     className="tile"
-                    color={this.state.boardState[i][j]}
+                    color={boardState[i][j]}
                     boardColor={this.props.boardColor} 
                     makeMove={(col) => this.props.makeMove(col)} 
                     column={j}
@@ -48,6 +66,13 @@ export default class Board extends Component {
                 </div>
             )
         }
+
+        return boardRender;
+    }
+
+
+    render = () => {
+        let boardRender = this.generateBoard(this.state.boardState);
 
         return (
             <div className="board" style={{

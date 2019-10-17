@@ -18,7 +18,7 @@ export default function(WrappedComponent, endpoint)
             }
         }
 
-        registerPermanentInvokeParam = param => permanentInvokeParams.push(param);
+        registerPermanentInvokeParam = param => this.setState({permanentInvokeParams: [...this.state.permanentInvokeParams, param]});
 
         invoke = (destination, ...params) => this.state.connection.invoke(destination, ...this.state.permanentInvokeParams, ...params);
 
@@ -34,7 +34,13 @@ export default function(WrappedComponent, endpoint)
         render = () =>
         {
             return (
-                    <WrappedComponent  />
+                    <WrappedComponent 
+                        {...this.props}
+                        on={this.on} 
+                        registerPermanentInvokeParam={this.registerPermanentInvokeParam} 
+                        invoke={this.invoke}
+                        startConnection={this.startConnection}
+                    />
                 );
         }
     }

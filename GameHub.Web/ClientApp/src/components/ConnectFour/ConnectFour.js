@@ -1,5 +1,4 @@
 ﻿import React, { Component } from 'react';
-import { HubConnectionBuilder } from '@aspnet/signalr';
 import './ConnectFour.css';
 import { Title, Subtitle } from '../Common/Text';
 import ResizeWithContainerHOC from '../HigherOrder/GetRenderedWidthHOC';
@@ -19,91 +18,61 @@ export class ConnectFour extends Component {
             gameMessage: "",
             playerTurn: "",
             gameState: "lobby",
-            hubConnection: null,
             playerInfo: null,
             boardState: [[]],
             boardColor: "#0e3363"
         };
     }
 
-    componentDidMount() {
-        let board = [];
-        
-        for (let i = 0; i < this.state.boardState.length; i++) {
-            let row = [];
-            for (let j = 0; j < this.state.boardState[i].length; j++) {
-                row.push("white");
-            }
-            board.push(row);
-        }
+    componentDidMount() 
+    {
+        this.props.registerPermanentInvokeParam(this.state.gameId);
 
-        const hubConnection = new HubConnectionBuilder()
-        .withUrl("/connectfourhub", {accessTokenFactory: () => "testing"})
-        .build();
-
-        hubConnection.on('PlayerMoved', gameState => this.updateStateWithNewGameState(gameState));
+        this.props.on('PlayerMoved', gameState => this.updateStateWithNewGameState(gameState));
         
-        hubConnection.on('RoomDoesntExist', res => {
+        this.props.on('RoomDoesntExist', res => {
             this.props.history.push("/connectfour/createroom")
         });
 
-        hubConnection.on('GameOver', gameState => this.updateStateWithNewGameState(gameState));
+        this.props.on('GameOver', gameState => this.updateStateWithNewGameState(gameState));
         
-        hubConnection.on('IllegalAction', res => {
+        this.props.on('IllegalAction', res => {
             this.setState({
                 gameMessage: res
             });
         });
         
-        hubConnection.on('GameStarted', gameState => this.updateStateWithNewGameState(gameState));
+        this.props.on('GameStarted', gameState => this.updateStateWithNewGameState(gameState));
         
-        this.setState({ boardState : board, hubConnection }, () => {
-            this.state.hubConnection
-            .start()
-            .then(() => {
-                this.state.hubConnection.invoke('JoinRoom', this.state.gameId)
-                .then(res => {
-                    this.populatePlayerClientInfo();
-                })
-                .then(res => {
-                    this.populateGameState();   
-                })
-                        .catch(res => console.log(res))
-                    })
-                    .catch(err => console.log('Error while establishing connection :(', err))
-            });
+        this.props.startConnection()
+        .then(() => {
+            this.props.invoke('JoinRoom')
+            .then(res => this.populatePlayerClientInfo())
+            .then(res => this.populateGameState())
+            .catch(res => console.log(res));
+        });
     }
 
     MakeMove = col =>
     {
-        this.state.hubConnection.invoke('MakeMove', this.state.gameId, col).catch(err => console.error(err));;
+        this.props.invoke('MakeMove', col).catch(err => console.error(err));;
     }
     
     JoinGame = name => {
-        this.state.hubConnection.invoke('JoinGame', this.state.gameId, name)
+        this.props.invoke('JoinGame', name)
             .then(this.populatePlayerClientInfo())
             .then(this.populateGameState())
             .catch(() => this.setState({gameMessage: "oopsie daisy"}));
     }
 
-    StartGame = () =>
+    invoke = destination =>
     {
-        this.state.hubConnection.invoke('StartGame', this.state.gameId).catch(res => this.setState({gameMessage:res}));
-    }
-
-    Rematch = () =>
-    {
-        this.state.hubConnection.invoke('Rematch', this.state.gameId);
-    }
-
-    Resign = () =>
-    {
-        this.state.hubConnection.invoke('Resign', this.state.gameId);
+        this.props.invoke(destination).catch(res => this.setState({gameMessage:res}));;
     }
 
     populateGameState = () =>
     {
-        this.state.hubConnection.invoke('GetGameState', this.state.gameId)
+        this.props.invoke('GetGameState')
         .then(gameState => this.updateStateWithNewGameState(gameState));
     }
 
@@ -120,7 +89,6 @@ export class ConnectFour extends Component {
 
     getTurnIndicator = player => 
     {
-        console.log("player", player)
         if (this.state.playerInfo === null) return "";
 
         return player.id === this.state.playerInfo.id ? "your" : (player.playerNick + "'s");
@@ -158,7 +126,7 @@ export class ConnectFour extends Component {
 
     populatePlayerClientInfo = () =>
     {
-        return this.state.hubConnection.invoke('GetClientPlayerInfo', this.state.gameId)
+        return this.props.invoke('GetClientPlayerInfo')
             .then(res => 
                 {
                     if (res === null) return; 
@@ -201,9 +169,9 @@ export class ConnectFour extends Component {
                     JoinGame = {this.JoinGame}
                     gameState = {gameState}
                     isPlayerRegistered = {isPlayerRegistered}
-                    StartGame = {this.StartGame}
-                    Rematch = {this.Rematch}
-                    Resign = {this.Resign}
+                    StartGame = {() => this.invoke('StartGame')}
+                    Rematch = {() => this.invoke('Rematch')}
+                    Resign = {() => this.invoke('Resign')}
                 />
                 <button onClick={() => console.log(this.state)}>log state</button>
             </div>
