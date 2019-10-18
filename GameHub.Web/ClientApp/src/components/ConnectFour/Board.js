@@ -72,7 +72,6 @@ export default class Board extends Component {
         return boardRender;
     }
 
-
     render = () => {
         let boardRender = this.generateBoard(this.state.boardState);
 
