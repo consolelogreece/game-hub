@@ -14,10 +14,12 @@ export default class Board extends Component {
 
     componentWillReceiveProps(props)
     {
-        var borderThickness = props.containerWidth / 20;
+        var borderThickness = props.containerWidth / 75;
 
-        // in order for the board to appear properly, the tile width must take in to consideration the border thickness. if it doesnt, the containerWidth prop wont be adjusted properly, meaning tiles dont all fit into the row.
-        var tileWidth = Math.floor(props.containerWidth / props.boardState[0].length) - (borderThickness / props.boardState[0].length);
+        // in order for the board to appear properly, the tile width must take in to consideration the border thickness.
+        // if it doesnt, the containerWidth prop wont be adjusted properly, meaning tiles dont all fit into the row.
+        // must times borderThickness by 2, to factor in BOTH sides
+        var tileWidth = Math.floor(props.containerWidth / props.boardState[0].length) - (borderThickness * 2 / props.boardState[0].length);
 
         this.setState({
             boardState: props.boardState, 
@@ -77,7 +79,7 @@ export default class Board extends Component {
         return (
             <div className="board" style={{
                 backgroundColor: this.props.boardColor, 
-                border:`${this.state.borderThickness} solid ${this.props.boardColor}`, 
+                border:`${this.state.borderThickness}px solid ${this.props.boardColor}`, 
                 borderRadius: "10px"
             }}>
                 {boardRender}
