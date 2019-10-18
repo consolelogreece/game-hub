@@ -9,9 +9,6 @@ import { Title, Subtitle } from '../Common/Text';
     todos:
         offer draw -PRIORITY
         try to reduce the amount of hub calls made.
-
-        NEXT: make game base class to reduce duplicate code
-
 */
 
 export default class Chess extends Component {
@@ -368,7 +365,6 @@ export default class Chess extends Component {
                     Rematch = {() => this.props.invoke('Rematch')}
                     Resign = {() => this.props.invoke('Resign')}
                 />
-                <button onClick={() => console.log(this.state)} >log state</button>
             </div>
             )
     }

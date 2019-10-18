@@ -1,11 +1,9 @@
 ﻿import React, { Component } from 'react';
-import { HubConnectionBuilder } from '@aspnet/signalr'
 
 export class NewGameC4 extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            hubConnection: null,
             roomConfig: {
                 nRows:6,
                 nCols: 7,
@@ -15,22 +13,16 @@ export class NewGameC4 extends Component {
         };
     }
 
-    componentDidMount() {
-        const hubConnection = new HubConnectionBuilder()
-            .withUrl("/connectfourhub")
-            .build();
-            
-        this.setState({ hubConnection }, () => {
-            this.state.hubConnection
-                .start()
-                .then(() => console.log('Connection started!'))
-                .catch(err => console.log('Error while establishing connection :(', err))
-        });
+    componentDidMount() 
+    {  
+        this.props.startConnection()
+            .then(() => console.log('Connection started!'))
+            .catch(err => console.log('Error while establishing connection :(', err))
     }
 
-    CreateRoom = () => {
-        console.log(this.state)
-        this.state.hubConnection.invoke('CreateRoom', this.state.roomConfig)
+    CreateRoom = () => 
+    {
+        this.props.invoke('CreateRoom', this.state.roomConfig)
             .then(gameId => this.props.history.push(gameId))
             .catch(err => console.error(err));
     }

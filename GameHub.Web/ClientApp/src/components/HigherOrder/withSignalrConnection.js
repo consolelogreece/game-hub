@@ -1,5 +1,4 @@
 import { HubConnectionBuilder } from '@aspnet/signalr';
-
 import React, { Component } from 'react';
 
 export default function(WrappedComponent, endpoint)
@@ -9,7 +8,6 @@ export default function(WrappedComponent, endpoint)
         constructor(props)
         {
             super(props);
-    
             this.state = {
                 permanentInvokeParams:[],
                 connection: new HubConnectionBuilder()
