@@ -41,7 +41,7 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
             return moves;
         }
 
-        public virtual void MakeMove(Move move, string gameId)
+        public virtual void MakeMove(string gameId, Move move)
         {
             var playerId = Context.Items["PlayerId"].ToString();
 

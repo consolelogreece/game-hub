@@ -20,7 +20,7 @@ export default class App extends Component {
                 <Route path='/connectfour/createroom' component={NewGameC4} />
                 <Route path='/connectfour/:gameId' component={withSignalrConnection(ConnectFour, '/connectfourhub')} />
                 <Route path='/chess/createroom' component={NewGameChess} />
-                <Route path='/chess/:gameId' component={ResizeWithContainerHOC(Chess)} />
+                <Route path='/chess/:gameId' component={withSignalrConnection(ResizeWithContainerHOC(Chess), '/chesshub')} />
             </Switch>
       </Layout>
     );

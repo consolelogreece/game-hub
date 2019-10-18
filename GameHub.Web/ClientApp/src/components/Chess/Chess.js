@@ -1,6 +1,5 @@
 ﻿import React, { Component } from "react";
 import Chessboard from "chessboardjsx";
-import { HubConnectionBuilder } from '@aspnet/signalr';
 import OptionPanel from '../Common/OptionPanel';
 import Popup from '../Common/Popup'
 import PromotionSelection from './PromotionSelection';
@@ -36,26 +35,22 @@ export default class Chess extends Component {
 
     componentDidMount() 
     {
-        const hubConnection = new HubConnectionBuilder()
-        .withUrl("/chesshub", {accessTokenFactory: () => "testing"})
-        .build();
+        this.props.registerPermanentInvokeParam(this.state.gameId);
 
-        hubConnection.on('PlayerMoved', this.playerMoved);
+        this.props.on('PlayerMoved', this.playerMoved);
 
-        hubConnection.on('GameStarted', this.gameStarted);
+        this.props.on('GameStarted', this.gameStarted);
 
-        hubConnection.on('IllegalAction', this.illegalAction);
+        this.props.on('IllegalAction', this.illegalAction);
 
-        hubConnection.on('GameOver', this.gameOverHandler);
-
-        this.setState({ hubConnection }, () => {
-            this.state.hubConnection
-            .start()
-            .then(() => {
-                this.state.hubConnection.invoke('JoinRoom', this.state.gameId)
-                .then(this.initilaize())
-            })
+        this.props.on('GameOver', this.gameOverHandler);
+   
+        this.props.startConnection()
+        .then(() => {
+            this.props.invoke('JoinRoom')
+            .then(this.initilaize())
         });
+   
     }
 
     initilaize()
@@ -100,15 +95,14 @@ export default class Chess extends Component {
 
     populateGameState = () =>
     {
-        var gameId = this.state.gameId;
-
-        return this.state.hubConnection.invoke('GetGameState', gameId)
+        return this.props.invoke('GetGameState')
             .then(res => this.updateStateWithNewGameState(res));
     }
 
     updateStateWithNewGameState = gameState =>
     {
         var message = this.generateGameMessageFromGameState(gameState);
+        console.log(gameState)
         this.setState({
             fen: gameState.boardStateFen, 
             gameState: gameState.status.status,
@@ -149,16 +143,12 @@ export default class Chess extends Component {
 
     populateAvailableMoves = () =>
     {
-        var gameId = this.state.gameId;
-
-        this.state.hubConnection.invoke('GetMoves', gameId).then(res => this.mapMoves(res))
+        this.props.invoke('GetMoves').then(res => this.mapMoves(res))
     }
 
     populatePlayerClientInfo = () =>
     {
-        var gameId = this.state.gameId;
-
-        return this.state.hubConnection.invoke('GetClientPlayerInfo', gameId)
+        return this.props.invoke('GetClientPlayerInfo')
         .then(res => {
             this.setState({
                 playerInfo: res
@@ -275,7 +265,7 @@ export default class Chess extends Component {
                 return;
             }
 
-            this.state.hubConnection.invoke('MakeMove', move, this.state.gameId);
+            this.props.invoke('MakeMove', move);
         }
 
         this.setState({pieceSquare: "", squareStyles: {}})
@@ -299,14 +289,14 @@ export default class Chess extends Component {
 
         move.promotion = promotion;
 
-        this.state.hubConnection.invoke('MakeMove', move, this.state.gameId)
+        this.props.invoke('MakeMove', move)
         .then(res => {
             this.setState({displayPromotionPrompt: false, promotionMove: null})
         });
     }
 
     JoinGame = name => {
-        this.state.hubConnection.invoke('JoinGame', this.state.gameId, name)
+        this.props.invoke('JoinGame', name)
             .then(this.populatePlayerClientInfo())
             .then(this.populateGameState())
             .catch(() => this.setState({gameMessage: "oopsie daisy"}));
@@ -314,17 +304,17 @@ export default class Chess extends Component {
 
     StartGame = () =>
     {
-        this.state.hubConnection.invoke('StartGame', this.state.gameId).catch(res => this.setState({gameMessage:res}));
+        this.props.invoke('StartGame').catch(res => this.setState({gameMessage:res}));
     }
 
     Rematch = () =>
     {
-        this.state.hubConnection.invoke('Rematch', this.state.gameId);
+        this.props.invoke('Rematch');
     }
 
     Resign = () =>
     {
-        this.state.hubConnection.invoke('Resign', this.state.gameId);
+        this.props.invoke('Resign');
     }
 
     isHost = () =>
@@ -375,9 +365,10 @@ export default class Chess extends Component {
                     gameState = {gameState}
                     isPlayerRegistered = {isPlayerRegistered}
                     StartGame = {this.StartGame}
-                    Rematch = {this.Rematch}
-                    Resign = {this.Resign}
+                    Rematch = {() => this.props.invoke('Rematch')}
+                    Resign = {() => this.props.invoke('Resign')}
                 />
+                <button onClick={() => console.log(this.state)} >log state</button>
             </div>
             )
     }
