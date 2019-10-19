@@ -8,6 +8,8 @@ import Chess from './components/Chess/Chess';
 import { NewGameChess } from './components/Chess/NewGameChess';
 import ResizeWithContainerHOC from './components/HigherOrder/GetRenderedWidthHOC';
 import withSignalrConnection from './components/HigherOrder/withSignalrConnection';
+import gamesPage from './components/Games';
+import aboutPage from './components/About';
 
 export default class App extends Component {
   static displayName = App.name;
@@ -17,6 +19,8 @@ export default class App extends Component {
         <Layout>
             <Switch>
                 <Route exact path='/' component={Home} />
+                <Route path='/games' component={gamesPage} />
+                <Route path='/about' component={aboutPage} />
                 <Route path='/connectfour/createroom' component={withSignalrConnection(NewGameC4, '/connectfourhub')} />
                 <Route path='/connectfour/:gameId' component={withSignalrConnection(ConnectFour, '/connectfourhub')} />
                 <Route path='/chess/createroom' component={withSignalrConnection(NewGameChess, '/chesshub')} />
