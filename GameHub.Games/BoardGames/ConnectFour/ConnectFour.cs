@@ -43,7 +43,8 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
         public bool MakeMove(int col, string playerId)
         {
-            // todo: dontallow move if game over or not started
+            if (_gameOver || !_gameStarted) return false;
+
             lock (_game)
             lock (_players)
             {
