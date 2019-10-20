@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using GameHub.Games.BoardGames.Common;
 
 namespace GameHub.Games.BoardGames.ConnectFour
 {
     public class ConnectFourGame
     {
         public string[][] _board { get; private set; }
+
+        private string _winnerID;
 
         private int _winThreshold = 4;
 
@@ -43,28 +42,30 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
         public MoveResult MakeMove(int col, string playerId)
         {
-            var moveResult = new MoveResult();
+            var wasValidMove = false;
+
+            var message = "";
 
             if (col >= _columnCount || _columnCount < 0)
             {
-                moveResult.WasValidMove = false;
+                wasValidMove = false;
 
-                moveResult.Message = "Invalid column";
+                message = "Invalid column";
 
-                return moveResult;
+                return new MoveResult(wasValidMove, message);
             }
 
             var row = FindRow(col);
 
             if (row == -1) {
-                moveResult.WasValidMove = false;
+                wasValidMove = false;
 
-                moveResult.Message = "That column is full.";
+                message = "That column is full.";
 
-                return moveResult;
+                return new MoveResult(wasValidMove, message);
             }
 
-            moveResult.WasValidMove = true;
+            wasValidMove = true;
 
             _spacesLeft--;
 
@@ -72,17 +73,10 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
             if (HasWon(row, col))
             {
-                moveResult.DidMoveEndGame = true;
-                moveResult.EndReason = "Win";
-            }
-            
-            if (IsDraw())
-            {
-                moveResult.DidMoveEndGame = true;
-                moveResult.EndReason = "Draw";
+                _winnerID = playerId;
             }
 
-            return moveResult;
+            return new MoveResult(wasValidMove, message);
         }
 
         private bool HasWon(int row, int col)
@@ -90,9 +84,14 @@ namespace GameHub.Games.BoardGames.ConnectFour
             return CheckVertical(row, col) || CheckHorizontal(row, col) || CheckDiagonalTLBR(row, col) || CheckDiagonalTRBL(row, col);
         }
 
-        private bool IsDraw()
+        public bool IsDraw()
         {
             return _spacesLeft == 0;
+        }
+
+        public string GetWinnerID()
+        {
+            return _winnerID;
         }
 
         private int FindRow(int col)

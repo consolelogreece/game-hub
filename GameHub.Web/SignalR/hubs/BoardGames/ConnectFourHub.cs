@@ -24,15 +24,15 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
 
             var playerId = Context.Items["PlayerId"].ToString();
 
-            var wasValidMove = game.MakeMove(col, playerId);
+            var moveResult = game.MakeMove(col, playerId);
 
-            if (wasValidMove)
+            if (moveResult.WasValid)
             {
                 Clients.Group(gameId).SendAsync("PlayerMoved", this.GetGameState(gameId));      
             }
             else
             {
-                Clients.Caller.SendAsync("IllegalAction", "Invalid move");
+                Clients.Caller.SendAsync("IllegalAction", moveResult.Message);
             }
         }
         

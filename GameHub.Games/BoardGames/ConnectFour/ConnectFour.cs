@@ -41,10 +41,8 @@ namespace GameHub.Games.BoardGames.ConnectFour
             _players = new List<ConnectFourPlayer>();
         }
 
-        public bool MakeMove(int col, string playerId)
+        public MoveResult MakeMove(int col, string playerId)
         {
-            if (_gameOver || !_gameStarted) return false;
-
             lock (_game)
             lock (_players)
             {
@@ -52,24 +50,26 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
                 if (player.Id != playerId)
                 {
-                    return false;
+                    return new MoveResult(false, "It's not your turn");
                 }
 
                 var moveResult = _game.MakeMove(col, playerId);
 
+                if (!moveResult.WasValid) return moveResult;
+
                 _nextPlayerIndex = (_nextPlayerIndex + 1) % _players.Count;
 
-                if (moveResult.DidMoveEndGame) 
-                {
-                    if (moveResult.EndReason == "Win")
-                    {
-                        _winner = player;
-                        _winner.Wins++;
-                    }
-                    _gameOver = true;
-                }
+                return new MoveResult(true);
+            }
+        }
 
-                return moveResult.WasValidMove;
+        private void UpdateStatus()
+        {
+            var gameWinnerID = _game.GetWinnerID();
+
+            if (gameWinnerID != null) 
+            {
+                _winner = GetPlayer(gameWinnerID);
             }
         }
 

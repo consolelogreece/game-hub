@@ -25,9 +25,9 @@ namespace GameHub.Test.BoardGames
             game.StartGame(player1Id);
 
             // act
-            var movedSuccessfully = game.MakeMove(1, player1Id);
+            var move = game.MakeMove(1, player1Id);
 
-            Assert.True(movedSuccessfully, "Failed to move despite all conditions being fine");
+            Assert.True(move.WasValid, "Failed to move despite all conditions being fine");
         }
 
         [Fact]
@@ -38,9 +38,9 @@ namespace GameHub.Test.BoardGames
             game.StartGame(player1Id);
 
             // act
-            var movedSuccessfully = game.MakeMove(1, player2Id);
+            var move = game.MakeMove(1, player2Id);
 
-            Assert.False(movedSuccessfully, "Player was able to move despite not being their turn");
+            Assert.False(move.WasValid, "Player was able to move despite not being their turn");
         }
 
         // this checks to make sure the game keeps track of who's turn it is.
@@ -52,11 +52,11 @@ namespace GameHub.Test.BoardGames
             game.StartGame(player1Id);
 
             // act
-            var move1Successful = game.MakeMove(1, player1Id);
-            var move2Successful = game.MakeMove(1, player1Id);
+            var move1 = game.MakeMove(1, player1Id);
+            var move2 = game.MakeMove(1, player1Id);
 
-            Assert.True(move1Successful, "Player was unable to move despite it being their turn");
-            Assert.False(move2Successful, "Player moved despite it not being their turn");
+            Assert.True(move1.WasValid, "Player was unable to move despite it being their turn");
+            Assert.False(move2.WasValid, "Player moved despite it not being their turn");
         }
 
         public void CantMoveOnInvalidColumn()
@@ -67,9 +67,9 @@ namespace GameHub.Test.BoardGames
 
             // act
             // Important to note that game is using the default configuration, which is 7 columns.
-            var moveSuccessful = game.MakeMove(100, player1Id);
+            var move = game.MakeMove(100, player1Id);
 
-            Assert.False(moveSuccessful, "Was able to move on a column that does not exist");
+            Assert.False(move.WasValid, "Was able to move on a column that does not exist");
         }
 
         [Fact]
