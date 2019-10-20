@@ -43,6 +43,7 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
         public bool MakeMove(int col, string playerId)
         {
+            // todo: dontallow move if game over or not started
             lock (_game)
             lock (_players)
             {
@@ -57,10 +58,13 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
                 _nextPlayerIndex = (_nextPlayerIndex + 1) % _players.Count;
 
-                if (moveResult.DidMoveWin) 
+                if (moveResult.DidMoveEndGame) 
                 {
-                    _winner = player;
-                    _winner.Wins++;
+                    if (moveResult.EndReason == "Win")
+                    {
+                        _winner = player;
+                        _winner.Wins++;
+                    }
                     _gameOver = true;
                 }
 
@@ -156,9 +160,10 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
             var status = (_gameOver ? GameStatus.finished : _gameStarted ? GameStatus.started : GameStatus.lobby).ToString();
 
-            if (_gameOver && _winner != null)
+            if (_gameOver)
             {
-                endReason = _winner.PlayerNick + " has won!";
+                if (_winner != null) endReason = _winner.PlayerNick + " has won!";
+                else endReason = "It's a draw!";
             }
 
             return new GameProgress(status, endReason);
