@@ -14,7 +14,9 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
         public string Message { get; set; }
 
-        public bool DidMoveWin { get; internal set; }
+        public bool DidMoveEndGame { get; internal set; }
+
+        public string EndReason { get; internal set;}
 
         public ConnectFourPlayer NextTurnPlayer { get; internal set; }
     }

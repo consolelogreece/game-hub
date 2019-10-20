@@ -15,6 +15,8 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
         private int _columnCount = 7;
 
+        private int _spacesLeft;
+
         public ConnectFourGame(ConnectFourConfiguration config)
         {
             _rowCount = config.nRows;
@@ -22,6 +24,8 @@ namespace GameHub.Games.BoardGames.ConnectFour
             _columnCount = config.nCols;
 
             _winThreshold = config.winThreshold;
+
+            _spacesLeft = config.nRows * config.nCols;
 
             InitializeBoard();
         }
@@ -60,14 +64,23 @@ namespace GameHub.Games.BoardGames.ConnectFour
                 return moveResult;
             }
 
-
             moveResult.WasValidMove = true;
+
+            _spacesLeft--;
 
             _board[row][col] = playerId;
 
-            var didWin = HasWon(row, col);
-
-            moveResult.DidMoveWin = didWin;
+            if (HasWon(row, col))
+            {
+                moveResult.DidMoveEndGame = true;
+                moveResult.EndReason = "Win";
+            }
+            
+            if (IsDraw())
+            {
+                moveResult.DidMoveEndGame = true;
+                moveResult.EndReason = "Draw";
+            }
 
             return moveResult;
         }
@@ -75,6 +88,11 @@ namespace GameHub.Games.BoardGames.ConnectFour
         private bool HasWon(int row, int col)
         {
             return CheckVertical(row, col) || CheckHorizontal(row, col) || CheckDiagonalTLBR(row, col) || CheckDiagonalTRBL(row, col);
+        }
+
+        private bool IsDraw()
+        {
+            return _spacesLeft == 0;
         }
 
         private int FindRow(int col)
