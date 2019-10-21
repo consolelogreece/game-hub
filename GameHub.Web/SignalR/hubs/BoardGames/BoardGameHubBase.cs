@@ -121,6 +121,11 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
                 registeredSuccessfully = game.RegisterPlayer(playerId, playerNick);
             }
 
+            if (registeredSuccessfully)
+            {
+                Clients.Group(gameId).SendAsync("PlayerJoined", this.GetGameState(gameId));
+            }
+
             return registeredSuccessfully;
         }
 

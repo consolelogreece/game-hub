@@ -15,7 +15,7 @@ export class ConnectFour extends Component {
         this.state = {
             column: 0,
             gameId: gameId,
-            isGameFull: true,
+            isGameFull: false,
             gameMessage: "",
             playerTurn: "",
             gameState: "lobby",
@@ -109,13 +109,22 @@ export class ConnectFour extends Component {
 
         let {status, endReason} = gameState.status;
 
+        let isGameFull = this.isGameFull(gameState);
+
         if (status === "finished") message = endReason;
 
         if (status === "lobby")
         {
             if (this.state.playerInfo === null)
             {
-                message = "Please enter your name"
+                if (isGameFull)
+                {
+                    message = "Game full, waiting for host to start..."
+                }
+                else
+                {
+                    message = "Please enter your name"
+                }
             }
             else if (!this.isHost())
             {
@@ -152,7 +161,8 @@ export class ConnectFour extends Component {
 
     isGameFull = gameState =>
     {
-        return gameState.configuration <= gameState.players.length;
+        console.log(gameState)
+        return gameState.configuration.nPlayersMax <= gameState.players.length;
     }
 
     render()
