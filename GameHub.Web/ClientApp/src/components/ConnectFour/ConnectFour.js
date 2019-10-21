@@ -55,6 +55,9 @@ export class ConnectFour extends Component {
 
     MakeMove = col =>
     {
+        // if the playerinfo is null, the player is a spectator and thus can't move.
+        if (this.state.playerInfo == null) return;
+
         this.props.invoke('MakeMove', col).catch(err => console.error(err));;
     }
     
