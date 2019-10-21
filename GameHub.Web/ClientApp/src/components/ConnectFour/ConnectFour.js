@@ -15,6 +15,7 @@ export class ConnectFour extends Component {
         this.state = {
             column: 0,
             gameId: gameId,
+            isGameFull: true,
             gameMessage: "",
             playerTurn: "",
             gameState: "lobby",
@@ -30,19 +31,15 @@ export class ConnectFour extends Component {
 
         this.props.on('PlayerMoved', gameState => this.updateStateWithNewGameState(gameState));
         
-        this.props.on('RoomDoesntExist', res => {
-            this.props.history.push("/connectfour/createroom")
-        });
+        this.props.on('RoomDoesntExist', res => { this.props.history.push("/connectfour/createroom")});
 
         this.props.on('GameOver', gameState => this.updateStateWithNewGameState(gameState));
         
-        this.props.on('IllegalAction', res => {
-            this.setState({
-                gameMessage: res
-            });
-        });
+        this.props.on('IllegalAction', res => {this.setState({ gameMessage: res })});
         
         this.props.on('GameStarted', gameState => this.updateStateWithNewGameState(gameState));
+
+        this.props.on('PlayerJoined', gameState => this.updateStateWithNewGameState(gameState))
         
         this.props.startConnection()
         .then(() => {
@@ -82,17 +79,28 @@ export class ConnectFour extends Component {
     updateStateWithNewGameState = gameState =>
     {
         var message = this.generateGameMessageFromGameState(gameState);
+        var isGameFull = this.isGameFull(gameState);
         this.setState({
             boardState: gameState.boardState,
             gameState: gameState.status.status,
             playerTurn: this.getTurnIndicator(gameState.currentTurnPlayer),
+            isGameFull: isGameFull,
             gameMessage: message
         })
     }
 
     getTurnIndicator = player => 
     {
-        return (this.state.playerInfo === null) || player.id !== this.state.playerInfo.id ? (player.playerNick + "'s") : "your";
+        if (this.state.playerInfo === null)
+        {
+            if (player === null)
+            {
+                return "";
+            }
+            
+            return player.playerNick;
+        }
+        return "your";
     }
 
     generateGameMessageFromGameState = gameState =>
@@ -142,6 +150,11 @@ export class ConnectFour extends Component {
         return this.state.playerInfo != null && this.state.playerInfo.isHost;
     }
 
+    isGameFull = gameState =>
+    {
+        return gameState.configuration <= gameState.players.length;
+    }
+
     render()
     {
         var Aboard = ResizeWithContainerHOC(Board);
@@ -149,6 +162,8 @@ export class ConnectFour extends Component {
         let gameState = this.state.gameState;
 
         let isHost = this.isHost();
+
+        let isGameFull = this.state.isGameFull;
 
         let clientName = this.state.playerInfo != null ? this.state.playerInfo.playerNick : "";
 
@@ -169,6 +184,7 @@ export class ConnectFour extends Component {
                     isHost = {isHost}
                     JoinGame = {this.JoinGame}
                     gameState = {gameState}
+                    isGameFull = {isGameFull}
                     isPlayerRegistered = {isPlayerRegistered}
                     StartGame = {() => this.invoke('StartGame')}
                     Rematch = {() => this.invoke('Rematch')}

@@ -66,9 +66,18 @@ export default class Chess extends Component {
 
     getTurnIndicator = player => 
     {
-        return (this.state.playerInfo === null) || player.id !== this.state.playerInfo.id ? (player.playerNick + "'s") : "your";
+        if (this.state.playerInfo === null)
+        {
+            if (player === null)
+            {
+                return "";
+            }
+            
+            return player.playerNick;
+        }
+        return "your";
     }
-
+    
     gameStarted = gameState => 
     {
         this.populateAvailableMoves();

@@ -3,7 +3,7 @@ import JoinGame from './JoinGame'
 
 export default props =>
 {
-    let {gameState, isHost, isPlayerRegistered} = props;
+    let {gameState, isHost, isPlayerRegistered, isGameFull} = props;
 
     let optionsPanel;
 
@@ -12,7 +12,7 @@ export default props =>
         case "lobby":
             optionsPanel = (
                 <div>                        
-                    {!isPlayerRegistered &&
+                    {!isPlayerRegistered && !isGameFull &&
                         <JoinGame 
                             title="What's your name?"
                             JoinGame={(name) => props.JoinGame(name)}
