@@ -43,6 +43,16 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
         public MoveResult MakeMove(int col, string playerId)
         {
+            if (!_gameStarted)
+            {
+                return new MoveResult(false, "Easy, tiger! The game hasn't started yet!");
+            }
+            
+            if (_gameOver)
+            {
+                return new MoveResult(false, "The game has finished!");
+            }
+
             lock (_game)
             lock (_players)
             {
