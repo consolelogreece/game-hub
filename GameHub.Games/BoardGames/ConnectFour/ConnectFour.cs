@@ -69,6 +69,8 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
                 _nextPlayerIndex = (_nextPlayerIndex + 1) % _players.Count;
 
+                UpdateStatus();
+
                 return new MoveResult(true);
             }
         }
@@ -80,6 +82,10 @@ namespace GameHub.Games.BoardGames.ConnectFour
             if (gameWinnerID != null) 
             {
                 _winner = GetPlayer(gameWinnerID);
+
+                _winner.Wins++;
+
+                _gameOver = true;
             }
         }
 
