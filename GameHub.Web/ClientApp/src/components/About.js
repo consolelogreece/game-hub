@@ -5,7 +5,7 @@ export default class about extends Component {
     return (
       <div>
         <p>
-            Real time games, without needing to create an account!
+            Real time games, no signup.
         </p>
       </div>
     );
