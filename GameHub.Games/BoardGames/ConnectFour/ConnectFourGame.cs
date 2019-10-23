@@ -40,7 +40,7 @@ namespace GameHub.Games.BoardGames.ConnectFour
             }
         }
 
-        public MoveResult MakeMove(int col, string playerId)
+        public ActionResult MakeMove(int col, string playerId)
         {
             var wasValidMove = false;
 
@@ -52,7 +52,7 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
                 message = "Invalid column";
 
-                return new MoveResult(wasValidMove, message);
+                return new ActionResult(wasValidMove, message);
             }
 
             var row = FindRow(col);
@@ -62,7 +62,7 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
                 message = "That column is full.";
 
-                return new MoveResult(wasValidMove, message);
+                return new ActionResult(wasValidMove, message);
             }
 
             wasValidMove = true;
@@ -76,7 +76,7 @@ namespace GameHub.Games.BoardGames.ConnectFour
                 _winnerID = playerId;
             }
 
-            return new MoveResult(wasValidMove, message);
+            return new ActionResult(wasValidMove, message);
         }
 
         private bool HasWon(int row, int col)

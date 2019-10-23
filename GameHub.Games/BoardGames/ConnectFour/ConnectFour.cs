@@ -41,16 +41,16 @@ namespace GameHub.Games.BoardGames.ConnectFour
             _players = new List<ConnectFourPlayer>();
         }
 
-        public MoveResult MakeMove(int col, string playerId)
+        public ActionResult MakeMove(int col, string playerId)
         {
             if (!_gameStarted)
             {
-                return new MoveResult(false, "Easy, tiger! The game hasn't started yet!");
+                return new ActionResult(false, "Easy, tiger! The game hasn't started yet!");
             }
             
             if (_gameOver)
             {
-                return new MoveResult(false, "The game has finished!");
+                return new  ActionResult(false, "The game has finished!");
             }
 
             lock (_game)
@@ -60,7 +60,7 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
                 if (player.Id != playerId)
                 {
-                    return new MoveResult(false, "It's not your turn");
+                    return new ActionResult(false, "It's not your turn");
                 }
 
                 var moveResult = _game.MakeMove(col, playerId);
@@ -71,7 +71,7 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
                 UpdateStatus();
 
-                return new MoveResult(true);
+                return new ActionResult(true);
             }
         }
 
