@@ -75,7 +75,7 @@ export default class Chess extends Component {
             
             return player.playerNick;
         }
-        return "your";
+        return player.playerNick == this.state.playerInfo.playerNick ? "your" : player.playerNick;
     }
     
     gameStarted = gameState => 

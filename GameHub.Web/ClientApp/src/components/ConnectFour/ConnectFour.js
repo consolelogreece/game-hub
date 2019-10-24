@@ -91,7 +91,6 @@ export class ConnectFour extends Component {
 
     getTurnIndicator = player => 
     {
-        console.log(player)
         if (this.state.playerInfo === null)
         {
             if (player === null)
