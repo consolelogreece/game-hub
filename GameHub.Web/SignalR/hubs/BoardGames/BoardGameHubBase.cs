@@ -96,7 +96,7 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
             Groups.AddToGroupAsync(Context.ConnectionId, gameId);
         }
 
-        public virtual bool JoinGame(string gameId, string playerNick)
+        public virtual void JoinGame(string gameId, string playerNick)
         {
             var game = _cache.Get(gameId);
 
@@ -106,27 +106,29 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
 
                 this.Context.Abort();
 
-                return false;
+                return;
             }
 
             var playerId = Context.Items["PlayerId"].ToString();
 
             var gamestate = game.GetGameState();  
 
-            var registeredSuccessfully = false;
+            var registerResult = new ActionResult(false); //default
 
             // todo: dont do this check here, check in the game and return a value indicating success.
             if (gamestate.Status.Status == GameHub.Games.BoardGames.Common.GameStatus.lobby.ToString())
             {
-                registeredSuccessfully = game.RegisterPlayer(playerId, playerNick);
+                registerResult = game.RegisterPlayer(playerId, playerNick);
             }
 
-            if (registeredSuccessfully)
+            if (registerResult.WasValid)
             {
                 Clients.Group(gameId).SendAsync("PlayerJoined", this.GetGameState(gameId));
             }
-
-            return registeredSuccessfully;
+            else
+            {
+                Clients.Caller.SendAsync("IllegalAction", registerResult.Message);
+            }
         }
 
         public virtual void Rematch(string gameId)
@@ -146,11 +148,15 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
 
             if (game == null) return;
 
-            var resetSuccessful = game.Reset(playerId);
+            var resetResult = game.Reset(playerId);
 
-            if (resetSuccessful)
+            if (resetResult.WasValid)
             {
                 Clients.Group(gameId).SendAsync("GameStarted", this.GetGameState(gameId));
+            }
+            else
+            {
+                Clients.Caller.SendAsync("IllegalAction", resetResult.Message);
             }
         }
 
