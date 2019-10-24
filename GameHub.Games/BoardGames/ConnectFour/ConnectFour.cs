@@ -28,7 +28,7 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
         private ConnectFourPlayer _winner;
 
-        private bool _gameStarted = false;
+        private bool _started = false;
 
         private ConnectFourConfiguration _config;
 
@@ -43,7 +43,7 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
         public ActionResult MakeMove(int col, string playerId)
         {
-            if (!_gameStarted)
+            if (!_started)
             {
                 return new ActionResult(false, "Easy, tiger! The game hasn't started yet!");
             }
@@ -107,7 +107,7 @@ namespace GameHub.Games.BoardGames.ConnectFour
                 return new ActionResult(false, "Game is full");
             }
 
-            if (_gameStarted) return new ActionResult(false, "Game has already started");
+            if (_started) return new ActionResult(false, "Game has already started");
             
             var newPlayer = new ConnectFourPlayer { 
                 Id = playerId, 
@@ -127,9 +127,9 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
             if (playerId != _config.creatorId) return new ActionResult(false,  "You are not the host");
 
-            if (_gameStarted) return new ActionResult(false, "The game has already started");
+            if (_started) return new ActionResult(false, "The game has already started");
 
-            _gameStarted = true;
+            _started = true;
 
             return new ActionResult(true);
         }
@@ -142,7 +142,7 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
             _gameOver = false;
 
-            _gameStarted = true;
+            _started = true;
 
             _nextPlayerIndex = 0;
 
@@ -156,7 +156,7 @@ namespace GameHub.Games.BoardGames.ConnectFour
         {
             var endReason = "";
 
-            var status = (_gameOver ? GameStatus.finished : _gameStarted ? GameStatus.started : GameStatus.lobby).ToString();
+            var status = (_gameOver ? GameStatus.finished : _started ? GameStatus.started : GameStatus.lobby).ToString();
 
             if (_gameOver)
             {
@@ -189,7 +189,7 @@ namespace GameHub.Games.BoardGames.ConnectFour
             var player = this.GetPlayer(playerId);
 
             // cant resign if player does not exist.
-            if (player == null || !_gameStarted) return new ActionResult(false, "Not a player");
+            if (player == null || !_started) return new ActionResult(false, "Not a player");
 
             if (player.Resigned) return new ActionResult(false, "Player already resigned");
 
