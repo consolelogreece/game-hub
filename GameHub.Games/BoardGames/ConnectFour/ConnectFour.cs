@@ -212,7 +212,6 @@ namespace GameHub.Games.BoardGames.ConnectFour
             {
                 _gameOver = true;
                 _winner = _players.FirstOrDefault(p => !p.Resigned);
-                // todo null check
                 _winner.Wins++;
             }
 

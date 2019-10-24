@@ -54,7 +54,7 @@ namespace GameHub.Test.BoardGames
         [Fact]
         public void CantRegisterSameIDTwice()
         {
-          // arrange
+            // arrange
             var game = ConnectFourTestHelpers.GetGame(ConnectFourTestHelpers.GetDefaultConfig("1234"));
 
             // act
@@ -64,6 +64,21 @@ namespace GameHub.Test.BoardGames
 
             // assert
             Assert.False(registrationResult.WasSuccessful, "Was able to register player ID already being in use");  
+        }
+
+        [Fact]
+        public void CantRegisterSameNickTwice()
+        {
+            // arrange
+            var game = ConnectFourTestHelpers.GetGame(ConnectFourTestHelpers.GetDefaultConfig("1234"));
+
+            // act
+            game.RegisterPlayer("1234", "user");
+            
+            var registrationResult = game.RegisterPlayer("1234", "user");
+
+            // assert
+            Assert.False(registrationResult.WasSuccessful, "Was able to register player nick which is already in use");  
         }
 
         [Fact]
