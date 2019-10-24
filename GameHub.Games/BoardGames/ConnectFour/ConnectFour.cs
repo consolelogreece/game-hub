@@ -65,7 +65,7 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
                 var moveResult = _game.MakeMove(col, playerId);
 
-                if (!moveResult.WasValid) return moveResult;
+                if (!moveResult.WasSuccessful) return moveResult;
 
                 _nextPlayerIndex = (_nextPlayerIndex + 1) % _players.Count;
 

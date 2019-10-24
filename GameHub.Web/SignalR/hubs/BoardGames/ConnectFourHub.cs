@@ -26,7 +26,7 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
 
             var moveResult = game.MakeMove(col, playerId);
 
-            if (moveResult.WasValid)
+            if (moveResult.WasSuccessful)
             {
                 Clients.Group(gameId).SendAsync("PlayerMoved", this.GetGameState(gameId));      
             }

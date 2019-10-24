@@ -2,13 +2,13 @@ namespace GameHub.Games.BoardGames.Common
 {
     public class ActionResult
     {
-        public bool WasValid { get; private set; }
+        public bool WasSuccessful { get; private set; }
 
         public string Message { get; private set;}
 
-        public ActionResult(bool wasValid, string message = "")
+        public ActionResult(bool wasSuccessful, string message = "")
         {
-            WasValid = wasValid;
+            wasSuccessful = WasSuccessful;
             Message = message;
         }
     }

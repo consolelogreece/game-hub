@@ -42,30 +42,30 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
         public ActionResult MakeMove(int col, string playerId)
         {
-            var wasValidMove = false;
+            var wasSuccessfulMove = false;
 
             var message = "";
 
             if (col >= _columnCount || _columnCount < 0)
             {
-                wasValidMove = false;
+                wasSuccessfulMove = false;
 
                 message = "Invalid column";
 
-                return new ActionResult(wasValidMove, message);
+                return new ActionResult(wasSuccessfulMove, message);
             }
 
             var row = FindRow(col);
 
             if (row == -1) {
-                wasValidMove = false;
+                wasSuccessfulMove = false;
 
                 message = "That column is full.";
 
-                return new ActionResult(wasValidMove, message);
+                return new ActionResult(wasSuccessfulMove, message);
             }
 
-            wasValidMove = true;
+            wasSuccessfulMove = true;
 
             _spacesLeft--;
 
@@ -76,7 +76,7 @@ namespace GameHub.Games.BoardGames.ConnectFour
                 _winnerID = playerId;
             }
 
-            return new ActionResult(wasValidMove, message);
+            return new ActionResult(wasSuccessfulMove, message);
         }
 
         private bool HasWon(int row, int col)

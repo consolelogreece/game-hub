@@ -27,7 +27,7 @@ namespace GameHub.Test.BoardGames
             // act
             var move = game.MakeMove(1, player1Id);
 
-            Assert.True(move.WasValid, "Failed to move despite all conditions being fine");
+            Assert.True(move.WasSuccessful, "Failed to move despite all conditions being fine");
         }
 
         [Fact]
@@ -40,7 +40,7 @@ namespace GameHub.Test.BoardGames
             // act
             var move = game.MakeMove(1, player2Id);
 
-            Assert.False(move.WasValid, "Player was able to move despite not being their turn");
+            Assert.False(move.WasSuccessful, "Player was able to move despite not being their turn");
         }
 
         // this checks to make sure the game keeps track of who's turn it is.
@@ -55,8 +55,8 @@ namespace GameHub.Test.BoardGames
             var move1 = game.MakeMove(1, player1Id);
             var move2 = game.MakeMove(1, player1Id);
 
-            Assert.True(move1.WasValid, "Player was unable to move despite it being their turn");
-            Assert.False(move2.WasValid, "Player moved despite it not being their turn");
+            Assert.True(move1.WasSuccessful, "Player was unable to move despite it being their turn");
+            Assert.False(move2.WasSuccessful, "Player moved despite it not being their turn");
         }
 
         public void CantMoveOnInvalidColumn()
@@ -69,7 +69,7 @@ namespace GameHub.Test.BoardGames
             // Important to note that game is using the default configuration, which is 7 columns.
             var move = game.MakeMove(100, player1Id);
 
-            Assert.False(move.WasValid, "Was able to move on a column that does not exist");
+            Assert.False(move.WasSuccessful, "Was able to move on a column that does not exist");
         }
 
         [Fact]

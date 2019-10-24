@@ -30,9 +30,9 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
 
             var playerId = Context.Items["PlayerId"].ToString();
 
-            var started = game.StartGame(playerId);
+            var startResult = game.StartGame(playerId);
 
-            if (started)
+            if (startResult.WasSuccessful)
             {
                 Clients.Group(gameId).SendAsync("GameStarted", game.GetGameState());
             }
@@ -121,7 +121,7 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
                 registerResult = game.RegisterPlayer(playerId, playerNick);
             }
 
-            if (registerResult.WasValid)
+            if (registerResult.WasSuccessful)
             {
                 Clients.Group(gameId).SendAsync("PlayerJoined", this.GetGameState(gameId));
             }
@@ -150,7 +150,7 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
 
             var resetResult = game.Reset(playerId);
 
-            if (resetResult.WasValid)
+            if (resetResult.WasSuccessful)
             {
                 Clients.Group(gameId).SendAsync("GameStarted", this.GetGameState(gameId));
             }
