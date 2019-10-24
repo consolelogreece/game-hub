@@ -150,7 +150,7 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
             _gameOver = false;
 
-            _gameStarted = true;
+            _gameStarted = false;
 
             _nextPlayerIndex = 0;
 
