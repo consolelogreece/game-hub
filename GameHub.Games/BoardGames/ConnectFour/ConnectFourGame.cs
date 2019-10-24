@@ -4,9 +4,9 @@ namespace GameHub.Games.BoardGames.ConnectFour
 {
     public class ConnectFourGame
     {
-        public string[][] _board { get; private set; }
+        public string[][] Board { get; private set; }
 
-        private string _winnerID;
+        private string _winner;
 
         private int _winThreshold = 4;
 
@@ -31,16 +31,19 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
         private void InitializeBoard()
         {
-            _board = new string[_rowCount][];
+            Board = new string[_rowCount][];
 
             for (int i = 0; i < _rowCount; i++)
             {   
                 var row = new string[_columnCount];
-                _board[i] = row;
+                for (int j = 0; j < row.Length; j++ ) {
+                    row[j] = "white"; // white == default
+                }
+                Board[i] = row;
             }
         }
 
-        public ActionResult MakeMove(int col, string playerId)
+        public ActionResult MakeMove(int col, string color)
         {
             var wasSuccessfulMove = false;
 
@@ -69,11 +72,11 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
             _spacesLeft--;
 
-            _board[row][col] = playerId;
+            Board[row][col] = color;
 
             if (HasWon(row, col))
             {
-                _winnerID = playerId;
+                _winner =  color;
             }
 
             return new ActionResult(wasSuccessfulMove, message);
@@ -89,18 +92,18 @@ namespace GameHub.Games.BoardGames.ConnectFour
             return _spacesLeft == 0;
         }
 
-        public string GetWinnerID()
+        public string GetWinner()
         {
-            return _winnerID;
+            return _winner;
         }
 
         private int FindRow(int col)
         {
             int i = -1;
-            foreach (var row in _board)
+            foreach (var row in Board)
             {
                 i++;
-                if (row[col] == null)
+                if (row[col] == "white")
                 {
                     return i;
                 }
@@ -113,13 +116,13 @@ namespace GameHub.Games.BoardGames.ConnectFour
         {
             int count = 1;
 
-            var player = _board[row][col];
+            var player = Board[row][col];
 
             row--;
 
             for (; row >= 0; row--)
             {
-                if (_board[row][col] == player) count++;
+                if (Board[row][col] == player) count++;
                 else break;
             }
 
@@ -132,11 +135,11 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
             var tempCol = col;
 
-            var player = _board[row][col];
+            var player = Board[row][col];
 
-            while (++tempCol < _columnCount && _board[row][tempCol] == player) count++;
+            while (++tempCol < _columnCount && Board[row][tempCol] == player) count++;
 
-            while (--col >= 0 && _board[row][col] == player) count++;
+            while (--col >= 0 && Board[row][col] == player) count++;
 
             return count >= _winThreshold;
         }
@@ -149,11 +152,11 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
             var tempRow = row;
 
-            var player = _board[row][col];
+            var player = Board[row][col];
 
-            while (++tempCol < _columnCount && ++tempRow < _rowCount && _board[tempRow][tempCol] == player) count++;
+            while (++tempCol < _columnCount && ++tempRow < _rowCount && Board[tempRow][tempCol] == player) count++;
 
-            while (--col >= 0 && --row >= 0 && _board[row][col] == player) count++;
+            while (--col >= 0 && --row >= 0 && Board[row][col] == player) count++;
 
             return count >= _winThreshold;
         }
@@ -166,18 +169,18 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
             var tempRow = row;
 
-            var player = _board[row][col];
+            var player = Board[row][col];
 
-            while (++tempCol < _columnCount && --tempRow >= 0 && _board[tempRow][tempCol] == player) count++;
+            while (++tempCol < _columnCount && --tempRow >= 0 && Board[tempRow][tempCol] == player) count++;
 
-            while (--col >= 0 && ++row < _rowCount && _board[row][col] == player) count++;
+            while (--col >= 0 && ++row < _rowCount && Board[row][col] == player) count++;
 
             return count >= _winThreshold;
         }
 
         public string[][] GetBoardState()
         {
-            return _board;
+            return Board;
         }
 
         public void ClearBoard()

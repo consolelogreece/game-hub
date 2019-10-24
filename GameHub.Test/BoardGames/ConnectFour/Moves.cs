@@ -12,7 +12,7 @@ namespace GameHub.Test.BoardGames
             var game = ConnectFourTestHelpers.GetGame(ConnectFourTestHelpers.GetDefaultConfig(player1Id));
 
             game.RegisterPlayer(player1Id, "user");
-            game.RegisterPlayer(player2Id, "user");
+            game.RegisterPlayer(player2Id, "user2");
 
             return game;
         }

@@ -63,7 +63,7 @@ namespace GameHub.Games.BoardGames.ConnectFour
                     return new ActionResult(false, "It's not your turn");
                 }
 
-                var moveResult = _game.MakeMove(col, playerId);
+                var moveResult = _game.MakeMove(col, player.PlayerColor);
 
                 if (!moveResult.WasSuccessful) return moveResult;
 
@@ -77,11 +77,11 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
         private void UpdateStatus()
         {
-            var gameWinnerID = _game.GetWinnerID();
+            var gameWinnerColor = _game.GetWinner();
 
-            if (gameWinnerID != null) 
+            if (gameWinnerColor != null) 
             {
-                _winner = GetPlayer(gameWinnerID);
+                _winner = _players.FirstOrDefault(p => p.PlayerColor == gameWinnerColor);
 
                 _winner.Wins++;
 
@@ -156,33 +156,6 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
             return new ActionResult(true);
         }
-
-        public string[][] GetBoardStateColors()
-        {
-            lock (_game)
-            {
-                var board = _game.GetBoardState();
-
-                var boardColorsOnly = new string[board.GetLength(0)][];
-
-                for (int i = 0; i < board.GetLength(0); i++)
-                {
-                    var formattedRow = new string[board[i].Length];
-
-                    for (int j = 0; j < board[i].Length; j++)
-                    {
-                        var playerId = board[i][j];
-                        var color = _players.FirstOrDefault(p => p.Id == playerId)?.PlayerColor ?? "white";
-                        formattedRow[j] = color;
-                    }
-
-                    boardColorsOnly[i] = formattedRow;
-                }
-
-                return boardColorsOnly;
-            }
-        }
-
         private GameProgress GetGameStatus()
         {
             var endReason = "";
@@ -206,7 +179,7 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
                 gameState.Status = this.GetGameStatus();
 
-                gameState.BoardState = GetBoardStateColors();
+                gameState.BoardState = _game.Board;
 
                 gameState.Players = _players;
 
@@ -234,6 +207,7 @@ namespace GameHub.Games.BoardGames.ConnectFour
             {
                 _gameOver = true;
                 _winner = _players.FirstOrDefault();
+                // todo null check
                 _winner.Wins++;
             }
 
