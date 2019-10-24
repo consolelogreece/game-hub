@@ -14,9 +14,9 @@ namespace GameHub.Test.BoardGames
 
             game.StartGame("1234");
 
-            var resignedSuccessfully = game.Resign("1234");
+            var resignResult = game.Resign("1234");
 
-            Assert.True(resignedSuccessfully);
+            Assert.True(resignResult.WasSuccessful);
         }
 
         [Fact]
@@ -27,9 +27,9 @@ namespace GameHub.Test.BoardGames
             game.RegisterPlayer("1234", "player1");
             game.RegisterPlayer("abcd", "player2");
 
-            var resignedSuccessfully = game.Resign("1234");
+            var resignResult = game.Resign("1234");
 
-            Assert.False(resignedSuccessfully);
+            Assert.False(resignResult.WasSuccessful);
         }
 
 
@@ -43,11 +43,11 @@ namespace GameHub.Test.BoardGames
 
             game.StartGame("1234");
 
-            var resignedSuccessfully1 = game.Resign("1234");
-            var resignedSuccessfully2 = game.Resign("1234");
+            var resignResult1 = game.Resign("1234");
+            var resignResult2 = game.Resign("1234");
 
-            Assert.True(resignedSuccessfully1);
-            Assert.False(resignedSuccessfully2);
+            Assert.True(resignResult1.WasSuccessful);
+            Assert.False(resignResult2.WasSuccessful);
         }
     }
 }

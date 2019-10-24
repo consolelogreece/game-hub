@@ -8,7 +8,7 @@ namespace GameHub.Games.BoardGames.Common
 
         public ActionResult(bool wasSuccessful, string message = "")
         {
-            wasSuccessful = WasSuccessful;
+            WasSuccessful = wasSuccessful;
             Message = message;
         }
     }

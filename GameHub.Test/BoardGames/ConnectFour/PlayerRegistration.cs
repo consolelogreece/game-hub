@@ -11,10 +11,10 @@ namespace GameHub.Test.BoardGames
             var game = ConnectFourTestHelpers.GetGame(ConnectFourTestHelpers.GetDefaultConfig("1234"));
 
             // act
-            var isRegistrationComplete = game.RegisterPlayer("1234", "user");
+            var registrationResult = game.RegisterPlayer("1234", "user");
 
             // assert
-            Assert.True(isRegistrationComplete, "Failed to register player");
+            Assert.True(registrationResult.WasSuccessful, "Failed to register player");
         }
 
         [Fact]
@@ -29,10 +29,10 @@ namespace GameHub.Test.BoardGames
 
             game.StartGame("1234");
 
-            var isRegistrationSuccessful = game.RegisterPlayer("zxcv", "user3");
+            var registrationResult = game.RegisterPlayer("zxcv", "user3");
 
             // assert
-            Assert.False(isRegistrationSuccessful, "Was able to register player after game has already started");
+            Assert.False(registrationResult.WasSuccessful, "Was able to register player after game has already started");
         }
 
         [Fact]
@@ -45,10 +45,10 @@ namespace GameHub.Test.BoardGames
             game.RegisterPlayer("1234", "user");
             game.RegisterPlayer("abcd", "user2");
 
-            var isRegistrationSuccessful = game.RegisterPlayer("zxcv", "user3");
+            var registrationResult = game.RegisterPlayer("zxcv", "user3");
 
             // assert
-            Assert.False(isRegistrationSuccessful, "Was able to register player despite game being full");
+            Assert.False(registrationResult.WasSuccessful, "Was able to register player despite game being full");
         }
 
         [Fact]
@@ -60,10 +60,10 @@ namespace GameHub.Test.BoardGames
             // act
             game.RegisterPlayer("1234", "user");
             
-            var isRegistrationSuccessful = game.RegisterPlayer("1234", "user2");
+            var registrationResult = game.RegisterPlayer("1234", "user2");
 
             // assert
-            Assert.False(isRegistrationSuccessful, "Was able to register player ID already being in use");  
+            Assert.False(registrationResult.WasSuccessful, "Was able to register player ID already being in use");  
         }
 
         [Fact]
