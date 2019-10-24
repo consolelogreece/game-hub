@@ -96,9 +96,19 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
         public ActionResult RegisterPlayer(string playerId, string playerNick)
         {
+            if (_players.Any(p => p.Id == playerId))
+            {
+                return new ActionResult(false, "Player already registered"); 
+            }
+
             if (_players.Any(p => p.PlayerNick == playerNick))
             {
                 return new ActionResult(false, "Name already in use");
+            }
+
+            if (_players.Count >= _config.nPlayersMax)
+            {
+                return new ActionResult(false, "Game is full");
             }
 
             if (_gameStarted) return new ActionResult(false, "Game has already started");
@@ -109,22 +119,11 @@ namespace GameHub.Games.BoardGames.ConnectFour
             IsHost = _config.creatorId == playerId};
 
             lock (_players)
-            lock(_game)
             {
-                if (_players.Count >= _config.nPlayersMax)
-                {
-                    return new ActionResult(false, "Game is full");
-                }
-
-                if (_players.Any(p => p.Id == newPlayer.Id))
-                {
-                    return new ActionResult(false, "Player already registered"); 
-                }
-
                 _players.Add(newPlayer);
-
-                return new ActionResult(true);
             }
+
+            return new ActionResult(true);
         }
 
         public ActionResult StartGame(string playerId)
