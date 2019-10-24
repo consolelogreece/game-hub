@@ -77,20 +77,20 @@ namespace GameHub.Games.BoardGames.Chess
             return winner;
         }
 
-        public bool StartGame(string playerId)
+        public ActionResult StartGame(string playerId)
         {
             // only game creator can start the game.
-            if (playerId != _config.creatorId) return false;
+            if (playerId != _config.creatorId) return new ActionResult(false,  "You are not the host");
 
-            if (_started) return true;
+            if (_started) return new ActionResult(false, "The game has already started");
 
-            if (Black == null || White == null) _started = false;
+            if (Black == null || White == null) return new ActionResult(false, "Not enough players to start");
             else _started = true;
 
-            return _started;
+            return new ActionResult(true);
         }
 
-        public bool RegisterPlayer(string playerId, string playerNick)
+        public ActionResult RegisterPlayer(string playerId, string playerNick)
         {
             var cp = new ChessPlayer
             {
@@ -115,10 +115,10 @@ namespace GameHub.Games.BoardGames.Chess
                 }
                 else
                 {
-                    return false;
+                    return new ActionResult(false, "Game is full");
                 }
 
-                return true;
+                return new ActionResult(true);
             }
         }
 
@@ -155,25 +155,25 @@ namespace GameHub.Games.BoardGames.Chess
             return moves.ToList();
         }
 
-        public bool Reset(string playerId)
+        public ActionResult Reset(string playerId)
         {
-            if( _config.creatorId != playerId) return false;
+            if( _config.creatorId != playerId) return new ActionResult(false, "You are not the host");
 
             // cant rematch if the game hasn't even started.
-            if (!_started) return false;
+            if (!_started) return new ActionResult(false, "Game hasn't started");
 
             _game = new ChessGame();
 
-            return true;
+            return new ActionResult(true);
         }
 
-        public bool Resign(string playerId)
+        public ActionResult Resign(string playerId)
         {
             var player = this.GetPlayer(playerId);
 
             _game.Resign(player.player);
 
-            return true;
+            return new ActionResult(true);
         }
 
         public GameStateChess GetGameState()

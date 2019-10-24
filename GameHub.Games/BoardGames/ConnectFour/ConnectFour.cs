@@ -94,9 +94,9 @@ namespace GameHub.Games.BoardGames.ConnectFour
             return _players.FirstOrDefault(p => p.Id == playerId);    
         }
 
-        public bool RegisterPlayer(string playerId, string playerNick)
+        public ActionResult RegisterPlayer(string playerId, string playerNick)
         {
-            if (_gameStarted) return false;
+            if (_gameStarted) return new ActionResult(false, "Game has already started");
             
             var newPlayer = new ConnectFourPlayer { Id = playerId, 
             PlayerNick = playerNick, 
@@ -106,33 +106,39 @@ namespace GameHub.Games.BoardGames.ConnectFour
             lock (_players)
             lock(_game)
             {
-                if (_players.Count >= _config.nPlayersMax || _players.Any(p => p.Id == newPlayer.Id))
+                if (_players.Count >= _config.nPlayersMax)
                 {
-                    return false;
+                    return new ActionResult(false, "Game is full");
+                }
+
+                if (_players.Any(p => p.Id == newPlayer.Id))
+                {
+                    return new ActionResult(false, "Player already registered"); 
                 }
 
                 _players.Add(newPlayer);
 
-                return true;
+                return new ActionResult(true);
             }
         }
 
-        public bool StartGame(string playerId)
+        public ActionResult StartGame(string playerId)
         {
-            if (_players.Count < 2) return false;
+            if (_players.Count < 2) return new ActionResult(false, "Not enough players");
 
-            if (_config.creatorId == playerId)
-            {
-                _gameStarted = true;
-            }
+            if (playerId != _config.creatorId) return new ActionResult(false,  "You are not the host");
 
-            return _gameStarted;
+            if (_gameStarted) return new ActionResult(false, "The game has already started");
+
+            _gameStarted = true;
+
+            return new ActionResult(true);
         }
 
         // returns true if reset was successful.
-        public bool Reset(string playerId)
+        public ActionResult Reset(string playerId)
         {
-            if( _config.creatorId != playerId) return false;
+            if( _config.creatorId != playerId) return new ActionResult(false,  "You are not the host");;
 
             _game.ClearBoard();
 
@@ -142,7 +148,7 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
             _nextPlayerIndex = 0;
 
-            return true;
+            return new ActionResult(true);
         }
 
         public string[][] GetBoardStateColors()
@@ -206,12 +212,12 @@ namespace GameHub.Games.BoardGames.ConnectFour
             }
         }
 
-        public bool Resign(string playerId)
+        public ActionResult Resign(string playerId)
         {
             var player = this.GetPlayer(playerId);
 
             // cant resign if player does not exist.
-            if (player == null || !_gameStarted) return false;
+            if (player == null || !_gameStarted) return new ActionResult(false, "Not a player");
 
             lock(_players)
             {
@@ -225,7 +231,7 @@ namespace GameHub.Games.BoardGames.ConnectFour
                 _winner.Wins++;
             }
 
-            return true;
+            return new ActionResult(true);
         }
     }
 }

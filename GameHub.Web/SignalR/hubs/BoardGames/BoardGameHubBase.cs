@@ -111,7 +111,7 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
 
             var playerId = Context.Items["PlayerId"].ToString();
 
-            var gamestate = game.GetGameState();
+            var gamestate = game.GetGameState();  
 
             var registeredSuccessfully = false;
 

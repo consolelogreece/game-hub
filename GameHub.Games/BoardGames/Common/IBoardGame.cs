@@ -4,10 +4,10 @@ namespace GameHub.Games.BoardGames.Common
         where TGameState: GameState
         where TGamePlayer : GamePlayer
     {
-        bool Resign(string playerId);
-        bool Reset(string playerId);
-        bool RegisterPlayer(string playerId, string playerNick);
-        bool StartGame(string playerId);
+        ActionResult Resign(string playerId);
+        ActionResult Reset(string playerId);
+        ActionResult RegisterPlayer(string playerId, string playerNick);
+        ActionResult StartGame(string playerId);
         TGameState GetGameState();
         TGamePlayer GetPlayer(string playerId);
     }
