@@ -198,7 +198,7 @@ export class ConnectFour extends Component {
                     isPlayerRegistered = {isPlayerRegistered}
                     StartGame = {() => this.invoke('StartGame')}
                     Rematch = {() => this.invoke('Rematch')}
-                    Resign = {() => this.invoke('Resign').then(this.setState({playerInfo: null}))}
+                    Resign = {() => this.invoke('Resign')}
                 />
             </div>
         )

@@ -141,7 +141,6 @@ namespace GameHub.Games.BoardGames.ConnectFour
             return new ActionResult(true);
         }
 
-        // returns true if reset was successful.
         public ActionResult Reset(string playerId)
         {
             if( _config.creatorId != playerId) return new ActionResult(false,  "You are not the host");;
@@ -150,12 +149,16 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
             _gameOver = false;
 
-            _gameStarted = false;
+            _gameStarted = true;
 
             _nextPlayerIndex = 0;
 
+            // un-resign resigned players
+            _players.ForEach(p => p.Resigned = false);
+
             return new ActionResult(true);
         }
+
         private GameProgress GetGameStatus()
         {
             var endReason = "";
@@ -198,15 +201,17 @@ namespace GameHub.Games.BoardGames.ConnectFour
             // cant resign if player does not exist.
             if (player == null || !_gameStarted) return new ActionResult(false, "Not a player");
 
+            if (player.Resigned) return new ActionResult(false, "Player already resigned");
+
             lock(_players)
             {
-                _players.Remove(player);
+                player.Resigned = true;
             }
 
-            if (_players.Count < 2)
+            if (_players.Count(p => !p.Resigned) < 2)
             {
                 _gameOver = true;
-                _winner = _players.FirstOrDefault();
+                _winner = _players.FirstOrDefault(p => !p.Resigned);
                 // todo null check
                 _winner.Wins++;
             }

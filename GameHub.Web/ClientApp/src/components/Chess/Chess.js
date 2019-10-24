@@ -318,7 +318,7 @@ export default class Chess extends Component {
 
     Resign = () =>
     {
-        this.props.invoke('Resign').then(_ => this.setState({playerInfo: null}));
+        this.props.invoke('Resign');
     }
 
     isHost = () =>
