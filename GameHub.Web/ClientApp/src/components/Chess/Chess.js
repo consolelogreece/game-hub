@@ -318,7 +318,7 @@ export default class Chess extends Component {
 
     Resign = () =>
     {
-        this.props.invoke('Resign');
+        this.props.invoke('Resign').then(_ => this.setState({playerInfo: null}));
     }
 
     isHost = () =>
@@ -370,7 +370,7 @@ export default class Chess extends Component {
                     isPlayerRegistered = {isPlayerRegistered}
                     StartGame = {this.StartGame}
                     Rematch = {() => this.props.invoke('Rematch')}
-                    Resign = {() => this.props.invoke('Resign')}
+                    Resign = {this.Resign}
                 />
             </div>
             )

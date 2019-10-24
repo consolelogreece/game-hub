@@ -92,11 +92,6 @@ namespace GameHub.Games.BoardGames.Chess
 
         public ActionResult RegisterPlayer(string playerId, string playerNick)
         {
-            if (White.PlayerNick == playerNick || Black.PlayerNick == playerNick)
-            {
-                return new ActionResult(false, "Name already in use");
-            }
-            
             var cp = new ChessPlayer
             {
                 Id = playerId,
@@ -104,15 +99,23 @@ namespace GameHub.Games.BoardGames.Chess
                 IsHost = playerId == _config.creatorId
             };
 
+            var isWhiteTaken = White != null;
+            var isBlackTaken = Black != null;
+
+            if ((isBlackTaken && Black.PlayerNick == playerNick) || (isWhiteTaken && White.PlayerNick == playerNick))
+            {
+                return new ActionResult(false, "Name already in use");
+            }
+
             lock(_game)
             {
-                if (White == null)
+                if (!isWhiteTaken)
                 {
                     cp.player = Player.White;
 
                     White = cp;
                 }
-                else if (Black == null && White.Id != playerId)
+                else if (!isBlackTaken && White.Id != playerId)
                 {
                     cp.player = Player.Black;
 
