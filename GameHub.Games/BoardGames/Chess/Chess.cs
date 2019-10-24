@@ -92,6 +92,11 @@ namespace GameHub.Games.BoardGames.Chess
 
         public ActionResult RegisterPlayer(string playerId, string playerNick)
         {
+            if (White.PlayerNick == playerNick || Black.PlayerNick == playerNick)
+            {
+                return new ActionResult(false, "Name already in use");
+            }
+            
             var cp = new ChessPlayer
             {
                 Id = playerId,
