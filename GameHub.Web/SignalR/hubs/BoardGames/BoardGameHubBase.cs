@@ -28,17 +28,20 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
                 return;
             }
 
-            var playerId = Context.Items["PlayerId"].ToString();
-
-            var startResult = game.StartGame(playerId);
-
-            if (startResult.WasSuccessful)
+            lock(game)
             {
-                Clients.Group(gameId).SendAsync("GameStarted", game.GetGameState());
-            }
-            else
-            {
-                Clients.Caller.SendAsync("IllegalAction", "Couldn't start game");
+                var playerId = Context.Items["PlayerId"].ToString();
+
+                var startResult = game.StartGame(playerId);
+
+                if (startResult.WasSuccessful)
+                {
+                    Clients.Group(gameId).SendAsync("GameStarted", game.GetGameState());
+                }
+                else
+                {
+                    Clients.Caller.SendAsync("IllegalAction", "Couldn't start game");
+                }
             }
         }
 
@@ -147,16 +150,19 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
             var playerId = Context.Items["PlayerId"].ToString();
 
             if (game == null) return;
-
-            var resetResult = game.Reset(playerId);
-
-            if (resetResult.WasSuccessful)
+            
+            lock(game)
             {
-                Clients.Group(gameId).SendAsync("GameStarted", this.GetGameState(gameId));
-            }
-            else
-            {
-                Clients.Caller.SendAsync("IllegalAction", resetResult.Message);
+                var resetResult = game.Reset(playerId);
+
+                if (resetResult.WasSuccessful)
+                {
+                    Clients.Group(gameId).SendAsync("GameStarted", this.GetGameState(gameId));
+                }
+                else
+                {
+                    Clients.Caller.SendAsync("IllegalAction", resetResult.Message);
+                }
             }
         }
 
@@ -176,9 +182,12 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
 
             var playerId = Context.Items["PlayerId"].ToString();
 
-            game.Resign(playerId);
+            lock(game)
+            {
+                game.Resign(playerId);
 
-            Clients.Group(gameId).SendAsync("GameOver", GetGameState(gameId));
+                Clients.Group(gameId).SendAsync("GameOver", GetGameState(gameId));
+            }
         }
 
         public override Task OnConnectedAsync()

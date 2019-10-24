@@ -28,7 +28,7 @@ export default props =>
         case "started":
             optionsPanel = (
                 <div>
-                    <button onClick={() => props.Resign()}>Resign</button>
+                   {!!isPlayerRegistered && <button onClick={() => props.Resign()}>Resign</button>}
                 </div>
             )
             break;

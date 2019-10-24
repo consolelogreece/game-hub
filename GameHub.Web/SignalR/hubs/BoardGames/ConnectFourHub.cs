@@ -22,17 +22,20 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
                 return;
             }
 
-            var playerId = Context.Items["PlayerId"].ToString();
-
-            var moveResult = game.MakeMove(col, playerId);
-
-            if (moveResult.WasSuccessful)
+            lock(game)
             {
-                Clients.Group(gameId).SendAsync("PlayerMoved", this.GetGameState(gameId));      
-            }
-            else
-            {
-                Clients.Caller.SendAsync("IllegalAction", moveResult.Message);
+                var playerId = Context.Items["PlayerId"].ToString();
+
+                var moveResult = game.MakeMove(col, playerId);
+
+                if (moveResult.WasSuccessful)
+                {
+                    Clients.Group(gameId).SendAsync("PlayerMoved", this.GetGameState(gameId));      
+                }
+                else
+                {
+                    Clients.Caller.SendAsync("IllegalAction", moveResult.Message);
+                } 
             }
         }
         

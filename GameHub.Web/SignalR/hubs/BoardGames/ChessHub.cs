@@ -47,15 +47,18 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
 
             var game = _cache.Get(gameId);
 
-            var isValid = game.MakeMove(playerId, move);
+            lock(game)
+            {
+                var isValid = game.MakeMove(playerId, move);
 
-            if (isValid)
-            {
-                Clients.Group(gameId).SendAsync("PlayerMoved", GetGameState(gameId));
-            }
-            else
-            {
-                Clients.Caller.SendAsync("IllegalAction", "Invalid move");
+                if (isValid)
+                {
+                    Clients.Group(gameId).SendAsync("PlayerMoved", GetGameState(gameId));
+                }
+                else
+                {
+                    Clients.Caller.SendAsync("IllegalAction", "Invalid move");
+                }
             }
         }
 

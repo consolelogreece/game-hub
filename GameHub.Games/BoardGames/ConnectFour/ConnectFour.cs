@@ -53,26 +53,22 @@ namespace GameHub.Games.BoardGames.ConnectFour
                 return new  ActionResult(false, "The game has finished!");
             }
 
-            lock (_game)
-            lock (_players)
+            var player = _players[_nextPlayerIndex];
+
+            if (player.Id != playerId)
             {
-                var player = _players[_nextPlayerIndex];
-
-                if (player.Id != playerId)
-                {
-                    return new ActionResult(false, "It's not your turn");
-                }
-
-                var moveResult = _game.MakeMove(col, player.PlayerColor);
-
-                if (!moveResult.WasSuccessful) return moveResult;
-
-                _nextPlayerIndex = (_nextPlayerIndex + 1) % _players.Count;
-
-                UpdateStatus();
-
-                return new ActionResult(true);
+                return new ActionResult(false, "It's not your turn");
             }
+
+            var moveResult = _game.MakeMove(col, player.PlayerColor);
+
+            if (!moveResult.WasSuccessful) return moveResult;
+
+            _nextPlayerIndex = (_nextPlayerIndex + 1) % _players.Count;
+
+            UpdateStatus();
+
+            return new ActionResult(true);
         }
 
         private void UpdateStatus()
@@ -96,35 +92,31 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
         public ActionResult RegisterPlayer(string playerId, string playerNick)
         {
-            lock (_players)
+            if (_players.Any(p => p.Id == playerId))
             {
-                if (_players.Any(p => p.Id == playerId))
-                {
-                    return new ActionResult(false, "Player already registered"); 
-                }
-
-                if (_players.Any(p => p.PlayerNick == playerNick))
-                {
-                    return new ActionResult(false, "Name already in use");
-                }
-
-                if (_players.Count >= _config.nPlayersMax)
-                {
-                    return new ActionResult(false, "Game is full");
-                }
-
-                if (_gameStarted) return new ActionResult(false, "Game has already started");
-                
-                var newPlayer = new ConnectFourPlayer { 
-                    Id = playerId, 
-                    PlayerNick = playerNick, 
-                    PlayerColor = _colors[_players.Count], 
-                    IsHost = _config.creatorId == playerId
-                };
-
-            
-                _players.Add(newPlayer);
+                return new ActionResult(false, "Player already registered"); 
             }
+
+            if (_players.Any(p => p.PlayerNick == playerNick))
+            {
+                return new ActionResult(false, "Name already in use");
+            }
+
+            if (_players.Count >= _config.nPlayersMax)
+            {
+                return new ActionResult(false, "Game is full");
+            }
+
+            if (_gameStarted) return new ActionResult(false, "Game has already started");
+            
+            var newPlayer = new ConnectFourPlayer { 
+                Id = playerId, 
+                PlayerNick = playerNick, 
+                PlayerColor = _colors[_players.Count], 
+                IsHost = _config.creatorId == playerId
+            };
+
+            _players.Add(newPlayer);
 
             return new ActionResult(true);
         }
@@ -144,7 +136,7 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
         public ActionResult Reset(string playerId)
         {
-            if( _config.creatorId != playerId) return new ActionResult(false,  "You are not the host");;
+            if(_config.creatorId != playerId) return new ActionResult(false,  "You are not the host");
 
             _game.ClearBoard();
 
@@ -177,22 +169,19 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
         public GameStateConnectFour GetGameState()
         {
-            lock (_players)
-            {
-                var gameState = new GameStateConnectFour();
+            var gameState = new GameStateConnectFour();
 
-                gameState.Status = this.GetGameStatus();
+            gameState.Status = this.GetGameStatus();
 
-                gameState.BoardState = _game.Board;
+            gameState.BoardState = _game.Board;
 
-                gameState.Players = _players;
+            gameState.Players = _players;
 
-                gameState.CurrentTurnPlayer = _players.Count != 0 ? _players[_nextPlayerIndex] : null;
+            gameState.CurrentTurnPlayer = _players.Count != 0 ? _players[_nextPlayerIndex] : null;
 
-                gameState.Configuration = this._config;
+            gameState.Configuration = this._config;
 
-                return gameState;
-            }
+            return gameState;
         }
 
         public ActionResult Resign(string playerId)
@@ -204,11 +193,8 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
             if (player.Resigned) return new ActionResult(false, "Player already resigned");
 
-            lock(_players)
-            {
-                player.Resigned = true;
-            }
-
+            player.Resigned = true;
+        
             if (_players.Count(p => !p.Resigned) < 2)
             {
                 _gameOver = true;
