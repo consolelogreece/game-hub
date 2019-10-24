@@ -96,6 +96,11 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
         public ActionResult RegisterPlayer(string playerId, string playerNick)
         {
+            if (_players.Any(p => p.PlayerNick == playerNick))
+            {
+                return new ActionResult(false, "Name already in use");
+            }
+
             if (_gameStarted) return new ActionResult(false, "Game has already started");
             
             var newPlayer = new ConnectFourPlayer { Id = playerId, 
