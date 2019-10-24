@@ -96,32 +96,33 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
         public ActionResult RegisterPlayer(string playerId, string playerNick)
         {
-            if (_players.Any(p => p.Id == playerId))
-            {
-                return new ActionResult(false, "Player already registered"); 
-            }
-
-            if (_players.Any(p => p.PlayerNick == playerNick))
-            {
-                return new ActionResult(false, "Name already in use");
-            }
-
-            if (_players.Count >= _config.nPlayersMax)
-            {
-                return new ActionResult(false, "Game is full");
-            }
-
-            if (_gameStarted) return new ActionResult(false, "Game has already started");
-            
-            var newPlayer = new ConnectFourPlayer { 
-                Id = playerId, 
-                PlayerNick = playerNick, 
-                PlayerColor = _colors[_players.Count], 
-                IsHost = _config.creatorId == playerId
-            };
-
             lock (_players)
             {
+                if (_players.Any(p => p.Id == playerId))
+                {
+                    return new ActionResult(false, "Player already registered"); 
+                }
+
+                if (_players.Any(p => p.PlayerNick == playerNick))
+                {
+                    return new ActionResult(false, "Name already in use");
+                }
+
+                if (_players.Count >= _config.nPlayersMax)
+                {
+                    return new ActionResult(false, "Game is full");
+                }
+
+                if (_gameStarted) return new ActionResult(false, "Game has already started");
+                
+                var newPlayer = new ConnectFourPlayer { 
+                    Id = playerId, 
+                    PlayerNick = playerNick, 
+                    PlayerColor = _colors[_players.Count], 
+                    IsHost = _config.creatorId == playerId
+                };
+
+            
                 _players.Add(newPlayer);
             }
 
