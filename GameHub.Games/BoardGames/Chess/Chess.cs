@@ -187,12 +187,19 @@ namespace GameHub.Games.BoardGames.Chess
         public GameStateChess GetGameState()
         {
             var currentTurnPlayer =  this.GetPlayer(_game.WhoseTurn);
+
+            var players = new List<ChessPlayer>();
+
+            if (White != null) players.Add(White);
+            if (Black != null) players.Add(Black);
             
             return new GameStateChess
             {
                 BoardStateFen = _game.GetFen(),
                 CurrentTurnPlayer = currentTurnPlayer,
-                Status = GetGameStatus()
+                Status = GetGameStatus(),
+                Configuration = _config,
+                Players = players
             };
         }
     }

@@ -21,6 +21,7 @@ export default class Chess extends Component {
             legalMoves: {},
             squareStyles: {},
             pieceSquare:"",
+            isGameFull: false,
             gameState: "lobby",
             playerInfo: null,
             gameMessage: "",
@@ -41,6 +42,8 @@ export default class Chess extends Component {
         this.props.on('IllegalAction', this.illegalAction);
 
         this.props.on('GameOver', this.gameOverHandler);
+
+        this.props.on('PlayerJoined', gameState => this.updateStateWithNewGameState(gameState))
    
         this.props.startConnection()
         .then(() => {
@@ -106,12 +109,13 @@ export default class Chess extends Component {
     updateStateWithNewGameState = gameState =>
     {
         var message = this.generateGameMessageFromGameState(gameState);
-        console.log(gameState)
+        var isGameFull = this.isGameFull(gameState);
         this.setState({
             fen: gameState.boardStateFen, 
             gameState: gameState.status.status,
             playerTurn: this.getTurnIndicator(gameState.currentTurnPlayer),
-            gameMessage: message
+            gameMessage: message,
+            isGameFull: isGameFull
         })
     }
 
@@ -121,13 +125,22 @@ export default class Chess extends Component {
 
         let {status, endReason} = gameState.status;
 
+        let isGameFull = this.isGameFull(gameState);
+
         if (status === "finished") message = endReason;
 
         if (status === "lobby")
         {
             if (this.state.playerInfo === null)
             {
-                message = "Please enter your name"
+                if (isGameFull)
+                {
+                    message = "Game full, waiting for host to start..."
+                }
+                else
+                {
+                    message = "Please enter your name"
+                }
             }
             else if (!this.isHost())
             {
@@ -321,6 +334,11 @@ export default class Chess extends Component {
         this.props.invoke('Resign');
     }
 
+    isGameFull = gameState =>
+    {
+        return gameState.configuration.nPlayersMax <= gameState.players.length;
+    }
+
     isHost = () =>
     {
         return this.state.playerInfo !== null && this.state.playerInfo.isHost;
@@ -339,6 +357,8 @@ export default class Chess extends Component {
         let clientName = this.state.playerInfo !== null ? this.state.playerInfo.playerNick : "";
 
         let isPlayerRegistered = !!this.state.playerInfo;
+
+        let isGameFull = this.state.isGameFull;
 
         return (
             <div style={{width: width, margin: "0 auto"}}>
@@ -369,6 +389,7 @@ export default class Chess extends Component {
                     gameState = {gameState}
                     isPlayerRegistered = {isPlayerRegistered}
                     StartGame = {this.StartGame}
+                    isGameFull = {isGameFull}
                     Rematch = {() => this.props.invoke('Rematch')}
                     Resign = {this.Resign}
                 />

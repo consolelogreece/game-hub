@@ -161,7 +161,6 @@ export class ConnectFour extends Component {
 
     isGameFull = gameState =>
     {
-        console.log(gameState)
         return gameState.configuration.nPlayersMax <= gameState.players.length;
     }
 
