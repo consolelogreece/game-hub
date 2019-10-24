@@ -113,10 +113,12 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
             if (_gameStarted) return new ActionResult(false, "Game has already started");
             
-            var newPlayer = new ConnectFourPlayer { Id = playerId, 
-            PlayerNick = playerNick, 
-            PlayerColor = _colors[_players.Count], 
-            IsHost = _config.creatorId == playerId};
+            var newPlayer = new ConnectFourPlayer { 
+                Id = playerId, 
+                PlayerNick = playerNick, 
+                PlayerColor = _colors[_players.Count], 
+                IsHost = _config.creatorId == playerId
+            };
 
             lock (_players)
             {
