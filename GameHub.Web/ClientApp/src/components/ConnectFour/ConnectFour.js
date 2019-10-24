@@ -91,6 +91,7 @@ export class ConnectFour extends Component {
 
     getTurnIndicator = player => 
     {
+        console.log(player)
         if (this.state.playerInfo === null)
         {
             if (player === null)
@@ -100,7 +101,7 @@ export class ConnectFour extends Component {
             
             return player.playerNick;
         }
-        return "your";
+        return player.playerNick == this.state.playerInfo.playerNick ? "your" : player.playerNick;
     }
 
     generateGameMessageFromGameState = gameState =>
