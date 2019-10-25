@@ -9,7 +9,8 @@ export class NewGameC4 extends Component {
                 nCols: 7,
                 winThreshold: 4,
                 nPlayersMax: 2
-            }
+            },
+            message: ""
         };
     }
 
@@ -18,6 +19,8 @@ export class NewGameC4 extends Component {
         this.props.startConnection()
             .then(() => console.log('Connection started!'))
             .catch(err => console.log('Error while establishing connection :(', err))
+
+        this.props.on("IllegalAction", res => this.setState({message: res}))
     }
 
     CreateRoom = () => 
@@ -46,6 +49,7 @@ export class NewGameC4 extends Component {
                 <h6>Max Players</h6>
                 <input name="nPlayersMax" value={this.state.roomConfig.nPlayersMax} onChange={e => this.HandleChange(e)} />
                 <br />
+                {this.state.message}
                 <button onClick={() => this.CreateRoom()}>Create</button>
             </div>
         )

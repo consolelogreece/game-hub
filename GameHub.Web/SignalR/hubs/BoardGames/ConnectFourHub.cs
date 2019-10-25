@@ -51,7 +51,7 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
 
             if (!validGameConfig)
             {
-               Clients.Caller.SendAsync("Config illegal");
+               Clients.Caller.SendAsync("IllegalAction", "Config Illegal");
 
                return null;
             }
