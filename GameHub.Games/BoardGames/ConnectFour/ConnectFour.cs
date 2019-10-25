@@ -63,9 +63,8 @@ namespace GameHub.Games.BoardGames.ConnectFour
             var moveResult = _game.MakeMove(col, player.PlayerColor);
 
             if (!moveResult.WasSuccessful) return moveResult;
-
-            // todo: update so resigned PLAYERS cant get assigned next go
             
+            UpdateMoveMade();
 
             return new ActionResult(true);
         }
@@ -132,9 +131,9 @@ namespace GameHub.Games.BoardGames.ConnectFour
             {
                 loopCounter++;
 
-                nextPlayerIndexCopy++;
+                nextPlayerIndexCopy = ((nextPlayerIndexCopy + 1) % nPlayers);
 
-                if (!_players[nextPlayerIndexCopy % nPlayers].Resigned) 
+                if (!_players[nextPlayerIndexCopy].Resigned) 
                 {
                     index = nextPlayerIndexCopy;
 

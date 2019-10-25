@@ -39,9 +39,11 @@ export class ConnectFour extends Component {
         
         this.props.on('GameStarted', gameState => this.updateStateWithNewGameState(gameState));
 
-        this.props.on('PlayerJoined', gameState => this.updateStateWithNewGameState(gameState))
+        this.props.on('PlayerJoined', gameState => this.updateStateWithNewGameState(gameState));
 
-        this.props.on('PlayerResigned', gameState => this.updateStateWithNewGameState(gameState))
+        this.props.on('PlayerResigned', gameState => this.updateStateWithNewGameState(gameState));
+
+        this.props.on('RematchStarted', gameState => this.RematchStarted(gameState));
         
         this.props.startConnection()
         .then(() => {
@@ -65,6 +67,16 @@ export class ConnectFour extends Component {
             .then(this.populatePlayerClientInfo())
             .then(this.populateGameState())
             .catch(() => this.setState({gameMessage: "oopsie daisy"}));
+    }
+
+    RematchStarted = gameState =>
+    {
+        if (this.state.playerInfo !== null)
+        {
+            this.setState({playerInfo:{...this.state.playerInfo, resigned: true}});
+        }
+
+        this.updateStateWithNewGameState(gameState);
     }
 
     invoke = destination =>
@@ -161,6 +173,16 @@ export class ConnectFour extends Component {
         return this.state.playerInfo != null && this.state.playerInfo.isHost;
     }
 
+    Resign = () => 
+    {
+        if (this.state.playerInfo !== null)
+        {
+            this.setState({playerInfo:{...this.state.playerInfo, resigned: true}});
+
+            this.invoke("Resign");
+        }
+    }
+
     isGameFull = gameState =>
     {
         return gameState.configuration.nPlayersMax <= gameState.players.length;
@@ -180,6 +202,8 @@ export class ConnectFour extends Component {
 
         let isPlayerRegistered = !!this.state.playerInfo;
 
+        let hasPlayerResigned = this.state.playerInfo !== null && this.state.playerInfo.resigned;
+
         return (
             <div id="ConnectFour" className="vertical_center">  
                 <Title text="Connect Four"/> 
@@ -197,9 +221,10 @@ export class ConnectFour extends Component {
                     gameState = {gameState}
                     isGameFull = {isGameFull}
                     isPlayerRegistered = {isPlayerRegistered}
+                    hasPlayerResigned = {hasPlayerResigned}
                     StartGame = {() => this.invoke('StartGame')}
                     Rematch = {() => this.invoke('Rematch')}
-                    Resign = {() => this.invoke('Resign')}
+                    Resign = {() => this.Resign()}
                 />
             </div>
         )

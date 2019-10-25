@@ -3,7 +3,7 @@ import JoinGame from './JoinGame'
 
 export default props =>
 {
-    let {gameState, isHost, isPlayerRegistered, isGameFull} = props;
+    let {gameState, isHost, isPlayerRegistered, isGameFull, hasPlayerResigned} = props;
 
     let optionsPanel;
 
@@ -28,7 +28,7 @@ export default props =>
         case "started":
             optionsPanel = (
                 <div>
-                   {!!isPlayerRegistered && <button onClick={() => props.Resign()}>Resign</button>}
+                   {!!isPlayerRegistered && !hasPlayerResigned && <button onClick={() => props.Resign()}>Resign</button>}
                 </div>
             )
             break;
