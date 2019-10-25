@@ -22,18 +22,16 @@ export default function(WrappedComponent, endpoint)
 
         on = (destination, func) => 
         {
-            switch (typeof(destination))
+            if (typeof(destination) === "string")
             {
-                case "array":
-                    destination.forEach(el => {
-                        if (typeof(el) === "string")
-                            this.state.connection.on(el, func)
-                    });
-                    break;
-
-                case "string":
-                    this.state.connection.on(destination, func);
-                    break;
+                this.state.connection.on(destination, func);
+            }
+            else if(Array.isArray(destination))
+            {
+                destination.forEach(el => {
+                    if (typeof(el) === "string")
+                        this.state.connection.on(el, func)
+                });
             }
         };
 
