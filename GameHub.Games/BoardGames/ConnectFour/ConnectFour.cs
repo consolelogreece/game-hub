@@ -69,7 +69,6 @@ namespace GameHub.Games.BoardGames.ConnectFour
             return new ActionResult(true);
         }
 
-
         private void UpdateMoveMade()
         {
             UpdateWinConventional();
@@ -103,7 +102,6 @@ namespace GameHub.Games.BoardGames.ConnectFour
             // If the move indicator points to a player who's resigned, udate.
             if (_players[_currentPlayerIndex].Resigned) UpdatePlayerTurn();
         }
-
 
         private void UpdateWinByResignations()
         {
