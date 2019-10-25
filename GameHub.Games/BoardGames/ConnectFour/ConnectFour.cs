@@ -22,7 +22,7 @@ namespace GameHub.Games.BoardGames.ConnectFour
             "lightblue"
         };
 
-        private int _nextPlayerIndex;
+        private int _currentPlayerIndex;
 
         private bool _gameOver = false;
 
@@ -53,7 +53,7 @@ namespace GameHub.Games.BoardGames.ConnectFour
                 return new  ActionResult(false, "The game has finished!");
             }
 
-            var player = _players[_nextPlayerIndex];
+            var player = _players[_currentPlayerIndex];
 
             if (player.Id != playerId)
             {
@@ -93,7 +93,7 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
         private void UpdatePlayerTurn()
         {
-            _nextPlayerIndex = FindIndexOfNextPlayerToMove();
+            _currentPlayerIndex = FindIndexOfNextPlayerToMove();
         }
 
         private void UpdateResigned()
@@ -101,7 +101,7 @@ namespace GameHub.Games.BoardGames.ConnectFour
             UpdateWinByResignations();
 
             // If the move indicator points to a player who's resigned, udate.
-            if (_players[_nextPlayerIndex].Resigned) UpdatePlayerTurn();
+            if (_players[_currentPlayerIndex].Resigned) UpdatePlayerTurn();
         }
 
 
@@ -115,13 +115,11 @@ namespace GameHub.Games.BoardGames.ConnectFour
             }
         }
 
-        // todo rename nextPlayer to currentPlayer
-
         private int FindIndexOfNextPlayerToMove()
         {
             var nPlayers = _players.Count;
 
-            var nextPlayerIndexCopy = _nextPlayerIndex;
+            var currentPlayerIndexCopy = _currentPlayerIndex;
 
             var loopCounter = 0;
 
@@ -131,17 +129,17 @@ namespace GameHub.Games.BoardGames.ConnectFour
             {
                 loopCounter++;
 
-                nextPlayerIndexCopy = ((nextPlayerIndexCopy + 1) % nPlayers);
+                currentPlayerIndexCopy = ((currentPlayerIndexCopy + 1) % nPlayers);
 
-                if (!_players[nextPlayerIndexCopy].Resigned) 
+                if (!_players[currentPlayerIndexCopy].Resigned) 
                 {
-                    index = nextPlayerIndexCopy;
+                    index = currentPlayerIndexCopy;
 
                     break;
                 }
             }
 
-            return nextPlayerIndexCopy;
+            return currentPlayerIndexCopy;
         }
 
         public ConnectFourPlayer GetPlayer(string playerId)
@@ -203,7 +201,7 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
             _started = true;
 
-            _nextPlayerIndex = 0;
+            _currentPlayerIndex = 0;
 
             // un-resign resigned players
             _players.ForEach(p => p.Resigned = false);
@@ -236,7 +234,7 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
             gameState.Players = _players;
 
-            gameState.CurrentTurnPlayer = _players.Count != 0 ? _players[_nextPlayerIndex] : null;
+            gameState.CurrentTurnPlayer = _players.Count != 0 ? _players[_currentPlayerIndex] : null;
 
             gameState.Configuration = this._config;
 

@@ -157,7 +157,7 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
 
                 if (resetResult.WasSuccessful)
                 {
-                    Clients.Group(gameId).SendAsync("GameStarted", this.GetGameState(gameId));
+                    Clients.Group(gameId).SendAsync("RematchStarted", this.GetGameState(gameId));
                 }
                 else
                 {

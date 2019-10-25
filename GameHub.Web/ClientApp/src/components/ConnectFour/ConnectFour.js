@@ -73,7 +73,7 @@ export class ConnectFour extends Component {
     {
         if (this.state.playerInfo !== null)
         {
-            this.setState({playerInfo:{...this.state.playerInfo, resigned: true}});
+            this.setState({playerInfo:{...this.state.playerInfo, resigned: false}});
         }
 
         this.updateStateWithNewGameState(gameState);
@@ -226,6 +226,7 @@ export class ConnectFour extends Component {
                     Rematch = {() => this.invoke('Rematch')}
                     Resign = {() => this.Resign()}
                 />
+                <button onClick  = {() => console.log(this.state)}>log state</button>
             </div>
         )
     }
