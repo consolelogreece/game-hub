@@ -38,16 +38,16 @@ export class NewGameC4 extends Component {
         return (
             <div>
                 <h6>Rows</h6>
-                <input name="nRows" value={this.state.roomConfig.nRows} onChange={e => this.HandleChange(e)} />
+                <input name="nRows" value={this.state.roomConfig.nRows} min="0" max="30" onChange={e => this.HandleChange(e)} />
                 <br />
                 <h6>Columns</h6>
-                <input name="nCols" value={this.state.roomConfig.nCols} onChange={e => this.HandleChange(e)} />
+                <input name="nCols" value={this.state.roomConfig.nCols} min="0" max="30" type="number" onChange={e => this.HandleChange(e)} />
                 <br />
                 <h6>Win Threshold</h6>
-                <input name="winThreshold" value={this.state.roomConfig.winThreshold} onChange={e => this.HandleChange(e)} />
+                <input name="winThreshold" value={this.state.roomConfig.winThreshold} min="0" max="30" type="number" onChange={e => this.HandleChange(e)} />
                 <br />
                 <h6>Max Players</h6>
-                <input name="nPlayersMax" value={this.state.roomConfig.nPlayersMax} onChange={e => this.HandleChange(e)} />
+                <input name="nPlayersMax" value={this.state.roomConfig.nPlayersMax} min="0" max="8" type="number" onChange={e => this.HandleChange(e)} />
                 <br />
                 {this.state.message}
                 <button onClick={() => this.CreateRoom()}>Create</button>
