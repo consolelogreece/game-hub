@@ -28,20 +28,18 @@ export class ConnectFour extends Component {
     componentDidMount() 
     {
         this.props.registerPermanentInvokeParam(this.state.gameId);
-
-        this.props.on('PlayerMoved', gameState => this.updateStateWithNewGameState(gameState));
         
         this.props.on('RoomDoesntExist', res => { this.props.history.push("/connectfour/createroom")});
-
-        this.props.on('GameOver', gameState => this.updateStateWithNewGameState(gameState));
         
         this.props.on('IllegalAction', res => {this.setState({ gameMessage: res })});
-        
-        this.props.on('GameStarted', gameState => this.updateStateWithNewGameState(gameState));
 
-        this.props.on('PlayerJoined', gameState => this.updateStateWithNewGameState(gameState));
-
-        this.props.on('PlayerResigned', gameState => this.updateStateWithNewGameState(gameState));
+        this.props.on([
+            'PlayerResigned',
+            'PlayerJoined',
+            'GameStarted',
+            'GameOver',
+            'PlayerMoved'
+        ], gameState => this.updateStateWithNewGameState(gameState));
 
         this.props.on('RematchStarted', gameState => this.RematchStarted(gameState));
         
