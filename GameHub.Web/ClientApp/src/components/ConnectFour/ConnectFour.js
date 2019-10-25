@@ -224,7 +224,6 @@ export class ConnectFour extends Component {
                     Rematch = {() => this.invoke('Rematch')}
                     Resign = {() => this.Resign()}
                 />
-                <button onClick  = {() => console.log(this.state)}>log state</button>
             </div>
         )
     }
