@@ -43,7 +43,9 @@ export default class Chess extends Component {
 
         this.props.on('GameOver', this.gameOverHandler);
 
-        this.props.on('PlayerJoined', gameState => this.updateStateWithNewGameState(gameState))
+        this.props.on(['PlayerJoined', 'PlayerResigned'], gameState => this.updateStateWithNewGameState(gameState))
+
+        this.props.on('RematchStarted', gameState => this.RematchStarted(gameState));
    
         this.props.startConnection()
         .then(() => {
@@ -83,6 +85,18 @@ export default class Chess extends Component {
     
     gameStarted = gameState => 
     {
+        this.updateStateWithNewGameState(gameState);
+
+        this.populateAvailableMoves();
+    }
+
+    RematchStarted = gameState =>
+    {
+        if (this.state.playerInfo !== null)
+        {
+            this.setState({playerInfo:{...this.state.playerInfo, resigned: false}});
+        }
+
         this.populateAvailableMoves();
 
         this.updateStateWithNewGameState(gameState);
@@ -331,7 +345,12 @@ export default class Chess extends Component {
 
     Resign = () =>
     {
-        this.props.invoke('Resign');
+        if (this.state.playerInfo !== null)
+        {
+            this.setState({playerInfo:{...this.state.playerInfo, resigned: false}});
+
+            this.props.invoke('Resign');
+        }
     }
 
     isGameFull = gameState =>
@@ -359,6 +378,8 @@ export default class Chess extends Component {
         let isPlayerRegistered = !!this.state.playerInfo;
 
         let isGameFull = this.state.isGameFull;
+
+        let hasPlayerResigned = this.state.playerInfo !== null && this.state.playerInfo.resigned;
 
         return (
             <div style={{width: width, margin: "0 auto"}}>
@@ -390,6 +411,7 @@ export default class Chess extends Component {
                     isPlayerRegistered = {isPlayerRegistered}
                     StartGame = {this.StartGame}
                     isGameFull = {isGameFull}
+                    hasPlayerResigned = {hasPlayerResigned}
                     Rematch = {() => this.props.invoke('Rematch')}
                     Resign = {this.Resign}
                 />
