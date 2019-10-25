@@ -40,6 +40,8 @@ export class ConnectFour extends Component {
         this.props.on('GameStarted', gameState => this.updateStateWithNewGameState(gameState));
 
         this.props.on('PlayerJoined', gameState => this.updateStateWithNewGameState(gameState))
+
+        this.props.on('PlayerResigned', gameState => this.updateStateWithNewGameState(gameState))
         
         this.props.startConnection()
         .then(() => {

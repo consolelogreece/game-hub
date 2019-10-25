@@ -64,14 +64,21 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
             if (!moveResult.WasSuccessful) return moveResult;
 
-            _nextPlayerIndex = (_nextPlayerIndex + 1) % _players.Count;
-
-            UpdateStatus();
+            // todo: update so resigned PLAYERS cant get assigned next go
+            
 
             return new ActionResult(true);
         }
 
-        private void UpdateStatus()
+
+        private void UpdateMoveMade()
+        {
+            UpdateWinConventional();
+
+            UpdatePlayerTurn();
+        }
+
+        private void UpdateWinConventional()
         {
             var gameWinnerColor = _game.GetWinner();
 
@@ -83,6 +90,59 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
                 _gameOver = true;
             }
+        }
+
+        private void UpdatePlayerTurn()
+        {
+            _nextPlayerIndex = FindIndexOfNextPlayerToMove();
+        }
+
+        private void UpdateResigned()
+        {
+            UpdateWinByResignations();
+
+            // If the move indicator points to a player who's resigned, udate.
+            if (_players[_nextPlayerIndex].Resigned) UpdatePlayerTurn();
+        }
+
+
+        private void UpdateWinByResignations()
+        {
+            if (_players.Count(p => !p.Resigned) < 2)
+            {
+                _gameOver = true;
+                _winner = _players.FirstOrDefault(p => !p.Resigned);
+                _winner.Wins++;
+            }
+        }
+
+        // todo rename nextPlayer to currentPlayer
+
+        private int FindIndexOfNextPlayerToMove()
+        {
+            var nPlayers = _players.Count;
+
+            var nextPlayerIndexCopy = _nextPlayerIndex;
+
+            var loopCounter = 0;
+
+            var index = -1;
+
+            while(loopCounter < nPlayers)
+            {
+                loopCounter++;
+
+                nextPlayerIndexCopy++;
+
+                if (!_players[nextPlayerIndexCopy % nPlayers].Resigned) 
+                {
+                    index = nextPlayerIndexCopy;
+
+                    break;
+                }
+            }
+
+            return nextPlayerIndexCopy;
         }
 
         public ConnectFourPlayer GetPlayer(string playerId)
@@ -193,14 +253,13 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
             if (player.Resigned) return new ActionResult(false, "Player already resigned");
 
+            if (_gameOver) return new ActionResult(false, "Game is over");
+
+            if (!_started) return new ActionResult(false, "Game hasn't started");
+
             player.Resigned = true;
-        
-            if (_players.Count(p => !p.Resigned) < 2)
-            {
-                _gameOver = true;
-                _winner = _players.FirstOrDefault(p => !p.Resigned);
-                _winner.Wins++;
-            }
+
+            UpdateResigned();
 
             return new ActionResult(true);
         }
