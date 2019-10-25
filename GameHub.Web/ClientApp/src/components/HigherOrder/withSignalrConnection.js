@@ -32,7 +32,7 @@ export default function(WrappedComponent, endpoint)
                     break;
 
                 case "string":
-                    this.state.connection.on(el, func);
+                    this.state.connection.on(destination, func);
                     break;
             }
         };
