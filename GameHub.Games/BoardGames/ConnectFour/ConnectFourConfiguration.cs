@@ -23,17 +23,29 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
             if (nRows > 30)
             {
-                errors.Add("nRows", "Can't have more than 30 rows.");
+                errors.Add("nRows", "Can't have more than 30 rows");
+            }
+            else if (nRows < 2)
+            {
+                errors.Add("nRows", "Must have atleast 2 rows"); 
             }
 
             if (nCols > 30)
             {
-                errors.Add("nCols", "Can't have more than 30 columns.");
+                errors.Add("nCols", "Can't have more than 30 columns");
+            }
+            else if (nCols < 2)
+            {
+                errors.Add("nCols", "Must have atleast 2 columns"); 
             }
 
             if (winThreshold > nRows || winThreshold > nCols)
             {
                 errors.Add("winThreshold", "Win threshold can't be greater than the size of the board");
+            }
+            else if (winThreshold < 2)
+            {
+                errors.Add("winThreshold", "Win threshold can't be less than 2");
             }
 
             if (nPlayersMax > 8)
