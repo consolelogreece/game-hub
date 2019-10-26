@@ -40,7 +40,7 @@ export class NewGameC4 extends Component {
             <div>
                 <h6>Rows</h6>
                 {!!this.state.errors.nRows && <ErrorMessage text={this.state.errors.nRows} />}
-                <input name="nRows" value={this.state.roomConfig.nRows} min="0" max="30" onChange={e => this.HandleChange(e)} />
+                <input name="nRows" value={this.state.roomConfig.nRows} min="0" max="30" type="number" onChange={e => this.HandleChange(e)} />
                 <br />
                 <h6>Columns</h6>
                 {!!this.state.errors.nCols && <ErrorMessage text={this.state.errors.nCols} />}
