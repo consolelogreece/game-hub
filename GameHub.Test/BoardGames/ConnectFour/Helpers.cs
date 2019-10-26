@@ -1,6 +1,6 @@
 using GameHub.Games.BoardGames.ConnectFour;
 
-namespace GameHub.Test.BoardGames
+namespace GameHub.Test.BoardGames.ConnectFourTests
 {
     internal static class ConnectFourTestHelpers
     {

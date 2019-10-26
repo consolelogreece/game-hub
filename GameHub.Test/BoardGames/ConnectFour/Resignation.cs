@@ -1,6 +1,6 @@
 using Xunit;
 
-namespace GameHub.Test.BoardGames
+namespace GameHub.Test.BoardGames.ConnectFourTests
 {
     public class Resignation
     {

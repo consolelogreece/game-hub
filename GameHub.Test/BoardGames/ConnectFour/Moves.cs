@@ -1,7 +1,7 @@
 using GameHub.Games.BoardGames.ConnectFour;
 using Xunit;
 
-namespace GameHub.Test.BoardGames
+namespace GameHub.Test.BoardGames.ConnectFourTests
 {
     public class Moves
     {
