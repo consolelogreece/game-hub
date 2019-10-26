@@ -47,11 +47,11 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
 
             config.creatorId = playerId;
 
-            var validGameConfig = config.Validate();
+            var errors = config.Validate();
 
-            if (!validGameConfig)
+            if (errors.Count != 0)
             {
-               Clients.Caller.SendAsync("IllegalAction", "Config Illegal");
+               Clients.Caller.SendAsync("IllegalConfiguration", errors);
 
                return null;
             }

@@ -16,9 +16,43 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
         public ushort nPlayersMax { get; set; }
 
-        public bool Validate()
+        ///<summary>Returns dictionary containing errors. Empty means configuration is valid.</summary>
+        public Dictionary<string, string> Validate()
         {
-            return nRows <= 30 && nCols <= 30 && winThreshold <= 30 && nPlayersMax >= 2 && nPlayersMax <= 8;
+            var errors = new Dictionary<string, string>();
+
+            if (nRows > 30)
+            {
+                errors.Add("nRows", "Can't have more than 30 rows.");
+            }
+
+            if (nCols > 30)
+            {
+                errors.Add("nCols", "Can't have more than 30 columns.");
+            }
+
+            if (winThreshold > nRows || winThreshold > nCols)
+            {
+                errors.Add("winThreshold", "Win threshold can't be greater than the size of the board");
+            }
+
+            if (nPlayersMax > 8)
+            {
+                errors.Add("nPlayersMax", "Can't have more than 8 players");
+            }
+            else if (nPlayersMax < 2)
+            {
+                errors.Add("nPlayersMax", "Can't have less than 2 players");
+            }
+
+            // A player must be able to have the same amount of turns as the win threshold to be able to win.
+            // therefore its impossible for someone to win unless condition below is met.
+            if ((nRows * nCols) < ((nPlayersMax * winThreshold) - nPlayersMax - 1))
+            {
+                errors.Add("General", "With this configuration, it is impossible for anyone to win.");
+            }
+           
+            return errors;
         }
     }
 }
