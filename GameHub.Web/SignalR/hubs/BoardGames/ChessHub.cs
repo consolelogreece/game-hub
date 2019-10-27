@@ -68,7 +68,7 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
 
             var playerId = Context.Items["PlayerId"].ToString();
 
-            var game = new Chess(new ChessConfig
+            var game = new Chess(new ChessConfiguration
             {
                 creatorId = playerId
             });

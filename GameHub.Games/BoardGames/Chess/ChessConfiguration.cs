@@ -1,6 +1,6 @@
 namespace GameHub.Games.BoardGames.Chess
 {
-    public class ChessConfig
+    public class ChessConfiguration
     {
         public string creatorId {get; set;}
 

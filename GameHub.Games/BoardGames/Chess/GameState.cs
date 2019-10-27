@@ -11,6 +11,6 @@ namespace GameHub.Games.BoardGames.Chess
 
         public List<ChessPlayer> Players { get; set; }
 
-        public ChessConfig Configuration { get; set; }
+        public ChessConfiguration Configuration { get; set; }
     }
 }

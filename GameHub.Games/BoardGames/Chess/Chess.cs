@@ -15,9 +15,9 @@ namespace GameHub.Games.BoardGames.Chess
 
         private bool _started = false;
 
-        private ChessConfig _config;
+        private ChessConfiguration _config;
 
-        public Chess(ChessConfig config)
+        public Chess(ChessConfiguration config)
         {
            _config = config;
         }

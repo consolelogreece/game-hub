@@ -6,16 +6,16 @@ namespace GameHub.Test.BoardGames.ChessTests
     {
         internal static Chess GetGame()
         {
-            return GetGame(new ChessConfig());
+            return GetGame(new ChessConfiguration());
         }
-        internal static Chess GetGame(ChessConfig config)
+        internal static Chess GetGame(ChessConfiguration config)
         {
             return new Chess(config);
         }
 
-        internal static ChessConfig GetDefaultConfig(string creatorId)
+        internal static ChessConfiguration GetDefaultConfig(string creatorId)
         {
-            return new ChessConfig
+            return new ChessConfiguration
             {
                 creatorId = creatorId
             };
