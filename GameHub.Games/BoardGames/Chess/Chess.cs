@@ -40,7 +40,6 @@ namespace GameHub.Games.BoardGames.Chess
             var isOver = false;
 
             var endReason = "";
-
             
             if (IsStalemated)
             {
@@ -175,6 +174,13 @@ namespace GameHub.Games.BoardGames.Chess
         public ActionResult Resign(string playerId)
         {
             var player = this.GetPlayer(playerId);
+
+            // cant resign if player does not exist.
+            if (player == null || !_started) return new ActionResult(false, "Not a player");
+
+            if (_game.Resigned == player.player) return new ActionResult(false, "Player already resigned");
+
+            if (!_started) return new ActionResult(false, "Game hasn't started");
 
             _game.Resign(player.player);
 
