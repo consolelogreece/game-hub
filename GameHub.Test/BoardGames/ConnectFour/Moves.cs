@@ -11,8 +11,8 @@ namespace GameHub.Test.BoardGames.ConnectFourTests
         {
             var game = ConnectFourTestHelpers.GetGame(ConnectFourTestHelpers.GetDefaultConfig(player1Id));
 
-            game.RegisterPlayer(player1Id, "user");
-            game.RegisterPlayer(player2Id, "user2");
+            game.Join(player1Id, "user");
+            game.Join(player2Id, "user2");
 
             return game;
         }
@@ -22,10 +22,10 @@ namespace GameHub.Test.BoardGames.ConnectFourTests
         {
             // arrange
             var game = GetInitiatedGame();
-            game.StartGame(player1Id);
+            game.Start(player1Id);
 
             // act
-            var move = game.MakeMove(1, player1Id);
+            var move = game.Move(player1Id, 1);
 
             Assert.True(move.WasSuccessful, "Failed to move despite all conditions being fine");
         }
@@ -35,10 +35,10 @@ namespace GameHub.Test.BoardGames.ConnectFourTests
         {
             // arrange
             var game = GetInitiatedGame();
-            game.StartGame(player1Id);
+            game.Start(player1Id);
 
             // act
-            var move = game.MakeMove(1, player2Id);
+            var move = game.Move(player2Id, 1);
 
             Assert.False(move.WasSuccessful, "Player was able to move despite not being their turn");
         }
@@ -49,11 +49,11 @@ namespace GameHub.Test.BoardGames.ConnectFourTests
         {
             // arrange
             var game = GetInitiatedGame();
-            game.StartGame(player1Id);
+            game.Start(player1Id);
 
             // act
-            var move1 = game.MakeMove(1, player1Id);
-            var move2 = game.MakeMove(1, player1Id);
+            var move1 = game.Move(player1Id, 1);
+            var move2 = game.Move(player1Id, 1);
 
             Assert.True(move1.WasSuccessful, "Player was unable to move despite it being their turn");
             Assert.False(move2.WasSuccessful, "Player moved despite it not being their turn");
@@ -63,11 +63,11 @@ namespace GameHub.Test.BoardGames.ConnectFourTests
         {
             // arrange
             var game = GetInitiatedGame();
-            game.StartGame(player1Id);
+            game.Start(player1Id);
 
             // act
             // Important to note that game is using the default configuration, which is 7 columns.
-            var move = game.MakeMove(100, player1Id);
+            var move = game.Move(player1Id, 100);
 
             Assert.False(move.WasSuccessful, "Was able to move on a column that does not exist");
         }
@@ -77,16 +77,17 @@ namespace GameHub.Test.BoardGames.ConnectFourTests
         {
             // arrange
             var game = GetInitiatedGame();
-            game.StartGame(player1Id);
+            game.Start(player1Id);
 
             // act
-            game.MakeMove(1, player1Id);
-            game.MakeMove(2, player2Id);
-            game.MakeMove(1, player1Id);
-            game.MakeMove(2, player2Id);
-            game.MakeMove(1, player1Id);
-            game.MakeMove(2, player2Id);
-            game.MakeMove(1, player1Id);
+            game.Move(player1Id, 1);
+            game.Move(player2Id, 2);
+            game.Move(player1Id, 1);
+            game.Move(player2Id, 2);
+            game.Move(player1Id, 1);
+            game.Move(player2Id, 2);
+            game.Move(player1Id, 1);
+
 
             var gameState = game.GetGameState();
 
@@ -99,16 +100,16 @@ namespace GameHub.Test.BoardGames.ConnectFourTests
         {
             // arrange
             var game = GetInitiatedGame();
-            game.StartGame(player1Id);
+            game.Start(player1Id);
 
             // act
-            game.MakeMove(3, player1Id);
-            game.MakeMove(2, player2Id);
-            game.MakeMove(4, player1Id);
-            game.MakeMove(2, player2Id);
-            game.MakeMove(5, player1Id);
-            game.MakeMove(2, player2Id);
-            game.MakeMove(6, player1Id);
+            game.Move(player1Id, 3);
+            game.Move(player2Id, 2);
+            game.Move(player1Id, 4);
+            game.Move(player2Id, 2);
+            game.Move(player1Id, 5);
+            game.Move(player2Id, 2);
+            game.Move(player1Id, 6);
 
             var gameState = game.GetGameState();
 
@@ -120,20 +121,20 @@ namespace GameHub.Test.BoardGames.ConnectFourTests
         {
             // arrange
             var game = GetInitiatedGame();
-            game.StartGame(player1Id);
+            game.Start(player1Id);
 
             // act
-            game.MakeMove(1, player1Id);
-            game.MakeMove(2, player2Id);
-            game.MakeMove(2, player1Id);
-            game.MakeMove(3, player2Id);
-            game.MakeMove(4, player1Id);
-            game.MakeMove(3, player2Id);
-            game.MakeMove(4, player1Id);
-            game.MakeMove(4, player2Id);
-            game.MakeMove(3, player1Id);
-            game.MakeMove(5, player2Id);
-            game.MakeMove(4, player1Id);
+            game.Move(player1Id, 1);
+            game.Move(player2Id, 2);
+            game.Move(player1Id, 2);
+            game.Move(player2Id, 3);
+            game.Move(player1Id, 4);
+            game.Move(player2Id, 3);
+            game.Move(player1Id, 4);
+            game.Move(player2Id, 4);
+            game.Move(player1Id, 3);
+            game.Move(player2Id, 5);
+            game.Move(player1Id, 4);
             
 
             var gameState = game.GetGameState();
