@@ -6,6 +6,7 @@ namespace GameHub.Games.BoardGames.ConnectFour
 {
     public class ConnectFour : IBoardGame<GameStateConnectFour, ConnectFourPlayer>
     {
+        #region private props
         private ConnectFourGame _game;
 
         private List<ConnectFourPlayer> _players;
@@ -31,7 +32,7 @@ namespace GameHub.Games.BoardGames.ConnectFour
         private bool _started = false;
 
         private ConnectFourConfiguration _config;
-
+        #endregion
         public ConnectFour(ConnectFourConfiguration config)
         {
             _config = config;
