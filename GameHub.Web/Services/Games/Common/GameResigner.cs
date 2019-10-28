@@ -1,13 +1,10 @@
-using Caching;
 using GameHub.Games.BoardGames.Common;
-using GameHub.Games.BoardGames.ConnectFour;
+using GameHub.Web.Services.Games.Common;
 
 public class GameResigner
 {
-    private ConnectFour _game;
-
-    look // change to IResignable
-    public GameResigner(ConnectFour game)
+    private IResignable _game;
+    public GameResigner(IResignable game)
     {
         _game = game;
     }
@@ -16,7 +13,7 @@ public class GameResigner
     {
         lock(_game)
         {
-            return _game.StartGame(playerId);
+            return _game.Resign(playerId);
         }
     }
 }

@@ -1,13 +1,11 @@
-using Caching;
 using GameHub.Games.BoardGames.Common;
-using GameHub.Games.BoardGames.ConnectFour;
+using GameHub.Web.Services.Games.Common;
 
 public class GameStateGetter
 {
-   private ConnectFour _game;
+    private IGameStateGetter _game;
 
-    look  // change from ConnectFour to IPlayerGettable
-    public GameStateGetter(ConnectFour game)
+    public GameStateGetter(IGameStateGetter game)
     {
         _game = game;
     }
@@ -16,7 +14,7 @@ public class GameStateGetter
     {
         lock(_game)
         {
-            return _game.GetGameState();
+            return _game.GetState();
         }
     }
 }

@@ -1,13 +1,11 @@
-using Caching;
 using GameHub.Games.BoardGames.Common;
-using GameHub.Games.BoardGames.ConnectFour;
+using GameHub.Web.Services.Games.Common;
 
 public class GameRematcher
 {
-   private ConnectFour _game;
-
-    look  // change from ConnectFour to IRestartable
-    public GameRematcher(ConnectFour game)
+    private IRestartable _game;
+    
+    public GameRematcher(IRestartable game)
     {
         _game = game;
     }
