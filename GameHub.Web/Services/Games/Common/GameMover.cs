@@ -1,15 +1,15 @@
 using GameHub.Games.BoardGames.Common;
 
-public class GameMover
+public class GameMover<T>
 {
-    private IMoveable _game;
+    private IMoveable<T> _game;
 
-    public GameMover(IMoveable game)
+    public GameMover(IMoveable<T> game)
     {
         _game = game;
     }
     
-    public ActionResult Move<T>(string playerId, T move)
+    public ActionResult Move(string playerId, T move)
     {
         lock(_game)
         {
