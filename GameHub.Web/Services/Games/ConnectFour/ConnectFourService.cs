@@ -1,3 +1,4 @@
+using GameHub.Games.BoardGames.Common;
 using GameHub.Games.BoardGames.ConnectFour;
 public class ConnectFourService
 {
@@ -7,7 +8,7 @@ public class ConnectFourService
     private GameResigner _gameResigner;
     private GameRestarter _gameRestarter;
     private GameStateGetter _gameStateGetter;
-    
+
     public ConnectFourService(ConnectFour game)
     {
         _gameStarter = new GameStarter(game);
@@ -23,5 +24,17 @@ public class ConnectFourService
         _gameStateGetter = new GameStateGetter(game);
     }
 
-    public void StartGame(string gameId, string playerId) => _gameStarter.StartGame(playerId);
+    public ActionResult StartGame(string playerId) => _gameStarter.StartGame(playerId);
+
+    public ActionResult JoinGame(string playerId, string playerNick) => _gameJoiner.JoinGame(playerId, playerNick);
+
+    public ConnectFourPlayer GetPlayer(string playerId) => (ConnectFourPlayer)_gamePlayerGetter.Get(playerId);
+
+    public ActionResult Resign(string playerId) => _gameResigner.Resign(playerId);
+ActionResult
+    public ActionResult Restart(string playerId) => _gameRestarter.Restart(playerId);
+
+    public GameStateConnectFour GetGameState() => (GameStateConnectFour)_gameStateGetter.Get();
+
+
 }

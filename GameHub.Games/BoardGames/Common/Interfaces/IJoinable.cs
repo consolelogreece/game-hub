@@ -1,6 +1,6 @@
 using GameHub.Games.BoardGames.Common;
 
-namespace GameHub.Web.Services.Games.Common
+namespace GameHub.Games.BoardGames.Common
 {
     public interface IJoinable
     {   
