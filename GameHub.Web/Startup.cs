@@ -98,7 +98,7 @@ namespace GameHub.Web
             {
                 routes.MapHub<ConnectFourHub>("/connectfourhub");
 
-                routes.MapHub<ChessHub>("/chesshub");
+                //routes.MapHub<ChessHub>("/chesshub");
             });
 
             app.UseMvc(routes =>

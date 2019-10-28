@@ -2,8 +2,8 @@ using GameHub.Games.BoardGames.Common;
 
 namespace GameHub.Games.BoardGames.Common
 {
-    public interface IGamePlayerGetter
+    public interface IGamePlayerGetter<T> where T : GamePlayer
     {   
-        GamePlayer GetPlayer(string playerId);
+        T GetPlayer(string playerId);
     }
 }

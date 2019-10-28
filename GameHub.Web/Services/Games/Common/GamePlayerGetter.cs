@@ -1,15 +1,15 @@
 using GameHub.Games.BoardGames.Common;
 
-public class GamePlayerGetter
+public class GamePlayerGetter<T> where T : GamePlayer
 {
-    private IGamePlayerGetter _game;
+    private IGamePlayerGetter<T> _game;
 
-    public GamePlayerGetter(IGamePlayerGetter game)
+    public GamePlayerGetter(IGamePlayerGetter<T> game)
     {
         _game = game;
     }
     
-    public GamePlayer Get(string playerId)
+    public T Get(string playerId)
     {
         lock(_game)
         {

@@ -1,19 +1,19 @@
 using GameHub.Games.BoardGames.Common;
 
-public class GameStateGetter
+public class GameStateGetter<T> where T : GameState
 {
-    private IGameStateGetter _game;
+    private IGameStateGetter<T> _game;
 
-    public GameStateGetter(IGameStateGetter game)
+    public GameStateGetter(IGameStateGetter<T> game)
     {
         _game = game;
     }
     
-    public GameState Get()
+    public T Get()
     {
         lock(_game)
         {
-            return _game.GetState();
+            return _game.GetGameState();
         }
     }
 }

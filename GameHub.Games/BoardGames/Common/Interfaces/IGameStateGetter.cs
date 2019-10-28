@@ -1,7 +1,7 @@
 namespace GameHub.Games.BoardGames.Common
 {
-    public interface IGameStateGetter
+    public interface IGameStateGetter<T> where T : GameState
     {   
-        GameState GetState();
+        T GetGameState();
     }
 }

@@ -4,7 +4,12 @@ using GameHub.Games.BoardGames.Common;
 
 namespace GameHub.Games.BoardGames.ConnectFour
 {
-    public class ConnectFour : IBoardGame<GameStateConnectFour, ConnectFourPlayer>
+    public class ConnectFour : IJoinable, 
+        IRestartable, 
+        IStartable, 
+        IResignable, 
+        IGamePlayerGetter<ConnectFourPlayer>, 
+        IGameStateGetter<GameStateConnectFour>
     {
         #region private props
         private ConnectFourGame _game;
@@ -146,7 +151,7 @@ namespace GameHub.Games.BoardGames.ConnectFour
             return _players.FirstOrDefault(p => p.Id == playerId);    
         }
 
-        public ActionResult RegisterPlayer(string playerId, string playerNick)
+        public ActionResult Join(string playerId, string playerNick)
         {
             if (_players.Any(p => p.Id == playerId))
             {
@@ -177,7 +182,7 @@ namespace GameHub.Games.BoardGames.ConnectFour
             return new ActionResult(true);
         }
 
-        public ActionResult StartGame(string playerId)
+        public ActionResult Start(string playerId)
         {
             if (_players.Count < 2) return new ActionResult(false, "Not enough players");
 
@@ -190,7 +195,7 @@ namespace GameHub.Games.BoardGames.ConnectFour
             return new ActionResult(true);
         }
 
-        public ActionResult Reset(string playerId)
+        public ActionResult Restart(string playerId)
         {
             if(_config.creatorId != playerId) return new ActionResult(false,  "You are not the host");
 

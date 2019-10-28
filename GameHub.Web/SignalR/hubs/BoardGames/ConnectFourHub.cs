@@ -6,7 +6,7 @@ using Caching;
 
 namespace GameHub.Web.SignalR.hubs.BoardGames
 {
-    public class ConnectFourHub : BoardGameHubBase<ConnectFour>
+    public class ConnectFourHub
     {
         public ConnectFourHub([FromServices] ICache<ConnectFour> cache) : base(cache)
         {}
