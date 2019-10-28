@@ -6,9 +6,9 @@ using Caching;
 
 namespace GameHub.Web.SignalR.hubs.BoardGames
 {
-    public class ConnectFourHub
+    public class ConnectFourHub : Hub
     {
-        public ConnectFourHub([FromServices] ICache<ConnectFour> cache) : base(cache)
+        public ConnectFourHub([FromServices] ICache<ConnectFour> cache)
         {}
 
         public void MakeMove(string gameId, int col)

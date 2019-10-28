@@ -8,6 +8,7 @@ namespace GameHub.Games.BoardGames.ConnectFour
         IRestartable, 
         IStartable, 
         IResignable, 
+        IMoveable<int>,
         IGamePlayerGetter<ConnectFourPlayer>, 
         IGameStateGetter<GameStateConnectFour>
     {
@@ -47,7 +48,7 @@ namespace GameHub.Games.BoardGames.ConnectFour
             _players = new List<ConnectFourPlayer>();
         }
 
-        public ActionResult MakeMove(int col, string playerId)
+        public ActionResult Move(string playerId, int col)
         {
             if (!_started)
             {
