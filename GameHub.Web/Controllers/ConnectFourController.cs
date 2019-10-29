@@ -6,6 +6,7 @@ using System.Text.Encodings.Web;
 
 namespace GameHub.Web.Controllers
 {
+    [Route("api/connectfour")]
     public class ConnectFourController : Controller
     {
         ICache<ConnectFour> _cache;
@@ -13,8 +14,8 @@ namespace GameHub.Web.Controllers
         {
             _cache = cache;
         }
-        [HttpPost]
-        public IActionResult CreateRoom(ConnectFourConfiguration config)
+        [HttpPost("createroom")]
+        public IActionResult CreateRoom([FromBody]ConnectFourConfiguration config)
         {
             var Id = System.Guid.NewGuid().ToString();
 
