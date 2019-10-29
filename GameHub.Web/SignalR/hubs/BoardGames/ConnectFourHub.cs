@@ -15,30 +15,6 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
         {
             _connectFourServiceFactory = connectFourServiceFactory;
         }
-        
-        public string CreateRoom(ConnectFourConfiguration config)
-        {
-            var Id = Guid.NewGuid().ToString();
-
-            var playerId = Context.Items["PlayerId"].ToString();
-
-            config.creatorId = playerId;
-
-            var errors = config.Validate();
-
-            if (errors.Count != 0)
-            {
-               Clients.Caller.SendAsync("IllegalConfiguration", errors);
-
-               return null;
-            }
-
-            var game = new ConnectFour(config);
-
-            _cache.Set(Id, game);
-
-            return Id;
-        }
 
         public override Task OnConnectedAsync()
         {
