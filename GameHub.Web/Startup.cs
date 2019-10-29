@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Http;
 using Caching;
 using GameHub.Games.BoardGames.ConnectFour;
 using GameHub.Games.BoardGames.Chess;
+using GameHub.Web.Services.Games.ConnectFourServices;
 
 namespace GameHub.Web
 {
@@ -37,6 +38,8 @@ namespace GameHub.Web
             services.AddSingleton<ICache<ConnectFour>, ConnectFourCache>();
 
             services.AddSingleton<ICache<Chess>, ChessCache>();
+
+            services.AddTransient<IConnectFourServiceFactory, ConnectFourServiceFactory>();
 
             services.AddSignalR();
         }

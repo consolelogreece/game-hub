@@ -3,13 +3,17 @@ using Microsoft.AspNetCore.SignalR;
 using System;
 using Microsoft.AspNetCore.Mvc;
 using Caching;
+using GameHub.Web.Services.Games.ConnectFourServices;
 
 namespace GameHub.Web.SignalR.hubs.BoardGames
 {
     public class ConnectFourHub : Hub
     {
-        public ConnectFourHub([FromServices] ICache<ConnectFour> cache)
-        {}
+        private ConnectFourService _connectFourService;
+        public ConnectFourHub(IConnectFourServiceFactory connectFourServiceFactory)
+        {
+            _connectFourService = connectFourServiceFactory.Create()
+        }
 
         public void MakeMove(string gameId, int col)
         {

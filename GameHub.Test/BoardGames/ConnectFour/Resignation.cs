@@ -9,10 +9,10 @@ namespace GameHub.Test.BoardGames.ConnectFourTests
         {
             var game = ConnectFourTestHelpers.GetGame(ConnectFourTestHelpers.GetDefaultConfig("1234"));
 
-            game.RegisterPlayer("1234", "player1");
-            game.RegisterPlayer("abcd", "player2");
+            game.Join("1234", "player1");
+            game.Join("abcd", "player2");
 
-            game.StartGame("1234");
+            game.Start("1234");
 
             var resignResult = game.Resign("1234");
 
@@ -24,8 +24,8 @@ namespace GameHub.Test.BoardGames.ConnectFourTests
         {
             var game = ConnectFourTestHelpers.GetGame(ConnectFourTestHelpers.GetDefaultConfig("1234"));
 
-            game.RegisterPlayer("1234", "player1");
-            game.RegisterPlayer("abcd", "player2");
+            game.Join("1234", "player1");
+            game.Join("abcd", "player2");
 
             var resignResult = game.Resign("1234");
 
@@ -38,10 +38,10 @@ namespace GameHub.Test.BoardGames.ConnectFourTests
         {
             var game = ConnectFourTestHelpers.GetGame(ConnectFourTestHelpers.GetDefaultConfig("1234"));
 
-            game.RegisterPlayer("1234", "player1");
-            game.RegisterPlayer("abcd", "player2");
+            game.Join("1234", "player1");
+            game.Join("abcd", "player2");
 
-            game.StartGame("1234");
+            game.Start("1234");
 
             var resignResult1 = game.Resign("1234");
             var resignResult2 = game.Resign("1234");
