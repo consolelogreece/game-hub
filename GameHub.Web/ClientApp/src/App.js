@@ -19,12 +19,12 @@ export default class App extends Component {
         <Layout>
             <Switch>
                 <Route exact path='/' component={Home} />
-                <Route path='/games' component={gamesPage} />
-                <Route path='/about' component={aboutPage} />
-                <Route path='/connectfour/createroom' component={withSignalrConnection(NewGameC4, '/connectfourhub')} />
-                <Route path='/connectfour/:gameId' component={withSignalrConnection(ConnectFour, '/connectfourhub')} />
-                <Route path='/chess/createroom' component={withSignalrConnection(NewGameChess, '/chesshub')} />
-                <Route path='/chess/:gameId' component={withSignalrConnection(ResizeWithContainerHOC(Chess), '/chesshub')} />
+                <Route exact path='/games' component={gamesPage} />
+                <Route exact path='/about' component={aboutPage} />
+                <Route exact path='/connectfour/createroom' component={withSignalrConnection(NewGameC4, '/connectfourhub')} />
+                <Route exact path='/connectfour/:gameId' component={withSignalrConnection(ConnectFour, '/connectfourhub')} />
+                <Route exact path='/chess/createroom' component={withSignalrConnection(NewGameChess, '/chesshub')} />
+                <Route exact path='/chess/:gameId' component={withSignalrConnection(ResizeWithContainerHOC(Chess), '/chesshub')} />
             </Switch>
       </Layout>
     );
