@@ -104,6 +104,13 @@ namespace GameHub.Web
                 //routes.MapHub<ChessHub>("/chesshub");
             });
 
+            app.UseMvc(routes =>
+            {
+                routes.MapSpaFallbackRoute(
+                name: "spa-fallback",
+                defaults: new { controller = "Home", action = "Index" });
+            });
+
             app.UseSpa(spa =>
             {
                 spa.Options.SourcePath = "ClientApp";
@@ -114,12 +121,6 @@ namespace GameHub.Web
                 }
             });
 
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller}/{action=Index}/{id?}");
-            });
         }
     }
 }
