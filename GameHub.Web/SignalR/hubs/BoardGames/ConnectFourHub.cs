@@ -1,46 +1,19 @@
 ﻿using GameHub.Games.BoardGames.ConnectFour;
 using Microsoft.AspNetCore.SignalR;
 using System;
-using Microsoft.AspNetCore.Mvc;
-using Caching;
 using GameHub.Web.Services.Games.ConnectFourServices;
+using System.Threading.Tasks;
 
 namespace GameHub.Web.SignalR.hubs.BoardGames
 {
     public class ConnectFourHub : Hub
     {
         private ConnectFourService _connectFourService;
+
+        private IConnectFourServiceFactory _connectFourServiceFactory;
         public ConnectFourHub(IConnectFourServiceFactory connectFourServiceFactory)
         {
-            _connectFourService = connectFourServiceFactory.Create()
-        }
-
-        public void MakeMove(string gameId, int col)
-        {
-            var game = _cache.Get(gameId);
-
-            if (game == null) 
-            {
-                Clients.Caller.SendAsync("RoomDoesntExist");
-
-                return;
-            }
-
-            lock(game)
-            {
-                var playerId = Context.Items["PlayerId"].ToString();
-
-                var moveResult = game.MakeMove(col, playerId);
-
-                if (moveResult.WasSuccessful)
-                {
-                    Clients.Group(gameId).SendAsync("PlayerMoved", this.GetGameState(gameId));      
-                }
-                else
-                {
-                    Clients.Caller.SendAsync("IllegalAction", moveResult.Message);
-                } 
-            }
+            _connectFourServiceFactory = connectFourServiceFactory;
         }
         
         public string CreateRoom(ConnectFourConfiguration config)
@@ -65,6 +38,24 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
             _cache.Set(Id, game);
 
             return Id;
+        }
+
+        public override Task OnConnectedAsync()
+        {
+            // Get player id from http context. This is taken from a cookie and put in httpcontext items dictionary in an earlier piece of middleware.
+            var httpContext = Context.GetHttpContext();
+
+            if (httpContext.Items.ContainsKey("GHPID") == false)
+            {
+                throw new Exception("Got to hub without GHPID. This shouldn't happen, everybody panic!");
+            }
+
+            var ghpid = httpContext.Items["GHPID"].ToString();
+
+            // Store playerid in hub context.
+            Context.Items.Add("PlayerId", ghpid);
+
+            return base.OnConnectedAsync();
         }
     }
 }

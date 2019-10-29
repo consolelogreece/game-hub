@@ -8,6 +8,7 @@ public class ConnectFourService
     private GameRestarter _gameRestarter;
     private GamePlayerGetter<ConnectFourPlayer> _gamePlayerGetter;
     private GameStateGetter<GameStateConnectFour> _gameStateGetter;
+    private GameMover<int> _gameMover;
 
     public ConnectFourService(ConnectFour game)
     {
@@ -22,6 +23,8 @@ public class ConnectFourService
         _gamePlayerGetter = new GamePlayerGetter<ConnectFourPlayer>(game);
 
         _gameStateGetter = new GameStateGetter<GameStateConnectFour>(game);
+
+        _gameMover = new GameMover<int>(game);
     }
 
     public ActionResult StartGame(string playerId) => _gameStarter.StartGame(playerId);
@@ -35,4 +38,6 @@ public class ConnectFourService
     public ActionResult Restart(string playerId) => _gameRestarter.Restart(playerId);
 
     public GameStateConnectFour GetGameState() => (GameStateConnectFour)_gameStateGetter.Get();
+
+    public ActionResult Move(string playerId, int col) => _gameMover.Move(playerId, col);
 }
