@@ -29,8 +29,6 @@ export class ConnectFour extends Component {
     {
         this.props.registerPermanentInvokeParam(this.state.gameId);
         
-        this.props.on('RoomDoesntExist', res => { this.props.history.push("/connectfour/createroom")});
-        
         this.props.on('IllegalAction', res => {this.setState({ gameMessage: res })});
 
         this.props.on([
@@ -48,7 +46,7 @@ export class ConnectFour extends Component {
             this.props.invoke('JoinRoom')
             .then(res => this.populatePlayerClientInfo())
             .then(res => this.populateGameState())
-            .catch(res => console.log(res));
+            .catch(res => this.props.history.push("createroom"));
         });
     }
 
@@ -64,7 +62,7 @@ export class ConnectFour extends Component {
         this.props.invoke('JoinGame', name)
             .then(this.populatePlayerClientInfo())
             .then(this.populateGameState())
-            .catch(() => this.setState({gameMessage: "oopsie daisy"}));
+            .catch(res => this.setState({gameMessage: "oopsie daisy"}));
     }
 
     RematchStarted = gameState =>
