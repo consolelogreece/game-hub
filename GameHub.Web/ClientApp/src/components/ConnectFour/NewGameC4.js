@@ -24,7 +24,7 @@ export class NewGameC4 extends Component {
     {
         e.preventDefault();
         axios.post('/api/connectfour/createroom', this.state.roomConfig)
-        .then(res => this.props.history.push(res.data))
+        .then(res => this.props.history.push("connectfour?g=" + res.data))
         .catch(res => this.setState({errors: res.response.data}))
     }
 
