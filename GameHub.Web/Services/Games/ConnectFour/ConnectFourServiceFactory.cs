@@ -12,13 +12,13 @@ namespace GameHub.Web.Services.Games.ConnectFourServices
             _cache = cache;
         }
 
-        public ConnectFourService Create(string gameId)
+        public ConnectFourService Create(string gameId, string playerId)
         {
             var game = _cache.Get(gameId);
 
             if (game == null) return null;
 
-            return new ConnectFourService(game);
+            return new ConnectFourService(game, playerId);
         }
     }
 }

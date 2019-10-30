@@ -31,43 +31,33 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
 
         public void StartGame() 
         {
-            var playerId = Context.Items["PlayerId"].ToString();
-
-            var result = GetGameService().StartGame(playerId);
+            var result = GetGameService().StartGame();
 
             ActionResultHandler(result, "GameStarted");
         }
 
         public void JoinGame(string playerNick)
         {
-            var playerId = Context.Items["PlayerId"].ToString();
-
-            var result = GetGameService().JoinGame(playerId, playerNick);
+            var result = GetGameService().JoinGame(playerNick);
 
             ActionResultHandler(result, "PlayerJoined");
         }
 
         public ConnectFourPlayer GetClientPlayerInfo()
         {
-            var playerId = Context.Items["PlayerId"].ToString();
-
-            return GetGameService().GetPlayer(playerId);
+            return GetGameService().GetPlayer();
         }
 
         public void Resign() 
         {
-            var playerId = Context.Items["PlayerId"].ToString();
-
-            var result = GetGameService().Resign(playerId);
+            var result = GetGameService().Resign();
 
             ActionResultHandler(result, "PlayerResigned");
         }
 
         public void Rematch() 
         {
-            var playerId = Context.Items["PlayerId"].ToString();
-
-            var result = GetGameService().Restart(playerId);
+            var result = GetGameService().Restart();
 
             ActionResultHandler(result, "RematchStarted");
         }
@@ -79,9 +69,7 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
 
         public void Move(int col) 
         {
-            var playerId = Context.Items["PlayerId"].ToString();
-            
-            var result = GetGameService().Move(playerId, col);
+            var result = GetGameService().Move(col);
 
             ActionResultHandler(result, "PlayerMoved");
         }
@@ -96,7 +84,7 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
             // Get player id from http context. This is taken from a cookie and put in httpcontext items dictionary in an earlier piece of middleware.
             var httpContext = Context.GetHttpContext();
 
-            if (httpContext.Items.ContainsKey("GHPID") == false)
+            if (!httpContext.Items.ContainsKey("GHPID"))
             {
                 throw new Exception("Got to hub without GHPID. This shouldn't happen, everybody panic!");
             }
@@ -108,9 +96,11 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
                 return base.OnDisconnectedAsync(new Exception("Game doesn't exist"));
             }
 
+            var playerId = httpContext.Items["GHPID"].ToString();
+
             var gameId = httpContext.Request.Query["g"];
 
-            var service = _connectFourServiceFactory.Create(gameId);
+            var service = _connectFourServiceFactory.Create(gameId, playerId);
 
             if (service == null)
             {
@@ -121,10 +111,8 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
 
             Context.Items.Add("GameService", service);
 
-            var ghpid = httpContext.Items["GHPID"].ToString();
-
             // Store playerid in hub context.
-            Context.Items.Add("PlayerId", ghpid);
+            Context.Items.Add("PlayerId", playerId);
 
             // Store gameid in hub context
             Context.Items.Add("GameId", gameId);

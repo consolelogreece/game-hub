@@ -9,8 +9,10 @@ public class ConnectFourService
     private GamePlayerGetter<ConnectFourPlayer> _gamePlayerGetter;
     private GameStateGetter<GameStateConnectFour> _gameStateGetter;
     private GameMover<int> _gameMover;
+    // id of player using the service
+    private string _playerId;
 
-    public ConnectFourService(ConnectFour game)
+    public ConnectFourService(ConnectFour game, string playerId)
     {
         _gameStarter = new GameStarter(game);
 
@@ -25,19 +27,21 @@ public class ConnectFourService
         _gameStateGetter = new GameStateGetter<GameStateConnectFour>(game);
 
         _gameMover = new GameMover<int>(game);
+
+        _playerId = playerId;
     }
 
-    public ActionResult StartGame(string playerId) => _gameStarter.StartGame(playerId);
+    public ActionResult StartGame() => _gameStarter.StartGame(_playerId);
 
-    public ActionResult JoinGame(string playerId, string playerNick) => _gameJoiner.JoinGame(playerId, playerNick);
+    public ActionResult JoinGame(string playerNick) => _gameJoiner.JoinGame(_playerId, playerNick);
 
-    public ConnectFourPlayer GetPlayer(string playerId) => (ConnectFourPlayer)_gamePlayerGetter.Get(playerId);
+    public ConnectFourPlayer GetPlayer() => (ConnectFourPlayer)_gamePlayerGetter.Get(_playerId);
 
-    public ActionResult Resign(string playerId) => _gameResigner.Resign(playerId);
+    public ActionResult Resign() => _gameResigner.Resign(_playerId);
 
-    public ActionResult Restart(string playerId) => _gameRestarter.Restart(playerId);
+    public ActionResult Restart() => _gameRestarter.Restart(_playerId);
 
     public GameStateConnectFour GetGameState() => (GameStateConnectFour)_gameStateGetter.Get();
 
-    public ActionResult Move(string playerId, int col) => _gameMover.Move(playerId, col);
+    public ActionResult Move(int col) => _gameMover.Move(_playerId, col);
 }
