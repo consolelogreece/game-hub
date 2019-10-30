@@ -41,8 +41,7 @@ export class ConnectFour extends Component {
         
         this.props.startConnection()
         .then(() => {
-            this.props.invoke('JoinRoom')
-            .then(res => this.populatePlayerClientInfo())
+            this.populatePlayerClientInfo()
             .then(res => this.populateGameState())
             .catch(res => this.props.history.push("createroom"));
         });

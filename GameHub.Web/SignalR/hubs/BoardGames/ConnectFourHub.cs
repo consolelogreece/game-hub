@@ -86,13 +86,6 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
             ActionResultHandler(result, "PlayerMoved");
         }
 
-        public virtual void JoinRoom()
-        {
-            var gameId = Context.Items["GameId"].ToString();
-
-            Groups.AddToGroupAsync(Context.ConnectionId, gameId);
-        }
-
         private ConnectFourService GetGameService()
         {
             return Context.Items["GameService"] as ConnectFourService;
@@ -128,6 +121,8 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
 
             // Store gameid in hub context
             Context.Items.Add("GameId", gameId);
+
+            Groups.AddToGroupAsync(Context.ConnectionId, gameId);
 
             return base.OnConnectedAsync();
         }
