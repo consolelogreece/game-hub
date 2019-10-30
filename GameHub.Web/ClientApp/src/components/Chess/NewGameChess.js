@@ -1,24 +1,21 @@
 ﻿import React, { Component } from 'react';
+import axios from 'axios';
 
 export class NewGameChess extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            roomConfig: {}
+            roomConfig: {},
+            errors: {}
         };
     }
-
-    componentDidMount() 
-    {  
-        this.props.startConnection()
-            .then(() => console.log('Connection started!'))
-            .catch(err => console.log('Error while establishing connection :(', err))
-    }
-
-    CreateRoom = () => {
-        this.props.invoke('CreateRoom')
-            .then(gameId => this.props.history.push(gameId))
-            .catch(err => console.error(err));
+    
+    CreateRoom = e =>
+    {
+        e.preventDefault();
+        axios.post('/api/chess/createroom', this.state.roomConfig)
+        .then(res => this.props.history.push("chess?g=" + res.data))
+        .catch(res => this.setState({errors: res.response.data}))
     }
 
     HandleChange(e) {
@@ -28,7 +25,7 @@ export class NewGameChess extends Component {
     render() {
         return (
             <div>
-                <button onClick={() => this.CreateRoom()}>Create</button>
+                <button onClick={this.CreateRoom}>Create</button>
             </div>
         )
     }

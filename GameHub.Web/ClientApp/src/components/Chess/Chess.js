@@ -33,8 +33,6 @@ export default class Chess extends Component {
 
     componentDidMount() 
     {
-        this.props.registerPermanentInvokeParam(this.state.gameId);
-
         this.props.on('PlayerMoved', this.playerMoved);
 
         this.props.on('GameStarted', this.gameStarted);
@@ -49,10 +47,9 @@ export default class Chess extends Component {
    
         this.props.startConnection()
         .then(() => {
-            this.props.invoke('JoinRoom')
-            .then(this.initilaize())
+            this.initilaize()
+            .catch(_ => this.props.history.push("createroom"));
         });
-   
     }
 
     initilaize()
@@ -296,7 +293,7 @@ export default class Chess extends Component {
                 return;
             }
 
-            this.props.invoke('MakeMove', move);
+            this.props.invoke('Move', move);
         }
 
         this.setState({pieceSquare: "", squareStyles: {}})
@@ -320,7 +317,7 @@ export default class Chess extends Component {
 
         move.promotion = promotion;
 
-        this.props.invoke('MakeMove', move)
+        this.props.invoke('Move', move)
         .then(res => {
             this.setState({displayPromotionPrompt: false, promotionMove: null})
         });

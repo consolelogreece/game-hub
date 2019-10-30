@@ -1,5 +1,5 @@
 ﻿import React, { Component } from 'react';
-import  ErrorMessage from '../Common/ErrorMessage';
+import ErrorMessage from '../Common/ErrorMessage';
 import axios from 'axios';
 
 export class NewGameC4 extends Component {
