@@ -56,7 +56,7 @@ export default class Board extends Component {
                     className="tile"
                     color={boardState[i][j]}
                     boardColor={this.props.boardColor} 
-                    makeMove={(col) => this.props.makeMove(col)} 
+                    move={(col) => this.props.move(col)} 
                     column={j}
                     tileDiameter = {this.state.tileWidth}
                     />)

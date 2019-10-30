@@ -4,7 +4,7 @@ export default props => {
     return (
         <div 
             className="tile"
-            onClick={() => props.makeMove(props.column)} style={{
+            onClick={() => props.move(props.column)} style={{
             backgroundColor: props.color,
             borderRadius: "50%",
             width: props.tileDiameter + "px",

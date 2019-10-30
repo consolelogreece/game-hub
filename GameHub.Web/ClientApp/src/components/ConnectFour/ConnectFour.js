@@ -27,8 +27,6 @@ export class ConnectFour extends Component {
 
     componentDidMount() 
     {
-        this.props.registerPermanentInvokeParam(this.state.gameId);
-        
         this.props.on('IllegalAction', res => {this.setState({ gameMessage: res })});
 
         this.props.on([
@@ -50,12 +48,12 @@ export class ConnectFour extends Component {
         });
     }
 
-    MakeMove = col =>
+    move = col =>
     {
         // if the playerinfo is null, the player is a spectator and thus can't move.
         if (this.state.playerInfo == null) return;
 
-        this.props.invoke('MakeMove', col).catch(err => console.error(err));;
+        this.props.invoke('Move', col).catch(err => console.error(err));;
     }
     
     JoinGame = name => {
@@ -207,7 +205,7 @@ export class ConnectFour extends Component {
                 <Aboard  
                     className="vertical_center" 
                     boardState={this.state.boardState} 
-                    makeMove={(col) => this.MakeMove(col)}
+                    move={(col) => this.move(col)}
                     boardColor={this.state.boardColor} 
                 />
                 {this.state.gameMessage}
