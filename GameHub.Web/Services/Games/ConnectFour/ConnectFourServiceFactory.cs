@@ -16,6 +16,8 @@ namespace GameHub.Web.Services.Games.ConnectFourServices
         {
             var game = _cache.Get(gameId);
 
+            if (game == null) return null;
+
             return new ConnectFourService(game);
         }
     }
