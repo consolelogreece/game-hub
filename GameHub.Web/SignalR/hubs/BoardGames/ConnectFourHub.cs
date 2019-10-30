@@ -29,57 +29,66 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
             }
         }
 
-        public void StartGame(string playerId) 
+        public void StartGame() 
         {
+            var playerId = Context.Items["PlayerId"].ToString();
+
             var result = GetGameService().StartGame(playerId);
 
             ActionResultHandler(result, "GameStarted");
         }
 
-        public void JoinGame(string playerId, string playerNick)
+        public void JoinGame(string playerNick)
         {
-            var plankerId = Context.Items["PlayerId"].ToString();
-            var result = GetGameService().JoinGame(plankerId, playerNick);
+            var playerId = Context.Items["PlayerId"].ToString();
+
+            var result = GetGameService().JoinGame(playerId, playerNick);
 
             ActionResultHandler(result, "PlayerJoined");
         }
 
-        public ConnectFourPlayer GetClientPlayerInfo(string uselessRemoveThisString)
+        public ConnectFourPlayer GetClientPlayerInfo()
         {
             var playerId = Context.Items["PlayerId"].ToString();
 
             return GetGameService().GetPlayer(playerId);
         }
 
-        public void Resign(string playerId) 
+        public void Resign() 
         {
+            var playerId = Context.Items["PlayerId"].ToString();
+
             var result = GetGameService().Resign(playerId);
 
             ActionResultHandler(result, "PlayerResigned");
         }
 
-        public void Rematch(string playerId) 
+        public void Rematch() 
         {
+            var playerId = Context.Items["PlayerId"].ToString();
+
             var result = GetGameService().Restart(playerId);
 
             ActionResultHandler(result, "RematchStarted");
         }
 
-        public GameStateConnectFour GetGameState(string uselessRemoveThisString)
+        public GameStateConnectFour GetGameState()
         {
            return GetGameService().GetGameState();
         }
 
-        public void Move(string playerId, int col) 
+        public void Move(int col) 
         {
+            var playerId = Context.Items["PlayerId"].ToString();
+            
             var result = GetGameService().Move(playerId, col);
 
             ActionResultHandler(result, "PlayerMoved");
         }
 
-        public virtual void JoinRoom(string gameId)
+        public virtual void JoinRoom()
         {
-            var playerId = Context.Items["PlayerId"].ToString();
+            var gameId = Context.Items["GameId"].ToString();
 
             Groups.AddToGroupAsync(Context.ConnectionId, gameId);
         }
