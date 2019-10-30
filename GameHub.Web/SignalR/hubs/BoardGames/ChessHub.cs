@@ -1,81 +1,129 @@
-// using Microsoft.AspNetCore.SignalR;
-// using System;
-// using Microsoft.AspNetCore.Mvc;
-// using Caching;
-// using GameHub.Games.BoardGames.Chess;
-// using System.Collections.Generic;
-// using ChessDotNet;
+using Microsoft.AspNetCore.SignalR;
+using System;
+using GameHub.Web.Services.Games.ConnectFourServices;
+using System.Threading.Tasks;
+using GameHub.Games.BoardGames.Common;
+using GameHub.Games.BoardGames.Chess;
+using ChessDotNet;
+using System.Collections.Generic;
 
-// namespace GameHub.Web.SignalR.hubs.BoardGames
-// {
-//     public class ChessHub : BoardGameHubBase<Chess>
-//     {
-//         public ChessHub([FromServices] ICache<Chess> cache) : base(cache)
-//         {
-//         }
+namespace GameHub.Web.SignalR.hubs.BoardGames
+{
+    public class ChessHub : Hub
+    {
+        private IChessServiceFactory _chessServiceFactory;
+        public ChessHub(IChessServiceFactory chessServiceFactory)
+        {
+            _chessServiceFactory = chessServiceFactory;
+        }
 
-//         public List<Move> GetMoves(string gameId)
-//         {
-//             var game = _cache.Get(gameId);
+        private void ActionResultHandler(ActionResult result, string successEndpoint)
+        {
+            var gameId = Context.Items["GameId"].ToString();
 
-//             if (game == null) 
-//             {
-//                 Clients.Caller.SendAsync("RoomDoesntExist");
+            if (result.WasSuccessful)
+            {
+               Clients.Group(gameId).SendAsync(successEndpoint, GetGameService().GetGameState());
+            }
+            else
+            {
+                Clients.Caller.SendAsync("IllegalAction", result.Message);
+            }
+        }
 
-//                 this.Context.Abort();
+        public void StartGame() 
+        {
+            var result = GetGameService().StartGame();
 
-//                 return null;
-//             }
+            ActionResultHandler(result, "GameStarted");
+        }
 
-//             var playerId = Context.Items["PlayerId"].ToString();
-            
-//             var player = game.GetPlayer(playerId);
+        public void JoinGame(string playerNick)
+        {
+            var result = GetGameService().JoinGame(playerNick);
 
-//             var moves = new List<Move>();
+            ActionResultHandler(result, "PlayerJoined");
+        }
 
-//             if (player != null)
-//             {
-//                 moves = game.GetMoves(player);
-//             }
+        public ChessPlayer GetClientPlayerInfo()
+        {
+            return GetGameService().GetPlayer();
+        }
 
-//             return moves;
-//         }
+        public void Resign() 
+        {
+            var result = GetGameService().Resign();
 
-//         public virtual void MakeMove(string gameId, Move move)
-//         {
-//             var playerId = Context.Items["PlayerId"].ToString();
+            ActionResultHandler(result, "PlayerResigned");
+        }
 
-//             var game = _cache.Get(gameId);
+        public void Rematch() 
+        {
+            var result = GetGameService().Restart();
 
-//             lock(game)
-//             {
-//                 var isValid = game.MakeMove(playerId, move);
+            ActionResultHandler(result, "RematchStarted");
+        }
 
-//                 if (isValid)
-//                 {
-//                     Clients.Group(gameId).SendAsync("PlayerMoved", GetGameState(gameId));
-//                 }
-//                 else
-//                 {
-//                     Clients.Caller.SendAsync("IllegalAction", "Invalid move");
-//                 }
-//             }
-//         }
+        public GameStateChess GetGameState()
+        {
+           return GetGameService().GetGameState();
+        }
 
-//         public string CreateRoom()
-//         {
-//             var Id = Guid.NewGuid().ToString();
+        public void Move(Move move) 
+        {
+            var result = GetGameService().Move(move);
 
-//             var playerId = Context.Items["PlayerId"].ToString();
+            ActionResultHandler(result, "PlayerMoved");
+        }
 
-//             var game = new Chess(new ChessConfiguration
-//             {
-//                 creatorId = playerId
-//             });
+        public List<Move> GetMoves() => GetGameService().GetMoves();
 
-//             _cache.Set(Id, game);
+        private ChessService GetGameService()
+        {
+            return Context.Items["GameService"] as ChessService;
+        }
 
-//             return Id;
-//         }
-//     }
-// }
+        public override Task OnConnectedAsync()
+        {
+            // Get player id from http context. This is taken from a cookie and put in httpcontext items dictionary in an earlier piece of middleware.
+            var httpContext = Context.GetHttpContext();
+
+            if (!httpContext.Items.ContainsKey("GHPID"))
+            {
+                throw new Exception("Got to hub without GHPID. This shouldn't happen, everybody panic!");
+            }
+
+            if (!httpContext.Request.Query.ContainsKey("g"))
+            {
+                this.Context.Abort();
+
+                return base.OnDisconnectedAsync(new Exception("Game doesn't exist"));
+            }
+
+            var playerId = httpContext.Items["GHPID"].ToString();
+
+            var gameId = httpContext.Request.Query["g"];
+
+            var service = _chessServiceFactory.Create(gameId, playerId);
+
+            if (service == null)
+            {
+                this.Context.Abort();
+
+                return base.OnDisconnectedAsync(new Exception("Game doesn't exist"));
+            }
+
+            Context.Items.Add("GameService", service);
+
+            // Store playerid in hub context.
+            Context.Items.Add("PlayerId", playerId);
+
+            // Store gameid in hub context
+            Context.Items.Add("GameId", gameId);
+
+            Groups.AddToGroupAsync(Context.ConnectionId, gameId);
+
+            return base.OnConnectedAsync();
+        }
+    }
+}
