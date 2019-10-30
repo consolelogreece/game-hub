@@ -19,7 +19,7 @@ namespace GameHub.Web.Controllers
         {
             var Id = System.Guid.NewGuid().ToString();
 
-            var playerId = Request.Cookies["GHPID"];
+            var playerId = Request.HttpContext.Items["GHPID"].ToString();
 
             if (playerId == null)
             {
