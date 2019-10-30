@@ -12,8 +12,8 @@ namespace GameHub.Test.BoardGames.ChessTests
         {
             var game = ChessTestHelpers.GetGame(ChessTestHelpers.GetDefaultConfig(player1Id));
 
-            game.RegisterPlayer(player1Id, "user");
-            game.RegisterPlayer(player2Id, "user2");
+            game.Join(player1Id, "user");
+            game.Join(player2Id, "user2");
 
             return game;
         }
@@ -23,14 +23,14 @@ namespace GameHub.Test.BoardGames.ChessTests
         {
             // arrange
             var game = GetInitiatedGame();
-            game.StartGame(player1Id);
+            game.Start(player1Id);
             var move = new ChessDotNet.Move("e2", "e4", Player.White);
 
             // act
-            var moveWasSuccessful = game.MakeMove(player1Id, move);
+            var moveWasSuccessful = game.Move(player1Id, move);
 
             // assert
-            Assert.True(moveWasSuccessful, "Failed to move despite all conditions being fine");
+            Assert.True(moveWasSuccessful.WasSuccessful, "Failed to move despite all conditions being fine");
         }
 
         [Fact]
@@ -38,13 +38,13 @@ namespace GameHub.Test.BoardGames.ChessTests
         {
             // arrange
             var game = GetInitiatedGame();
-            game.StartGame(player1Id);
+            game.Start(player1Id);
             var move = new ChessDotNet.Move("e7", "e5", Player.Black);
 
             // act
-            var moveWasSuccessful = game.MakeMove(player2Id, move);
+            var moveWasSuccessful = game.Move(player2Id, move);
 
-            Assert.False(moveWasSuccessful, "Player was able to move despite not being their turn");
+            Assert.False(moveWasSuccessful.WasSuccessful, "Player was able to move despite not being their turn");
         }
 
         // this checks to make sure the game keeps track of who's turn it is.
@@ -53,16 +53,16 @@ namespace GameHub.Test.BoardGames.ChessTests
         {
             // arrange
             var game = GetInitiatedGame();
-            game.StartGame(player1Id);
+            game.Start(player1Id);
             var move1 = new ChessDotNet.Move("e2", "e4", Player.White);
             var move2 = new ChessDotNet.Move("f2", "f4", Player.White);
 
             // act
-            var move1Successful = game.MakeMove(player1Id, move1);
-            var move2Successful = game.MakeMove(player1Id, move2);
+            var move1Result = game.Move(player1Id, move1);
+            var move2Result = game.Move(player1Id, move2);
 
-            Assert.True(move1Successful, "Player was unable to move despite it being their turn");
-            Assert.False(move2Successful, "Player moved despite it not being their turn");
+            Assert.True(move1Result.WasSuccessful, "Player was unable to move despite it being their turn");
+            Assert.False(move2Result.WasSuccessful, "Player moved despite it not being their turn");
         }
     }
 }

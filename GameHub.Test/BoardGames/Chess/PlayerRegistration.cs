@@ -11,7 +11,7 @@ namespace GameHub.Test.BoardGames.ChessTests
             var game = ChessTestHelpers.GetGame(ChessTestHelpers.GetDefaultConfig("1234"));
 
             // act
-            var registrationResult = game.RegisterPlayer("1234", "user");
+            var registrationResult = game.Join("1234", "user");
 
             // assert
             Assert.True(registrationResult.WasSuccessful, "Failed to register player");
@@ -24,12 +24,12 @@ namespace GameHub.Test.BoardGames.ChessTests
             var game = ChessTestHelpers.GetGame(ChessTestHelpers.GetDefaultConfig("1234"));
 
             // act
-            game.RegisterPlayer("1234", "user");
-            game.RegisterPlayer("abcd", "user2");
+            game.Join("1234", "user");
+            game.Join("abcd", "user2");
 
-            game.StartGame("1234");
+            game.Start("1234");
 
-            var registrationResult = game.RegisterPlayer("zxcv", "user3");
+            var registrationResult = game.Join("zxcv", "user3");
 
             // assert
              Assert.False(registrationResult.WasSuccessful, "Was able to register player after game has already started");
@@ -42,10 +42,10 @@ namespace GameHub.Test.BoardGames.ChessTests
             var game = ChessTestHelpers.GetGame(ChessTestHelpers.GetDefaultConfig("1234"));
 
             // act
-            game.RegisterPlayer("1234", "user");
-            game.RegisterPlayer("abcd", "user2");
+            game.Join("1234", "user");
+            game.Join("abcd", "user2");
 
-            var registrationResult = game.RegisterPlayer("zxcv", "user3");
+            var registrationResult = game.Join("zxcv", "user3");
 
             // assert
             Assert.False(registrationResult.WasSuccessful, "Was able to register player despite game being full");
@@ -58,9 +58,9 @@ namespace GameHub.Test.BoardGames.ChessTests
             var game = ChessTestHelpers.GetGame(ChessTestHelpers.GetDefaultConfig("1234"));
 
             // act
-            game.RegisterPlayer("1234", "user");
+            game.Join("1234", "user");
             
-            var registrationResult = game.RegisterPlayer("1234", "user2");
+            var registrationResult = game.Join("1234", "user2");
 
             // assert
             Assert.False(registrationResult.WasSuccessful, "Was able to register player ID already being in use");  
@@ -73,9 +73,9 @@ namespace GameHub.Test.BoardGames.ChessTests
             var game = ChessTestHelpers.GetGame(ChessTestHelpers.GetDefaultConfig("1234"));
 
             // act
-            game.RegisterPlayer("1234", "user");
+            game.Join("1234", "user");
             
-            var registrationResult = game.RegisterPlayer("1234", "user");
+            var registrationResult = game.Join("1234", "user");
 
             // assert
             Assert.False(registrationResult.WasSuccessful, "Was able to register player nick which is already in use");  
@@ -88,7 +88,7 @@ namespace GameHub.Test.BoardGames.ChessTests
             var game = ChessTestHelpers.GetGame(ChessTestHelpers.GetDefaultConfig("1234"));
 
             // act
-            game.RegisterPlayer("1234", "user");
+            game.Join("1234", "user");
 
             var player = game.GetPlayer("1234");
 
@@ -103,8 +103,8 @@ namespace GameHub.Test.BoardGames.ChessTests
             var game = ChessTestHelpers.GetGame(ChessTestHelpers.GetDefaultConfig("1234"));
 
             // act
-            game.RegisterPlayer("1234", "user");
-            game.RegisterPlayer("abcd", "user2");
+            game.Join("1234", "user");
+            game.Join("abcd", "user2");
 
             var player = game.GetPlayer("1234");
 
@@ -119,8 +119,8 @@ namespace GameHub.Test.BoardGames.ChessTests
             var game = ChessTestHelpers.GetGame(ChessTestHelpers.GetDefaultConfig("1234"));
             
             // act
-            game.RegisterPlayer("1234", "user");
-            game.RegisterPlayer("abcd", "user2");
+            game.Join("1234", "user");
+            game.Join("abcd", "user2");
 
             var playerHost = game.GetPlayer("1234");
             var playerNormal = game.GetPlayer("abcd");
