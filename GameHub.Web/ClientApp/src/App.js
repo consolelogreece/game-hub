@@ -22,7 +22,7 @@ export default class App extends Component {
                 <Route exact path='/games' component={gamesPage} />
                 <Route exact path='/about' component={aboutPage} />
                 <Route exact path='/connectfour/createroom' component={NewGameC4} />
-                <Route exact path='/connectfour/:gameId' component={withSignalrConnection(ConnectFour, '/connectfourhub')} />
+                <Route exact path='/connectfour/:gameId' component={withSignalrConnection(ConnectFour, `/connectfourhub${window.location.search}`)} />
                 <Route exact path='/chess/createroom' component={withSignalrConnection(NewGameChess, '/chesshub')} />
                 <Route exact path='/chess/:gameId' component={withSignalrConnection(ResizeWithContainerHOC(Chess), '/chesshub')} />
             </Switch>
