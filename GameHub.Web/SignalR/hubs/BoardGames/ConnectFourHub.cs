@@ -101,6 +101,13 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
                 throw new Exception("Got to hub without GHPID. This shouldn't happen, everybody panic!");
             }
 
+            if (!httpContext.Request.Query.ContainsKey("g"))
+            {
+                this.Context.Abort();
+
+                return base.OnDisconnectedAsync(new Exception("Game doesn't exist"));
+            }
+
             var gameId = httpContext.Request.Query["g"];
 
             var service = _connectFourServiceFactory.Create(gameId);
