@@ -5,7 +5,13 @@ using GameHub.Games.BoardGames.Common;
 
 namespace GameHub.Games.BoardGames.Chess
 {
-    public class Chess : IBoardGame<GameStateChess, ChessPlayer>
+    public class Chess : IJoinable, 
+        IRestartable, 
+        IStartable, 
+        IResignable, 
+        IMoveable<Move>,
+        IGamePlayerGetter<ChessPlayer>, 
+        IGameStateGetter<GameStateChess>
     {
         private ChessGame _game = new ChessGame();
 
@@ -22,11 +28,18 @@ namespace GameHub.Games.BoardGames.Chess
            _config = config;
         }
 
-        public bool MakeMove(string playerId, Move move)
+        public ActionResult Move(string playerId, Move move)
         {
             var result = _game.MakeMove(move, false);
 
-            return result != MoveType.Invalid;
+            var wasValid = result != MoveType.Invalid;
+
+            if (wasValid)
+            {
+                return new ActionResult(true);
+            }
+            
+            return new ActionResult(false, "Invalid move");
         }
 
         private GameProgress GetGameStatus()
@@ -76,7 +89,7 @@ namespace GameHub.Games.BoardGames.Chess
             return winner;
         }
 
-        public ActionResult StartGame(string playerId)
+        public ActionResult Start(string playerId)
         {
             // only game creator can start the game.
             if (playerId != _config.creatorId) return new ActionResult(false,  "You are not the host");
@@ -89,7 +102,7 @@ namespace GameHub.Games.BoardGames.Chess
             return new ActionResult(true);
         }
 
-        public ActionResult RegisterPlayer(string playerId, string playerNick)
+        public ActionResult Join(string playerId, string playerNick)
         {
             var cp = new ChessPlayer
             {
@@ -159,7 +172,7 @@ namespace GameHub.Games.BoardGames.Chess
             return moves.ToList();
         }
 
-        public ActionResult Reset(string playerId)
+        public ActionResult Restart(string playerId)
         {
             if( _config.creatorId != playerId) return new ActionResult(false, "You are not the host");
 
