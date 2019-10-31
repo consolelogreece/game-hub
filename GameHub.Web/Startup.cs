@@ -34,6 +34,8 @@ namespace GameHub.Web
             {
                 configuration.RootPath = "ClientApp/build";
             });
+            
+            services.AddSingleton<IConfiguration>(Configuration);
 
             services.AddSingleton<ICache<ConnectFour>, ConnectFourCache>();
 

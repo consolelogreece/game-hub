@@ -1,0 +1,14 @@
+{
+    "Games": [
+        {
+            "Name": "Connect Four",
+            "Thumbnail": "/connectfour.png",
+            "Url": "/connectfour"
+        },
+        {
+            "Name": "Chess",
+            "Thumbnail": "/chess.png",
+            "Url": "/chess"
+        }
+    ]
+}

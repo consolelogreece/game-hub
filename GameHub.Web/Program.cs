@@ -19,6 +19,7 @@ namespace GameHub.Web
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration(c => c.AddJsonFile("./GameMeta.json"))
                 .UseUrls("https://*:3002")
                 .UseStartup<Startup>();
     }

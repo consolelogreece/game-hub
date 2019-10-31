@@ -1,8 +1,10 @@
 using Caching;
 using GameHub.Games.BoardGames.ConnectFour;
+using GameHub.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
+using System.Collections.Generic;
 
 namespace GameHub.Web.Controllers
 {
@@ -18,7 +20,9 @@ namespace GameHub.Web.Controllers
         [HttpGet("getgames")]
         public IActionResult GetGames()
         {
-            return Ok("ok");
+            var gameMeta = _config.GetSection("Games").Get<List<GameMeta>>();
+
+            return Ok(gameMeta);
         }
     }
 }

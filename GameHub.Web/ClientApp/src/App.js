@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Route, Switch } from 'react-router';
 import { Layout } from './components/Layout';
-import { Home } from './components/Home';
 import { ConnectFour } from './components/ConnectFour/ConnectFour';
 import { NewGameC4 } from './components/ConnectFour/NewGameC4';
 import Chess from './components/Chess/Chess';
@@ -23,7 +22,7 @@ export default class App extends Component {
                 <Route exact path='/connectfour/:gameId' component={withSignalrConnection(ConnectFour, `/connectfourhub${window.location.search}`)} />
                 <Route exact path='/chess/createroom' component={NewGameChess} />
                 <Route exact path='/chess/:gameId' component={withSignalrConnection(ResizeWithContainerHOC(Chess), `/chesshub${window.location.search}`)} />
-                <Route exact path='/' component={gamesPage} />
+                <Route path='/' component={gamesPage} />
             </Switch>
       </Layout>
     );
