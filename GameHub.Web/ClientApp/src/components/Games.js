@@ -4,19 +4,26 @@ import Card  from './Card/Card';
 import Grid from './Grid/Grid';
 import HoverFadeOverlay from './HoverFadeOverlay';
 import { Title } from './Common/Text'
+import LoadingScreen from './Common/LoadingScreen'
 
 export default class Games extends Component {
 
   constructor(props)
   {
     super(props);
-    this.state={games:[]}
+    this.state={
+      games:[],
+      loading: true
+    }
   }
   
   componentDidMount()
   {
     axios.get("api/games/getgames").then(res => {
-      this.setState({games:res.data})
+      this.setState({
+        games:res.data,
+        loading: false
+      })
     })
   }
 
@@ -31,6 +38,7 @@ export default class Games extends Component {
     
     return (
       <div>
+        { <LoadingScreen />}
         <div style={{margin: "30px 0px"}}>
           <Title text="Games"/> 
         </div>
