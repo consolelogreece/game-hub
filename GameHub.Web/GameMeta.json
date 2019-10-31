@@ -2,12 +2,12 @@
     "Games": [
         {
             "Name": "Connect Four",
-            "Thumbnail": "/connectfour.png",
+            "Thumbnail": "images/connectfour.png",
             "Url": "/connectfour"
         },
         {
             "Name": "Chess",
-            "Thumbnail": "/chess.png",
+            "Thumbnail": "images/chess.png",
             "Url": "/chess"
         }
     ]
