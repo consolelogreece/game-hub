@@ -74,7 +74,7 @@ export class ConnectFour extends Component {
 
     invoke = destination =>
     {
-        return this.props.invoke(destination).catch(res => this.setState({gameMessage:res}));;
+        return this.props.invoke(destination).catch(res => this.setState({gameMessage:res}));
     }
 
     populateGameState = () =>
@@ -107,7 +107,7 @@ export class ConnectFour extends Component {
             
             return player.playerNick;
         }
-        return player.playerNick == this.state.playerInfo.playerNick ? "your" : player.playerNick;
+        return player.playerNick === this.state.playerInfo.playerNick ? "your" : player.playerNick;
     }
 
     generateGameMessageFromGameState = gameState =>

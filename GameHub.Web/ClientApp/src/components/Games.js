@@ -24,7 +24,7 @@ export default class Games extends Component {
     let games = this.state.games.map(g => (
       <div style={{cursor: "pointer"}} onClick={() => this.props.history.push(g.url + "/createroom")}>
         <HoverFadeOverlay text={g.name} fadeColor={"rgba(0,0,0,0.6)"}>
-          <Card thumbnail={g.thumbnail}/> 
+          <Card {...g}/> 
         </HoverFadeOverlay>
       </div>
     ));

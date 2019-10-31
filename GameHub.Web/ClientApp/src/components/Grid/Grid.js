@@ -1,9 +1,9 @@
 import React from 'react';
 
 export default props => {
-    let els = props.elements.map(G => {
+    let els = props.elements.map((G, i) => {
         return (
-            <div style={{width:"40%", margin: "0% 5%"}}>
+            <div key={i} style={{width:"40%", margin: "0% 5%"}}>
                 {G}
             </div>
         )}
