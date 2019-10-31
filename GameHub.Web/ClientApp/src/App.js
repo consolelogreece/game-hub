@@ -18,13 +18,12 @@ export default class App extends Component {
     return (
         <Layout>
             <Switch>
-                <Route exact path='/' component={Home} />
-                <Route exact path='/games' component={gamesPage} />
                 <Route exact path='/about' component={aboutPage} />
                 <Route exact path='/connectfour/createroom' component={NewGameC4} />
                 <Route exact path='/connectfour/:gameId' component={withSignalrConnection(ConnectFour, `/connectfourhub${window.location.search}`)} />
                 <Route exact path='/chess/createroom' component={NewGameChess} />
                 <Route exact path='/chess/:gameId' component={withSignalrConnection(ResizeWithContainerHOC(Chess), `/chesshub${window.location.search}`)} />
+                <Route exact path='/' component={gamesPage} />
             </Switch>
       </Layout>
     );
