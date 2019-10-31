@@ -24,7 +24,7 @@ export default class Games extends Component {
     return (
       <div>
         <h1>Game Hub</h1>
-        <div style={{height: "300px"}}>
+        <div>
           <Grid elements={games} />
         </div>
       </div>
