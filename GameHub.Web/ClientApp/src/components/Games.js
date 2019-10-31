@@ -1,14 +1,32 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import Card  from './Card/Card'
+import Grid from './Grid/Grid'
 
 export default class Games extends Component {
+
+  constructor(props)
+  {
+    super(props);
+    this.state={games:[]}
+  }
+  componentDidMount()
+  {
+    axios.get("api/games/getgames").then(res => console.log(this.setState({games:res.data})))
+  }
+
   render () {
-    axios.get("api/games/getgames").then(res => console.log(res.data))
+
+    let games = this.state.games.map(g => (
+      <Card {...g} />
+    ));
+    
     return (
       <div>
         <h1>Game Hub</h1>
-        <a href="/connectfour/createroom">Connect Four</a>
-        <a href="/chess/createroom">Chess</a>
+        <div style={{height: "300px"}}>
+          <Grid elements={games} />
+        </div>
       </div>
     );
   }
