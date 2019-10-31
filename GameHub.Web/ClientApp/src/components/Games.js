@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import Card  from './Card/Card'
-import Grid from './Grid/Grid'
+import Card  from './Card/Card';
+import Grid from './Grid/Grid';
+import HoverFadeOverlay from './HoverFadeOverlay';
+import { Title } from './Common/Text'
 
 export default class Games extends Component {
 
@@ -10,23 +12,29 @@ export default class Games extends Component {
     super(props);
     this.state={games:[]}
   }
+  
   componentDidMount()
   {
-    axios.get("api/games/getgames").then(res => console.log(this.setState({games:res.data})))
+    axios.get("api/games/getgames").then(res => {
+      this.setState({games:res.data})
+    })
   }
 
   render () {
-
     let games = this.state.games.map(g => (
-      <Card {...g} />
+      <div onClick={() => this.props.history.push(g.url + "/createroom")}>
+        <HoverFadeOverlay text={g.name} fadeColor={"rgba(0,0,0,0.6)"}>
+          <Card thumbnail={g.thumbnail}/> 
+        </HoverFadeOverlay>
+      </div>
     ));
     
     return (
       <div>
-        <h1>Game Hub</h1>
-        <div>
-          <Grid elements={games} />
+        <div style={{margin: "30px 0px"}}>
+          <Title text="Games"/> 
         </div>
+        <Grid elements={games} />
       </div>
     );
   }
