@@ -38,7 +38,7 @@ export default class Games extends Component {
     
     return (
       <div>
-        { <LoadingScreen />}
+        {this.state.loading && <LoadingScreen />}
         <div style={{margin: "30px 0px"}}>
           <Title text="Games"/> 
         </div>
