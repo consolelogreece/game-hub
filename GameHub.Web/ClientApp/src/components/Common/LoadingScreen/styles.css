@@ -52,3 +52,9 @@
       0% { transform: translateY(0px); }
       100% { transform: translateY(-50px); }
   }
+
+.loading-fade-out {
+  opacity:0;
+  visibility: hidden;
+  transition:opacity 0.5s, visibility 0.5s;
+}

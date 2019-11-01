@@ -6,7 +6,7 @@ import { faChessBishop, faChessRook, faChessPawn, faChessKnight } from '@fortawe
 export default props => 
 {
     return (
-        <div className="loading">
+        <div className={`loading ${props.classNames}`}>
             <FontAwesomeIcon icon={faChessRook} className="loading-element loading-rook" />
             <FontAwesomeIcon icon={faChessKnight} className="loading-element loading-knight" />
             <FontAwesomeIcon icon={faChessBishop} className="loading-element loading-bishop" />
