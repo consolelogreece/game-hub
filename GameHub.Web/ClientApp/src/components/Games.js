@@ -56,7 +56,7 @@ export default class Games extends Component {
 
     return (
       <div>
-        { <LoadingScreen classNames={this.state.loading ? "" : "loading-fade-out"}/>}
+        <LoadingScreen render={this.state.loading}/>
         <div style={{margin: "30px 0px"}}>
           <Title text="Games"/> 
         </div>
