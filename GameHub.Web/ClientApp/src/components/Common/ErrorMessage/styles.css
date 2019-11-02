@@ -4,6 +4,8 @@
     display: inline-flex;
     padding-right: 30px;
     width: 100%;
+    color: #D8000C;
+    background-color: #fDD;
 }
 
 .error-message-icon-container {
