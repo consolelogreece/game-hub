@@ -14,12 +14,42 @@ export class NewGameC4 extends Component {
                 winThreshold: 4,
                 nPlayersMax: 2
             },
-            errors:{}
+            errors:{
+                nRows: {
+                    shouldRender: false,
+                    message:""
+                },
+                nCols: {
+                    shouldRender: false,
+                    message:""
+                },
+                nPlayersMax: {
+                    shouldRender: false,
+                    message:""
+                },
+                winThreshold: {
+                    shouldRender: false,
+                    message:""
+                }
+            }
         };
     }
 
     onValueChange = e => {
-        this.setState({ ...this.state, roomConfig: { ...this.state.roomConfig, [e.origin] : e.value }})
+        this.setState({ ...this.state,
+             errors: {...this.state.errors, 
+                [e.origin]: {message: this.state.errors[e.origin].message, shouldRender: false}}, 
+                roomConfig: { ...this.state.roomConfig, [e.origin] : e.value 
+                }
+            }, () => {
+                if (this.state.errors[e.origin].message !== "")
+                {
+                    setTimeout(() => {
+                        this.setState({...this.state, errors:{...this.state.errors, [e.origin]: {message: "", shouldRender: false}}})
+                    }, 300)
+                }
+            });
+    
     }
 
     CreateRoom = e =>
@@ -27,14 +57,26 @@ export class NewGameC4 extends Component {
         e.preventDefault();
         axios.post('/api/connectfour/createroom', this.state.roomConfig)
         .then(res => this.props.history.push("connectfour?g=" + res.data))
-        .catch(res => this.setState({errors: res.response.data}))
+        .catch(res => {
+
+            let errors = this.state.errors;
+
+            for (var key in res.response.data)
+            {
+                errors[key] = {
+                    message: res.response.data[key],
+                    shouldRender: true
+                }
+            }
+            this.setState({errors: errors});
+        })
     }
 
     render() {
         return (
             <div>
                 <form style={{width: "70%", margin:"0 auto"}}>
-                    <FormRegion label={"Rows"} errors={this.state.errors.nRows}>
+                    <FormRegion label={"Rows"} error={this.state.errors.nRows}>
                         <IncrementalInput 
                             min={2} 
                             max={30} 
@@ -44,7 +86,7 @@ export class NewGameC4 extends Component {
                             increment={1}
                         />
                     </FormRegion>
-                    <FormRegion label={"Columns"} errors={this.state.errors.nCols}>
+                    <FormRegion label={"Columns"} error={this.state.errors.nCols}>
                         <IncrementalInput 
                             min={2} 
                             max={30} 
@@ -55,7 +97,7 @@ export class NewGameC4 extends Component {
                         />
                     
                     </FormRegion>
-                    <FormRegion label={"Win Threshold"} errors={this.state.errors.winThreshold}>
+                    <FormRegion label={"Win Threshold"} error={this.state.errors.winThreshold}>
                         <IncrementalInput 
                             min={2} 
                             max={30} 
@@ -65,7 +107,7 @@ export class NewGameC4 extends Component {
                             increment={1}
                         />
                     </FormRegion>
-                    <FormRegion label={"Maximum Players"} errors={this.state.errors.nPlayersMax}>
+                    <FormRegion label={"Maximum Players"} error={this.state.errors.nPlayersMax}>
                         <IncrementalInput 
                             min={2} 
                             max={8} 
