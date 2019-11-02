@@ -17,6 +17,11 @@ namespace GameHub.Web.Controllers
         [HttpPost("createroom")]
         public IActionResult CreateRoom([FromBody]ConnectFourConfiguration config)
         {
+            if (config == null)
+            {
+                return BadRequest();
+            }
+
             var Id = System.Guid.NewGuid().ToString();
 
             var playerId = Request.HttpContext.Items["GHPID"].ToString();
