@@ -36,7 +36,7 @@ export default class NewGameForm extends Component {
                 <form style={{width: "70%", boxShadow: "5px 10px 18px #888888", padding: "5px 10px", margin:"0 auto"}}>
                     <FormRegion name="nRows" label={"Rows"} errors={this.state.errors.nRows}>
                         <IncrementalInput 
-                           
+                            min={2} 
                             max={30} 
                             value={this.state.roomConfig.nRows} 
                             onValueChange={this.onValueChange} 
