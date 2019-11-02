@@ -16,7 +16,9 @@ export default class FormRegion extends React.PureComponent {
 
         return (
             <div className={`form-region ${errorDependentClass}`}>
-                <h6>{this.props.label}</h6>
+                <div className="form-region-title-container"> 
+                    <h6 className="form-region-title">{this.props.label}</h6>
+                </div>
                 {this.props.children}
                 {hasErrors && (
                     <div className="form-region-error-message">

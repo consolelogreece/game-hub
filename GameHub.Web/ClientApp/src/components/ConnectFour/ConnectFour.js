@@ -10,11 +10,8 @@ export class ConnectFour extends Component {
     constructor(props) {
         super(props);
 
-        let gameId = this.props.match.params.gameId;
-
         this.state = {
             column: 0,
-            gameId: gameId,
             isGameFull: false,
             gameMessage: "",
             playerTurn: "",
@@ -43,7 +40,7 @@ export class ConnectFour extends Component {
         .then(() => {
             this.populatePlayerClientInfo()
             .then(res => this.populateGameState())
-            .catch(res => this.props.history.push("createroom"));
+            .catch(res => this.props.history.push("/connectfour"));
         });
     }
 

@@ -29,14 +29,14 @@
 
 .form-region-no-error input
 {
-    border-color:#333;
+    border-color:#888;
     background-color: white;
     transition: background-color 300ms linear;
 }
 
 .form-region-no-error div
 {
-    border-color:#333;
+    border-color:#888;
     background-color: white;
     transition: background-color 300ms linear;
 }
@@ -45,4 +45,15 @@
 {
     display: inline-flex;
     margin-top: 10px;
+}
+
+.form-region-title-container
+{
+    margin:0 auto;
+    margin: 10px 0px;
+}
+
+.form-region-title
+{
+    color: #333;
 }

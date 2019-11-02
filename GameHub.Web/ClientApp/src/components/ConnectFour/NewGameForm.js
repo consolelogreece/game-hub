@@ -4,7 +4,7 @@ import axios from 'axios';
 import IncrementalInput from '../Common/Forms/IncrementalInput';
 import FormRegion from '../Common/Forms/FormRegion';
 
-export class NewGameC4 extends Component {
+export default class NewGameForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -26,14 +26,14 @@ export class NewGameC4 extends Component {
     {
         e.preventDefault();
         axios.post('/api/connectfour/createroom', this.state.roomConfig)
-        .then(res => this.props.history.push("connectfour?g=" + res.data))
+        .then(res => this.props.history.push("/connectfour/game?g=" + res.data))
         .catch(res => this.setState({errors: res.response.data}))
     }
 
     render() {
         return (
             <div>
-                <form style={{width: "70%", margin:"0 auto"}}>
+                <form style={{width: "70%", boxShadow: "5px 10px 18px #888888", padding: "5px 10px", margin:"0 auto"}}>
                     <FormRegion name="nRows" label={"Rows"} errors={this.state.errors.nRows}>
                         <IncrementalInput 
                             min={2} 
