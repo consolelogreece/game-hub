@@ -1,6 +1,8 @@
 ﻿import React, { Component } from 'react';
 import ErrorMessage from '../Common/ErrorMessage';
 import axios from 'axios';
+import IncrementalInput from '../Common/Forms/IncrementalInput';
+import FormRegion from '../Common/Forms/FormRegion';
 
 export class NewGameC4 extends Component {
     constructor(props) {
@@ -16,8 +18,8 @@ export class NewGameC4 extends Component {
         };
     }
 
-    HandleChange(e) {
-        this.setState({ ...this.state, roomConfig: { ...this.state.roomConfig, [e.target.name]: e.target.value }})
+    onValueChange = e => {
+        this.setState({ ...this.state, roomConfig: { ...this.state.roomConfig, [e.origin] : e.value }})
     }
 
     CreateRoom = e =>
@@ -31,26 +33,51 @@ export class NewGameC4 extends Component {
     render() {
         return (
             <div>
-                <form onSubmit={this.CreateRoom}>
-                    <h6>Rows</h6>
-                    {!!this.state.errors.nRows && <ErrorMessage text={this.state.errors.nRows} />}
-                    <input name="nRows" value={this.state.roomConfig.nRows} min="2" max="30" type="number" onChange={e => this.HandleChange(e)} />
-                    <br />
-                    <h6>Columns</h6>
-                    {!!this.state.errors.nCols && <ErrorMessage text={this.state.errors.nCols} />}
-                    <input name="nCols" value={this.state.roomConfig.nCols} min="2" max="30" type="number" onChange={e => this.HandleChange(e)} />
-                    <br />
-                    <h6>Win Threshold</h6>
-                    {!!this.state.errors.winThreshold && <ErrorMessage text={this.state.errors.winThreshold} />}
-                    <input name="winThreshold" value={this.state.roomConfig.winThreshold} min="2" max="30" type="number" onChange={e => this.HandleChange(e)} />
-                    <br />
-                    <h6>Max Players</h6>
-                    {!!this.state.errors.nPlayersMax && <ErrorMessage text={this.state.errors.nPlayersMax} />}
-                    <input name="nPlayersMax" value={this.state.roomConfig.nPlayersMax} min="2" max="8" type="number" onChange={e => this.HandleChange(e)} />
-                    <br />
+                <form style={{width: "70%", margin:"0 auto"}}>
+                    <FormRegion label={"Rows"} errors={this.state.errors.nRows}>
+                        <IncrementalInput 
+                            min={2} 
+                            max={30} 
+                            value={this.state.roomConfig.nRows} 
+                            onValueChange={this.onValueChange} 
+                            name="nRows" 
+                            increment={1}
+                        />
+                    </FormRegion>
+                    <FormRegion label={"Columns"} errors={this.state.errors.nCols}>
+                        <IncrementalInput 
+                            min={2} 
+                            max={30} 
+                            value={this.state.roomConfig.nCols} 
+                            onValueChange={this.onValueChange} 
+                            name="nCols" 
+                            increment={1}
+                        />
+                    
+                    </FormRegion>
+                    <FormRegion label={"Win Threshold"} errors={this.state.errors.winThreshold}>
+                        <IncrementalInput 
+                            min={2} 
+                            max={30} 
+                            value={this.state.roomConfig.winThreshold} 
+                            onValueChange={this.onValueChange} 
+                            name="winThreshold" 
+                            increment={1}
+                        />
+                    </FormRegion>
+                    <FormRegion label={"Maximum Players"} errors={this.state.errors.nPlayersMax}>
+                        <IncrementalInput 
+                            min={2} 
+                            max={8} 
+                            value={this.state.roomConfig.nPlayersMax} 
+                            onValueChange={this.onValueChange} 
+                            name="nPlayersMax" 
+                            increment={1}
+                        />
+                    </FormRegion>
                     {/* Only render general error message if there are no other errors. */}
                     {!!this.state.errors.general && Object.keys(this.state.errors).length === 1 && <ErrorMessage text={this.state.errors.general} />}
-                    <button>Create</button>
+                    <div onClick={this.CreateRoom}>Create</div>
                 </form>
             </div>
         )

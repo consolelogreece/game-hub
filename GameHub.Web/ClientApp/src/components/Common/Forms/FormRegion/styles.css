@@ -1,0 +1,14 @@
+.form-region
+{
+    margin: 30px 0px;
+}
+
+.form-region-error input
+{
+    border-color:red;
+}
+
+.form-region-error div
+{
+    border-color:red;
+}
