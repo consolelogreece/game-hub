@@ -29,7 +29,6 @@ export default class IncrementalInput extends React.PureComponent
     }
 
     render() {
-        console.log(this.props.name)
         return (
             <div className="incremental-container">
                 <div className="value-button" id="decrease" onClick={this.onDecrement}><FontAwesomeIcon icon={faMinus} /></div>
