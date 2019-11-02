@@ -4,6 +4,6 @@ namespace GameHub.Games.BoardGames.Chess
     {
         public string creatorId {get; set;}
 
-        public ushort nPlayersMax { get; private set; } = 2;
+        public int nPlayersMax { get; private set; } = 2;
     }  
 }

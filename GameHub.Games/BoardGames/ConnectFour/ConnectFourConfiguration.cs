@@ -8,13 +8,13 @@ namespace GameHub.Games.BoardGames.ConnectFour
     {
         public string creatorId { get; set;}
 
-        public ushort nRows { get; set; }
+        public int nRows { get; set; }
 
-        public ushort nCols { get; set; }
+        public int nCols { get; set; }
 
-        public ushort winThreshold { get; set; }
+        public int winThreshold { get; set; }
 
-        public ushort nPlayersMax { get; set; }
+        public int nPlayersMax { get; set; }
 
         ///<summary>Returns dictionary containing errors. Empty means configuration is valid.</summary>
         public Dictionary<string, string> Validate()
