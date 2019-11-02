@@ -22,13 +22,11 @@
 
 #decrease {
   margin-right: -4px;
-  border-radius: 8px 0 0 8px;
   height:40px;
 }
 
 #increase {
   margin-left: -4px;
-  border-radius: 0 8px 8px 0;
   height:40px;
 }
 

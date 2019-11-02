@@ -41,34 +41,8 @@
     transition: background-color 300ms linear;
 }
 
-@keyframes reducetime {
-    0% {
-      max-height: 0;
-    }
-    100% {
-      max-height: 100px
-    }
-  }
-
-
-  @keyframes test
-  {
-    0% {
-        max-height: 100px;
-      }
-      100% {
-        max-height: 0
-      }  
-  }
-
-.form-error-transition {
+.form-region-error-message
+{
     display: inline-flex;
-    animation-duration: 0.3s;
-    animation-name: reducetime;
-}
-
-.form-no-error-transition {
-    display: inline-flex;
-    animation-duration: 0.3s;
-    animation-name: test;
+    margin-top: 10px;
 }
