@@ -19,7 +19,7 @@ export class NewGameC4 extends Component {
     }
 
     onValueChange = e => {
-        this.setState({ ...this.state, errors: {...this.state.errors, [e.origin]: []}, roomConfig: { ...this.state.roomConfig, [e.origin] : e.value}});
+        this.setState({ ...this.state, errors: {...this.state.errors, [e.origin]: undefined}, roomConfig: { ...this.state.roomConfig, [e.origin] : e.value}});
     }
 
     CreateRoom = e =>
@@ -34,7 +34,7 @@ export class NewGameC4 extends Component {
         return (
             <div>
                 <form style={{width: "70%", margin:"0 auto"}}>
-                    <FormRegion label={"Rows"} errors={this.state.errors.nRows}>
+                    <FormRegion name="nRows" label={"Rows"} errors={this.state.errors.nRows}>
                         <IncrementalInput 
                             min={2} 
                             max={30} 
@@ -44,7 +44,7 @@ export class NewGameC4 extends Component {
                             increment={1}
                         />
                     </FormRegion>
-                    <FormRegion label={"Columns"} errors={this.state.errors.nCols}>
+                    <FormRegion name="nCols" label={"Columns"} errors={this.state.errors.nCols}>
                         <IncrementalInput 
                             min={2} 
                             max={30} 
@@ -55,7 +55,7 @@ export class NewGameC4 extends Component {
                         />
                     
                     </FormRegion>
-                    <FormRegion label={"Win Threshold"} errors={this.state.errors.winThreshold}>
+                    <FormRegion name="winThreshold" label={"Win Threshold"} errors={this.state.errors.winThreshold}>
                         <IncrementalInput 
                             min={2} 
                             max={30} 
@@ -65,7 +65,7 @@ export class NewGameC4 extends Component {
                             increment={1}
                         />
                     </FormRegion>
-                    <FormRegion label={"Maximum Players"} errors={this.state.errors.nPlayersMax}>
+                    <FormRegion name="nPlayersMax"  label={"Maximum Players"} errors={this.state.errors.nPlayersMax}>
                         <IncrementalInput 
                             min={2} 
                             max={8} 

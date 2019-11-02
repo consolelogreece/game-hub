@@ -7,20 +7,25 @@ import { faUnderline } from '@fortawesome/free-solid-svg-icons';
 const errorStyle = "form-region-error";
 const noErrorStyle = "form-region-no-error";
 
-export default props => {
-    const hasErrors = !(props.errors === undefined || props.errors.length === 0);
-    const errorDependentClass = hasErrors ? errorStyle : noErrorStyle;
+export default class FormRegion extends React.PureComponent {
 
-    return (
-        <div className={`form-region ${errorDependentClass}`}>
-            <h6>{props.label}</h6>
-            {props.children}
+    render()
+    {
+        let hasErrors = !(this.props.errors === undefined || this.props.errors.length === 0);
+        let errorDependentClass = hasErrors ? errorStyle : noErrorStyle;
 
-            {hasErrors && (
-                <div className="form-region-error-message">
-                    <ErrorMessage text={props.errors} />
-                </div>
-            )}
-        </div>
-    )
+        console.log(this.props.name)
+
+        return (
+            <div className={`form-region ${errorDependentClass}`}>
+                <h6>{this.props.label}</h6>
+                {this.props.children}
+                {hasErrors && (
+                    <div className="form-region-error-message">
+                        <ErrorMessage text={this.props.errors} />
+                    </div>
+                )}
+            </div>
+        )
+    }
 }
