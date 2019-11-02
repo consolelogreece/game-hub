@@ -53,7 +53,6 @@ export default class NewGameForm extends Component {
                             name="nCols" 
                             increment={1}
                         />
-                    
                     </FormRegion>
                     <FormRegion name="winThreshold" label={"Win Threshold"} errors={this.state.errors.winThreshold}>
                         <IncrementalInput 
