@@ -24,10 +24,15 @@
     width: 100%;
 }
 
+#c4-new-game-form
+{
+    margin-top: 50px;
+}
+
 #c4form
 {
     background-color: white;
-    padding: 5px 5px 5px 5px;
+    padding: 10px;
     border-radius: 5px;
     text-align: left;
     max-width: 600px;

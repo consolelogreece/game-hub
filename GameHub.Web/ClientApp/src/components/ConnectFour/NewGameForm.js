@@ -4,6 +4,8 @@ import axios from 'axios';
 import IncrementalInput from '../Common/Forms/IncrementalInput';
 import FormRegion from '../Common/Forms/FormRegion';
 import { Title } from '../Common/Text';
+import Button from '../Button'
+import { noAuto } from '@fortawesome/fontawesome-svg-core';
 
 export default class NewGameForm extends Component {
     constructor(props) {
@@ -79,7 +81,7 @@ export default class NewGameForm extends Component {
                     </FormRegion>
                     {/* Only render general error message if there are no other errors. */}
                     {!!this.state.errors.general && Object.keys(this.state.errors).length === 1 && <ErrorMessage text={this.state.errors.general} />}
-                    <div onClick={this.CreateRoom}>Create</div>
+                    <Button style={{margin: "0 auto"}} onClick={this.CreateRoom}>Create</Button>
                 </form>
             </div>
         )
