@@ -15,7 +15,7 @@ export function Subtitle(props)
 {
     return(
         <div>
-            <h6 style={{font: 'bold 15px/24px "Haas Grot Text R Web", "Helvetica Neue", Helvetica, Arial, sans-serif'}}>
+            <h6 style={{fontSize: '20px', fontWeight:"bold", ...props.style}}>
                 {props.children}
             </h6>
         </div>

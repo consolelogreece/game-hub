@@ -28,15 +28,13 @@
 
 .form-region-no-error input
 {
-    border-color:#888;
-    background-color: white;
+    background-color: #f5f6f7;
     transition: background-color 300ms linear;
 }
 
 .form-region-no-error .value-button 
 {
-    border-color:#888;
-    background-color: white;
+    background-color: #f5f6f7;
     transition: background-color 300ms linear;
 }
 
@@ -44,12 +42,12 @@
 {
     display: inline-flex;
     margin-top: 10px;
+    font-size:16px;
 }
 
 .form-region-title-container
 {
     margin:0 auto;
-   
 }
 
 .form-region-label

@@ -24,3 +24,13 @@
     width: 100%;
     max-width: 800px;
 }
+
+#c4form::before {
+        content : "";
+        position: absolute;
+        left    : 0;
+        bottom  : 0;
+        height  : 1px;
+        width   : 50%;  /* or 100px */
+        border-bottom:1px solid magenta;
+}

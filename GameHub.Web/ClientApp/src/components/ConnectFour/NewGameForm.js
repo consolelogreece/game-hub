@@ -32,8 +32,8 @@ export default class NewGameForm extends Component {
 
     render() {
         return (
-            <div>
-                <form style={{width: "70%", boxShadow: "5px 10px 18px #888888", padding: "5px 10px", margin:"0 auto"}}>
+            <div id="c4form">
+                <form style={{margin:"0 auto"}}>
                     <FormRegion name="nRows" label={"Rows"} errors={this.state.errors.nRows}>
                         <IncrementalInput 
                             min={2} 
