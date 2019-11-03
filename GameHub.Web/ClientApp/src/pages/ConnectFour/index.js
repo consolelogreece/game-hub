@@ -1,5 +1,5 @@
 import React from 'react'
-import NewGameForm from './NewGameForm';
+import NewGameForm from '../../components/ConnectFour/NewGameForm';
 
 export default props => {
     return (

@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import Card  from './Card/Card';
-import Grid from './Grid/Grid';
-import HoverFadeOverlay from './HoverFadeOverlay';
-import { Title } from './Common/Text'
-import LoadingScreen from './Common/LoadingScreen'
+import Card  from '../../components/Card/Card';
+import Grid from '../../components/Grid/Grid';
+import HoverFadeOverlay from '../../components/HoverFadeOverlay';
+import { Title } from '../../components/Common/Text'
+import LoadingScreen from '../../components/Common/LoadingScreen'
 
 export default class Games extends Component {
 
