@@ -27,7 +27,7 @@ export default class ConnectFourLandingPage extends React.PureComponent {
                     To win Connect Four you must be the first player to get four of your colored tokens in a row either horizontally, vertically or diagonally. 
                 </p>
                 { this.state.displayPopup && (
-                    <Popup onClose={this.togglePopup}>
+                    <Popup style={{width:" 100%", maxWidth: "800px"}} onClose={this.togglePopup}>
                         <NewGameForm history={this.props.history}/>
                     </Popup> 
                 )}
