@@ -25,8 +25,7 @@ export default props =>
                  background: "#f0d9b5",
                  borderRadius: "2%"
             }}>
-                <h1 style={{textAlign: "center"}}>{props.title}</h1>
-                {props.content}
+                {props.children}
             </div>
         </div>
     )
