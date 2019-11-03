@@ -10,6 +10,8 @@ import withSignalrConnection from './components/HigherOrder/withSignalrConnectio
 import gamesPage from './pages/Games';
 import aboutPage from './pages/About';
 
+import './styles.css'
+
 export default class App extends Component {
   static displayName = App.name;
 

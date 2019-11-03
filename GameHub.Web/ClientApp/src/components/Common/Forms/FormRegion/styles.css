@@ -14,7 +14,7 @@
     background-color: #fDD;
     transition: background-color 300ms linear;
 }
-.form-region-error h6
+.form-region-error label
 {
     font-size:16px !important;
 }
@@ -52,10 +52,11 @@
    
 }
 
-.form-region-title
+.form-region-label
 {
     color: #333;
     background-color: white;
+    font-weight: bold;
 }
 
 @keyframes show {
