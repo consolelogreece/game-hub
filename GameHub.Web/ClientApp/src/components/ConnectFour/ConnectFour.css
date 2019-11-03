@@ -22,7 +22,6 @@
 #ConnectFour
 {
     width: 100%;
-    max-width: 800px;
 }
 
 #c4form
@@ -31,4 +30,5 @@
     padding: 5px 5px 5px 5px;
     border-radius: 5px;
     text-align: left;
+    max-width: 600px;
 }
