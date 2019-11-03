@@ -5,7 +5,7 @@ export default props =>
 {
     return (
         <div className="popup-container" onClick={props.onClose !== undefined ? props.onClose : () => {}}>
-            <div style={props.style} className="popup-content">
+            <div onClick={e => {e.stopPropagation()}} style={props.style} className="popup-content">
                 {props.children}
             </div>
         </div>
