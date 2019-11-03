@@ -12,7 +12,7 @@ export default class ConnectFourLandingPage extends React.PureComponent {
         }
     }
 
-    togglePopup()
+    togglePopup = () => 
     {
         this.setState({displayPopup: !this.state.displayPopup});
     }
