@@ -3,9 +3,7 @@ import ErrorMessage from '../Common/ErrorMessage';
 import axios from 'axios';
 import IncrementalInput from '../Common/Forms/IncrementalInput';
 import FormRegion from '../Common/Forms/FormRegion';
-import { Title } from '../Common/Text';
 import Button from '../Button'
-import { noAuto } from '@fortawesome/fontawesome-svg-core';
 
 export default class NewGameForm extends Component {
     constructor(props) {
@@ -36,7 +34,7 @@ export default class NewGameForm extends Component {
     render() {
         return (
             <div id="c4form">
-                <Title text="New Game" />
+                <span id="c4-new-game-form-title">New Game</span>
                 <form style={{margin:"0 auto"}}>
                     <FormRegion name="nRows" label={"Rows"} errors={this.state.errors.nRows}>
                         <IncrementalInput 

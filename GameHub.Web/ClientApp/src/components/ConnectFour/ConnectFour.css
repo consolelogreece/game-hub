@@ -29,6 +29,13 @@
     margin-top: 50px;
 }
 
+#c4-new-game-form-title
+{
+    display:table;
+    margin:0 auto;
+    margin-top: 10px;
+}
+
 #c4form
 {
     background-color: white;
