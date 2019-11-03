@@ -5,7 +5,7 @@ import './Chess.css'
 export default props =>
 {
     return (
-        <div style={{display: "flex", flexDirection: "column", justifyContent: "center", height:"90%", maxWidth: "400px"}}>
+        <div style={{display: "flex", flexDirection: "column", justifyContent: "center", height:"90%"}}>
             <div style={{display: "flex", flexDirection: "row", height: "100%"}}>
                 <button className="button-promotion" onClick={() => props.callback("Q")}>
                     ♕

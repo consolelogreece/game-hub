@@ -383,9 +383,11 @@ export default class Chess extends Component {
                 <Title text="CHESS" />
                 <Subtitle>{clientName}</Subtitle>
                 {this.state.displayPromotionPrompt &&
-                    <Popup>
-                        <Title text="Promotion" />
-                        <PromotionSelection callback={this.makePromotion} />
+                    <Popup style={{width:" 100%", maxWidth: "800px"}}>
+                        <div style={{backgroundColor:"#f0d9b5"}} >
+                            <Title text="Promotion" />
+                            <PromotionSelection callback={this.makePromotion} />
+                        </div>
                     </Popup>
                 }
                 <div style={{margin: "0 auto", Width: "100%", backgroundColor: "red"}}>
