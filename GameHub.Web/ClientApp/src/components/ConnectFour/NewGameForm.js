@@ -3,7 +3,10 @@ import ErrorMessage from '../Common/ErrorMessage';
 import axios from 'axios';
 import IncrementalInput from '../Common/Forms/IncrementalInput';
 import FormRegion from '../Common/Forms/FormRegion';
-import Button from '../Button'
+import Button from '../Button';
+import Tooltip from '../Tooltip';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 
 export default class NewGameForm extends Component {
     constructor(props) {
@@ -57,7 +60,11 @@ export default class NewGameForm extends Component {
                         />
                     
                     </FormRegion>
-                    <FormRegion name="winThreshold" label={"Win Threshold"} errors={this.state.errors.winThreshold}>
+                    <FormRegion name="winThreshold" label={
+                    <span>
+                        Win Threshold <Tooltip pretext={<FontAwesomeIcon icon={faQuestionCircle} />} tooltip={"Number of tokens needed in a row to win"}/>
+                    </span>
+                    } errors={this.state.errors.winThreshold}>
                         <IncrementalInput 
                             min={2} 
                             max={30} 
