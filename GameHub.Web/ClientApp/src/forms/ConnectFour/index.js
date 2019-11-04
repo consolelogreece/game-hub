@@ -1,10 +1,10 @@
 ﻿import React, { Component } from 'react';
-import ErrorMessage from '../Common/ErrorMessage';
+import ErrorMessage from '../../components/Common/ErrorMessage';
 import axios from 'axios';
-import IncrementalInput from '../Common/Forms/IncrementalInput';
-import FormRegion from '../Common/Forms/FormRegion';
-import Button from '../Button';
-import Tooltip from '../Tooltip';
+import IncrementalInput from '../../components/Common/Forms/IncrementalInput';
+import FormRegion from '../../components/Common/Forms/FormRegion';
+import Button from '../../components/Button';
+import Tooltip from '../../components/Tooltip';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 

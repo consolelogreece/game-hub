@@ -3,8 +3,9 @@ import axios from 'axios';
 import Card  from '../../components/Card/Card';
 import Grid from '../../components/Grid/Grid';
 import HoverFadeOverlay from '../../components/HoverFadeOverlay';
-import { Title } from '../../components/Common/Text'
-import LoadingScreen from '../../components/Common/LoadingScreen'
+import { Title } from '../../components/Common/Text';
+import LoadingScreen from '../../components/Common/LoadingScreen';
+import ConnectFourForm from '../../forms/ConnectFour';
 
 export default class Games extends Component {
 
@@ -14,7 +15,11 @@ export default class Games extends Component {
     this.state={
       games:[],
       loading: true,
-      imagesLoaded:0
+      imagesLoaded:0,
+      formMap: {
+        "Connect Four": ConnectFourForm
+      },
+      selectedForm:""
     }
   }
   
