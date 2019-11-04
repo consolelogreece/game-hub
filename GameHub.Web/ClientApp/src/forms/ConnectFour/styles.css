@@ -14,9 +14,10 @@
 
 #c4form
 {
-    background-color: white;
+    background-color: white !important;
     padding: 10px;
     border-radius: 5px;
     text-align: left;
-    max-width: 600px;
+    width: 100%;
+    max-width: 700px;
 }

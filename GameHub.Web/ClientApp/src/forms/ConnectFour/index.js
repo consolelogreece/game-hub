@@ -7,6 +7,7 @@ import Button from '../../components/Button';
 import Tooltip from '../../components/Tooltip';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
+import './styles.css';
 
 export default class NewGameForm extends Component {
     constructor(props) {
