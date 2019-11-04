@@ -1,0 +1,39 @@
+
+#tooltip-ref-element
+{
+  display: inline-block;
+}
+
+#tooltip-pop-element-arrow
+{
+  position: absolute;
+  width: 10px; 
+  height: 10px; 
+  transform: rotate(45deg);
+  background-color: #333 !important;
+}
+
+#tooltip-pop-element-body
+{
+  background-color: #333 !important;
+  color: white;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  padding: 5px;
+  z-index: 999;
+  font-weight: normal;
+}
+
+.tooltip-hide
+{
+  visibility: hidden;
+  opacity: 0;
+  transition: all 100ms linear;
+}
+
+.tooltip-show
+{
+  visibility: visible;
+  opacity: 1;
+  transition: all 100ms linear;
+}

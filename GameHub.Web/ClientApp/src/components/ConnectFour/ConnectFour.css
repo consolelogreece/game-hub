@@ -22,5 +22,27 @@
 #ConnectFour
 {
     width: 100%;
-    max-width: 800px;
+}
+
+#c4-new-game-form
+{
+    margin-top: 50px;
+}
+
+#c4-new-game-form-title
+{
+    display:table;
+    margin:0 auto;
+    margin-top: 10px;
+    border-bottom: 1px #999 solid;
+    font-size: 25px;
+}
+
+#c4form
+{
+    background-color: white;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: left;
+    max-width: 600px;
 }

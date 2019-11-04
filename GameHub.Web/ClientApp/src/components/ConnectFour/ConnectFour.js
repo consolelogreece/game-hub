@@ -197,7 +197,7 @@ export class ConnectFour extends Component {
         return (
             <div id="ConnectFour" className="vertical_center">  
                 <Title text="Connect Four"/> 
-                <Subtitle text={clientName} />
+                <Subtitle>{clientName}</Subtitle>
                 <Aboard  
                     className="vertical_center" 
                     boardState={this.state.boardState} 

@@ -15,9 +15,20 @@ export function Subtitle(props)
 {
     return(
         <div>
-            <h6 style={{textAlign:"center"}}>
-                {props.text}
+            <h6 style={{fontSize: '20px', fontWeight:"bold", ...props.style}}>
+                {props.children}
             </h6>
+        </div>
+    )
+}
+
+export function TextArea(props)
+{
+    return(
+        <div>
+            <p style={{textAlign:"center"}}>
+                {props.children}
+            </p>
         </div>
     )
 }

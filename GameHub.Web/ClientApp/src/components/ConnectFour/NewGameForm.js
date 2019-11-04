@@ -3,6 +3,10 @@ import ErrorMessage from '../Common/ErrorMessage';
 import axios from 'axios';
 import IncrementalInput from '../Common/Forms/IncrementalInput';
 import FormRegion from '../Common/Forms/FormRegion';
+import Button from '../Button';
+import Tooltip from '../Tooltip';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 
 export default class NewGameForm extends Component {
     constructor(props) {
@@ -32,8 +36,9 @@ export default class NewGameForm extends Component {
 
     render() {
         return (
-            <div>
-                <form style={{width: "70%", boxShadow: "5px 10px 18px #888888", padding: "5px 10px", margin:"0 auto"}}>
+            <div id="c4form">
+                <span id="c4-new-game-form-title">New Game</span>
+                <form style={{margin:"0 auto"}}>
                     <FormRegion name="nRows" label={"Rows"} errors={this.state.errors.nRows}>
                         <IncrementalInput 
                             min={2} 
@@ -54,7 +59,11 @@ export default class NewGameForm extends Component {
                             increment={1}
                         />
                     </FormRegion>
-                    <FormRegion name="winThreshold" label={"Win Threshold"} errors={this.state.errors.winThreshold}>
+                    <FormRegion name="winThreshold" label={
+                    <span>
+                        Win Threshold <Tooltip text={<FontAwesomeIcon icon={faQuestionCircle} />} tooltip={"Number of tokens needed in a row to win"}/>
+                    </span>
+                    } errors={this.state.errors.winThreshold}>
                         <IncrementalInput 
                             min={2} 
                             max={30} 
@@ -76,7 +85,7 @@ export default class NewGameForm extends Component {
                     </FormRegion>
                     {/* Only render general error message if there are no other errors. */}
                     {!!this.state.errors.general && Object.keys(this.state.errors).length === 1 && <ErrorMessage text={this.state.errors.general} />}
-                    <div onClick={this.CreateRoom}>Create</div>
+                    <Button style={{margin: "0 auto"}} onClick={this.CreateRoom}>Create</Button>
                 </form>
             </div>
         )
