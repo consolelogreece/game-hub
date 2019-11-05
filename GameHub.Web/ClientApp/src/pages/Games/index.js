@@ -7,6 +7,7 @@ import { Title } from '../../components/Common/Text';
 import LoadingScreen from '../../components/Common/LoadingScreen';
 import Popup from '../../components/Common/Popup';
 import ConnectFourForm from '../../forms/ConnectFour';
+import ChessForm from '../../forms/Chess';
 
 export default class Games extends Component {
 
@@ -18,7 +19,8 @@ export default class Games extends Component {
       loading: true,
       imagesLoaded:0,
       formMap: {
-        "Connect Four": ConnectFourForm
+        "Connect Four": ConnectFourForm,
+        "Chess": ChessForm
       },
       selectedForm:""
     }

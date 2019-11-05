@@ -38,7 +38,7 @@ export default class NewGameForm extends Component {
     render() {
         return (
             <div id="c4form">
-                <span id="c4-new-game-form-title">New Game</span>
+                <span id="c4-new-game-form-title">Connect Four</span>
                 <form style={{margin:"0 auto"}}>
                     <FormRegion name="nRows" label={"Rows"} errors={this.state.errors.nRows}>
                         <IncrementalInput 
