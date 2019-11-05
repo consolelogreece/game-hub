@@ -1,21 +1,21 @@
 .game-form-show
 {
-    animation: fadeinform 300ms;
+    transition: fadeinform 300ms;
 }
 
 .game-form-hide
 {
-    animation: fadeoutform 300ms;
+    transition: fadeoutform 300ms;
 }
 
 .game-popup-show
 {
-    animation: fadeinpopup 300ms;
+    transition: fadeinpopup 300ms;
 }
 
 .game-popup-hide
 {
-    animation: fadeoutpopup 300ms;
+    transition: fadeoutpopup 300ms;
 }
 
 @keyframes fadeinpopup
@@ -40,7 +40,7 @@
 
 @keyframes fadeinform
 {
-    0% {
+    1% {
         opacity: 0;
         transform: scale(0.8, 0.8);
     }
@@ -49,7 +49,6 @@
         transform: scale(1,1);
     }
 }
-
 
 @keyframes fadeoutform
 {
@@ -61,12 +60,4 @@
         opacity: 1;
         transform: scale(1,1);
     }
-}
-
-#games-popup-container
-{
-    z-index: 9999;
-    position: relative;
-    transform-origin: center;
-    transform-origin: 0 0;
 }
