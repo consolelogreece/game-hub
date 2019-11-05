@@ -6,7 +6,7 @@ import OptionPanel from '../Common/OptionPanel';
 
 import Board from './Board';
 
-export class ConnectFour extends Component {
+export default class ConnectFour extends Component {
     constructor(props) {
         super(props);
 
@@ -40,8 +40,9 @@ export class ConnectFour extends Component {
         .then(() => {
             this.populatePlayerClientInfo()
             .then(res => this.populateGameState())
-            .catch(res => this.props.history.push("/connectfour"));
-        });
+        })
+        .then(() =>this.props.onLoadComplete())
+        .catch(res => this.props.onLoadFail(res));
     }
 
     move = col =>
@@ -76,7 +77,7 @@ export class ConnectFour extends Component {
 
     populateGameState = () =>
     {
-        this.props.invoke('GetGameState')
+        return this.props.invoke('GetGameState')
         .then(gameState => this.updateStateWithNewGameState(gameState));
     }
 
