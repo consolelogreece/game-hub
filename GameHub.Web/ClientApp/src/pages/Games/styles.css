@@ -1,21 +1,21 @@
 .game-form-show
 {
-    transition: fadeinform 300ms;
+    animation: fadeinform 300ms;
 }
 
 .game-form-hide
 {
-    transition: fadeoutform 300ms;
+    animation: fadeoutform 300ms;
 }
 
 .game-popup-show
 {
-    transition: fadeinpopup 300ms;
+    animation: fadeinpopup 300ms;
 }
 
 .game-popup-hide
 {
-    transition: fadeoutpopup 300ms;
+    animation: fadeoutpopup 300ms;
 }
 
 @keyframes fadeinpopup
