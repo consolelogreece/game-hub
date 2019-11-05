@@ -1,6 +1,7 @@
 import React from 'react';
-import ConnectFour from '../../components/ConnectFour/ConnectFour';
-import withSignalrConnection from '../../components/HigherOrder/withSignalrConnection'
+import Chess from '../../components/Chess/Chess';
+import withSignalrConnection from '../../components/HigherOrder/withSignalrConnection';
+import ResizeWithContainerHOC from '../../components/HigherOrder/GetRenderedWidthHOC';
 import LoadingScreen from '../../components/Common/LoadingScreen';
 
 export default class ConnectFourPage extends React.PureComponent
@@ -22,12 +23,12 @@ export default class ConnectFourPage extends React.PureComponent
 
     render()
     {
-        let Game = withSignalrConnection(ConnectFour, `/connectfourhub${window.location.search}`);
+        let Game = withSignalrConnection(ResizeWithContainerHOC(Chess), `/chesshub${window.location.search}`);
         
         return (
             <div>
                 <LoadingScreen render={this.state.loading}/>
-                <Game onLoadFail = {this.onLoadFail} onLoadComplete={this.onLoadComplete}/>
+                <Game onLoadFail={this.onLoadFail} onLoadComplete={this.onLoadComplete}/>
             </div>
         )
     } 

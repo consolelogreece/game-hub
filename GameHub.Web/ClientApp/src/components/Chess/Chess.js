@@ -17,7 +17,6 @@ export default class Chess extends Component {
         this.state = {
             hubConnection: null,
             fen: "empty",
-            gameId: props.match.params.gameId,
             legalMoves: {},
             squareStyles: {},
             pieceSquare:"",
@@ -47,9 +46,10 @@ export default class Chess extends Component {
    
         this.props.startConnection()
         .then(() => {
-            this.initilaize()
-            .catch(_ => this.props.history.push("createroom"));
-        });
+            this.initilaize();
+        })
+        .then(() => this.props.onLoadComplete())
+        .catch(res => this.props.onLoadFail(res));
     }
 
     initilaize()

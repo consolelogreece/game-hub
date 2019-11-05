@@ -19,7 +19,7 @@ export default class Tooltip extends React.PureComponent
   render()
   {
     let renderSpecificClass = this.state.renderTooltip ? showClassName : hideClassName;
-    console.log(renderSpecificClass, "specific");
+    
     return (
       <Manager>
         <Reference>

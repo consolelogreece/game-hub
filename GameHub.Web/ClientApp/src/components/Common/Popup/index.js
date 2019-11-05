@@ -4,9 +4,11 @@ import './styles.css'
 export default props => 
 {
     return (
-        <div className="popup-container" onClick={props.onClose !== undefined ? props.onClose : () => {}}>
-            <div onClick={e => {e.stopPropagation()}} style={props.style} className="popup-content">
-                {props.children}
+        <div className={"popup-super-container" + " " + props.superContainerClassNames} style={{...props.superContainerStyles}}>
+            <div className={"popup-container"  + " " + props.containerClassNames} onClick={props.onClose !== undefined ? props.onClose : () => {}}>
+                <div onClick={e => {e.stopPropagation()}} style={props.popupStyles} className="popup-content">
+                    {props.children}
+                </div>
             </div>
         </div>
     )
