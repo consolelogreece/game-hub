@@ -75,7 +75,7 @@ export default class NewGameForm extends Component {
                             increment={1}
                         />
                     </FormRegion>
-                    <FormRegion name="nPlayersMax"  label={"Maximum Players"} errors={this.state.errors.nPlayersMax}>
+                    <FormRegion name="nPlayersMax" label={"Maximum Players"} errors={this.state.errors.nPlayersMax}>
                         <IncrementalInput 
                             min={2} 
                             max={8} 
@@ -85,8 +85,6 @@ export default class NewGameForm extends Component {
                             increment={1}
                         />
                     </FormRegion>
-                    {/* Only render general error message if there are no other errors. */}
-                    {!!this.state.errors.general && Object.keys(this.state.errors).length === 1 && <ErrorMessage text={this.state.errors.general} />}
                     <Button style={{margin: "0 auto"}} onClick={this.CreateRoom}>Create</Button>
                 </form>
             </div>
