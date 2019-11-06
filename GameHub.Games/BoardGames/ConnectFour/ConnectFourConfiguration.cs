@@ -56,12 +56,11 @@ namespace GameHub.Games.BoardGames.ConnectFour
             {
                 errors.Add("nPlayersMax", "Can't have less than 2 players");
             }
-
             // A player must be able to have the same amount of turns as the win threshold to be able to win.
             // therefore its impossible for someone to win unless condition below is met.
-            if ((nRows * nCols) < ((nPlayersMax * winThreshold) - nPlayersMax - 1))
+            else if((nRows * nCols) < ((nPlayersMax * winThreshold) - nPlayersMax + 1))
             {
-                errors.Add("General", "With this configuration, it is impossible for anyone to win.");
+                errors.Add("nPlayersMax", "Winning is impossible with this many players on this size board");
             }
            
             return errors;
