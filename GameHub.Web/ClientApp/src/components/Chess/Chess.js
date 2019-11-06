@@ -323,6 +323,11 @@ export default class Chess extends Component {
         });
     }
 
+    cancelPromotion = () =>
+    {
+        this.setState({displayPromotionPrompt: false, promotion: null})
+    }
+
     JoinGame = name => {
         this.props.invoke('JoinGame', name)
             .then(this.populatePlayerClientInfo())
@@ -383,7 +388,10 @@ export default class Chess extends Component {
                 <Title text="CHESS" />
                 <Subtitle>{clientName}</Subtitle>
                 {this.state.displayPromotionPrompt &&
-                    <Popup style={{width:" 100%", maxWidth: "800px"}}>
+                    <Popup 
+                        superContainerStyles={{backgroundColor: "rgba(0,0,0, 0.5)"}} 
+                        popupStyles={{width:" 100%", maxWidth: "800px"}}
+                        onClose={this.cancelPromotion}>
                         <div style={{backgroundColor:"#f0d9b5"}} >
                             <Title text="Promotion" />
                             <PromotionSelection callback={this.makePromotion} />
