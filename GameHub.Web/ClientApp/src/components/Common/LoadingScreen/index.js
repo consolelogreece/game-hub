@@ -1,6 +1,6 @@
 import React from 'react';
 import './styles.css';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChessBishop, faChessRook, faChessPawn, faChessKnight } from '@fortawesome/free-solid-svg-icons'
 
 export default props => 
