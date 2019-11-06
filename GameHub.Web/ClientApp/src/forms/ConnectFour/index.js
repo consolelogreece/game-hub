@@ -62,7 +62,7 @@ export default class NewGameForm extends Component {
                     </FormRegion>
                     <FormRegion name="winThreshold" label={
                     <span>
-                        Win Threshold <Tooltip text={<FontAwesomeIcon icon={faQuestionCircle} />} tooltip={"Number of tokens needed in a row to win"}/>
+                        Win Threshold <Tooltip transitionPeriod={300} text={<FontAwesomeIcon icon={faQuestionCircle} />} tooltip={"Number of tokens needed in a row to win"}/>
                     </span>
                     } errors={this.state.errors.winThreshold}>
                         <IncrementalInput 

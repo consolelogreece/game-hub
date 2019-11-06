@@ -1,6 +1,7 @@
 import React from 'react';
 import { Manager, Reference, Popper } from 'react-popper';
 import './styles.css';
+import TooltipElement from './TooltipElement';
 
 const showClassName = "tooltip-show";
 const hideClassName = "tooltip-hide";
@@ -8,7 +9,8 @@ const hideClassName = "tooltip-hide";
 export default class Tooltip extends React.PureComponent 
 {
   state = {
-    renderTooltip: false
+    renderTooltip: false,
+    updateScheduler: null
   }
 
   renderTooltip = bool => 
@@ -30,13 +32,10 @@ export default class Tooltip extends React.PureComponent
           )}
         </Reference>
         <Popper placement="top">
-          {({ref, style, placement, arrowProps}) => {
+          {({ref, style, placement, arrowProps, scheduleUpdate}) => {
             return (
-            <div ref={ref} id="tooltip-pop-element-body" className={renderSpecificClass} style={{...style, }} data-placement={placement}>
-              {this.props.tooltip}
-              <div ref={arrowProps.ref} id="tooltip-pop-element-arrow" className={renderSpecificClass} style={{...arrowProps.style}} />
-            </div>
-          )}}
+              <TooltipElement transitionPeriod={this.props.transitionPeriod} annahroof={ref} style={style} arrowProps={arrowProps} placement={placement} scheduleUpdate={scheduleUpdate} tooltip={this.props.tooltip} renderSpecificClass={renderSpecificClass}/>
+            )}}
         </Popper>
       </Manager>
     )
