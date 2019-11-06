@@ -392,8 +392,8 @@ export default class Chess extends Component {
                         superContainerStyles={{backgroundColor: "rgba(0,0,0, 0.5)"}} 
                         popupStyles={{width:" 100%", maxWidth: "800px"}}
                         onClose={this.cancelPromotion}>
-                        <div style={{backgroundColor:"#f0d9b5"}} >
-                            <Title text="Promotion" />
+                        <div style={{backgroundColor:"white", borderRadius: "10px", padding: "10px"}} >
+                        <span id="chess-promotion-selection-popup">Promotion</span>
                             <PromotionSelection callback={this.makePromotion} />
                         </div>
                     </Popup>

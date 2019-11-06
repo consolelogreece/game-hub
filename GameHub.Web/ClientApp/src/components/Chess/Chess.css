@@ -1,6 +1,7 @@
 .button-promotion {
     position: relative;
-    background-color: #b58863;
+    box-shadow:0px 2px 10px 5px #888888;
+    color: #555;
     border: none;
     padding: 20px;
     text-align: center;
@@ -15,7 +16,15 @@
 }
 
 .button-promotion:hover{
-   background:#f0d9b5;
-   box-shadow:0px 2px 10px 5px #b58863;
+   background:white;
    color:#000;
+}
+
+#chess-promotion-selection-popup
+{
+    display:table;
+    margin:0 auto;
+    margin-bottom: 20px;
+    border-bottom: 1px #999 solid;
+    font-size: 25px;
 }
