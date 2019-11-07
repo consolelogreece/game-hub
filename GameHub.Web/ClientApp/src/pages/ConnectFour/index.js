@@ -6,28 +6,46 @@ import LoadingScreen from '../../components/Common/LoadingScreen';
 export default class ConnectFourPage extends React.PureComponent
 {
     state={
-        loading: true
+        loading: true,
+        game: null,
+        ls: null
+    }
+
+    componentDidMount()
+    {
+        let game = withSignalrConnection(ConnectFour,{
+            hubUrl: `/connectfourhub${window.location.search}`, 
+            onFail: this.onFail, 
+            onConnectionClose: this.onConnectionClosed,
+            onLoadComplete: this.onLoadComplete
+        });
+
+        this.setState({game: game})
     }
 
     onLoadComplete = () =>
     {
-       this.setState({loading: false});
+        this.setState({loading: false});
     }
 
-    onLoadFail = res => 
+    onFail = async res => 
     {
-        console.log(res);
-        this.props.history.push("/");
+        await this.props.history.push("/");
+        throw res;
+    }
+
+    onConnectionClosed = async () =>
+    {
+        await this.props.history.push("/");
+        throw "connection closed";
     }
 
     render()
     {
-        let Game = withSignalrConnection(ConnectFour, `/connectfourhub${window.location.search}`);
-        
         return (
             <div>
                 <LoadingScreen render={this.state.loading}/>
-                <Game onLoadFail = {this.onLoadFail} onLoadComplete={this.onLoadComplete}/>
+                {!!this.state.game && <this.state.game />}
             </div>
         )
     } 

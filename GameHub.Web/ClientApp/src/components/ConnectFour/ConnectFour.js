@@ -37,12 +37,8 @@ export default class ConnectFour extends Component {
         this.props.on('RematchStarted', gameState => this.RematchStarted(gameState));
         
         this.props.startConnection()
-        .then(() => {
-            this.populatePlayerClientInfo()
-            .then(res => this.populateGameState())
-        })
-        .then(() =>this.props.onLoadComplete())
-        .catch(res => this.props.onLoadFail(res));
+        .then(() => this.populatePlayerClientInfo())
+        .then(res =>  this.populateGameState());
     }
 
     move = col =>
