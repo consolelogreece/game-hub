@@ -211,6 +211,8 @@ namespace GameHub.Games.BoardGames.ConnectFour
             // un-resign resigned players
             _players.ForEach(p => p.Resigned = false);
 
+            _game = new ConnectFourGame(_config);
+
             return new ActionResult(true);
         }
 
