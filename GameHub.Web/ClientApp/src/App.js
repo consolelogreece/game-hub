@@ -8,6 +8,7 @@ import ChessPage from './pages/Chess';
 import './styles.css';
 import { LoadingProvider } from  './context/Loading';
 
+
 export default class App extends Component {
   static displayName = App.name;
 
