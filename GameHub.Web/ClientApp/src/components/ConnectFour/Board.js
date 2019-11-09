@@ -64,11 +64,12 @@ export default class Board extends Component {
                     move={(col) => this.props.move(col)} 
                     column={j}
                     tileDiameter = {this.state.tileWidth}
+                    key={i + "-" + j}
                     />)
             }
 
             boardRender.push(
-                <div className="row">
+                <div key={i} className="row">
                     {row}
                 </div>
             )
