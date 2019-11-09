@@ -8,7 +8,6 @@ export default class GamesPageWrapper extends Component
   {
     return (
       <div>
-        <h1>rst</h1>
         <LoadingCtx.Consumer>
           {context => (
             <Page {...this.props} context={context} />

@@ -29,7 +29,7 @@ export default class ConnectFourPage extends React.PureComponent
 
     onFail = res => 
     {
-        //this.props.history.push("/");
+        this.props.history.push("/");
     }
 
     onConnectionClosed = () =>
