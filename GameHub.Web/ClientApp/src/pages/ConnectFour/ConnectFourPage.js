@@ -1,7 +1,6 @@
 import React from 'react';
 import ConnectFour from '../../components/ConnectFour/ConnectFour';
 import withSignalrConnection from '../../components/HigherOrder/withSignalrConnection';
-import { LoadingCtx } from '../../context/Loading';
 
 export default class ConnectFourPage extends React.PureComponent
 {

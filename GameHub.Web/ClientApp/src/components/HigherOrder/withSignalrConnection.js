@@ -32,7 +32,7 @@ export default function(WrappedComponent, config)
                 return this.state.connection.invoke(destination, ...this.state.permanentInvokeParams, ...params);
             }
 
-            throw "Not Connected"
+            throw new Error("No Signalr connection");
         }
 
         on = (destination, func) => 

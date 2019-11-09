@@ -2,7 +2,6 @@ import React from 'react';
 import Chess from '../../components/Chess/Chess';
 import withSignalrConnection from '../../components/HigherOrder/withSignalrConnection';
 import ResizeWithContainerHOC from '../../components/HigherOrder/GetRenderedWidthHOC';
-import { LoadingCtx } from '../../context/Loading'
 
 export default class ConnectFourPage extends React.PureComponent
 {

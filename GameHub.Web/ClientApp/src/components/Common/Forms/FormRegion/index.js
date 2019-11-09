@@ -1,7 +1,6 @@
 import React from 'react';
 import ErrorMessage from '../../ErrorMessage';
 import './styles.css'
-import { faUnderline } from '@fortawesome/free-solid-svg-icons';
 
 // name of error related classes in styles.css
 const errorStyleInput = "form-region-error";
@@ -13,14 +12,13 @@ export default class FormRegion extends React.PureComponent {
 
     constructor(props)
     {
-        super(props)
-        {
-            this.state = {
-                errorMessage: "",
-                messageRenderClassName:errorStyleMessage,
-                inputRenderClassName:""
-            };
-        }
+        super(props);
+
+        this.state = {
+            errorMessage: "",
+            messageRenderClassName:errorStyleMessage,
+            inputRenderClassName:""
+        };
     }
 
     componentDidUpdate(prevProps, _, __)
