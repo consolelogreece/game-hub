@@ -5,6 +5,8 @@ export default function(WrappedComponent, config)
 {
     return class InjectSignalrConnection extends Component
     {
+        _connected = false;
+
         constructor(props)
         {
             super(props);
@@ -13,7 +15,7 @@ export default function(WrappedComponent, config)
             .withUrl(config.hubUrl)
             .build();
 
-            connection.onclose(config.onConnectionClosed);
+            connection.onclose(this.onConnectionClosed);
 
             this.state = {
                 permanentInvokeParams:[],
@@ -25,11 +27,12 @@ export default function(WrappedComponent, config)
 
         invoke = (destination, ...params) => 
         {
-            return this.state.connection.invoke(destination, ...this.state.permanentInvokeParams, ...params)
-                .catch(res => 
-                {
-                    return config.onFail(res);
-                });
+            if (this._connected)
+            {
+                return this.state.connection.invoke(destination, ...this.state.permanentInvokeParams, ...params);
+            }
+
+            throw "Not Connected"
         }
 
         on = (destination, func) => 
@@ -47,17 +50,36 @@ export default function(WrappedComponent, config)
             }
         };
 
-        startConnection = () => 
+        startConnection = async () => 
         {
-            return this.state.connection.start()
-            .then(() => config.onLoadComplete())
-            .catch(() => config.onFail());
+            var x = await this.state.connection.start();
+
+            if (x === undefined)
+            {
+                this._connected = true;
+            }
+            else
+            {
+                config.onFail();
+                this._connected = false;
+            }
+
+            return new Promise((resolve, reject) => { 
+                this._connected ? resolve() : reject();
+            });
         }
 
         componentWillUnmount()
         {
+            this._connected = false;
             this.state.connection.stop();
         }    
+
+        onConnectionClosed = () =>
+        {
+            this._connected = false;
+            config.onConnectionClosed();
+        }
     
         render = () =>
         {

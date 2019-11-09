@@ -22,7 +22,7 @@ export default class ConnectFour extends Component {
         };
     }
 
-    componentDidMount() 
+    async componentDidMount() 
     {
         this.props.on('IllegalAction', res => {this.setState({ gameMessage: res })});
 
@@ -36,9 +36,9 @@ export default class ConnectFour extends Component {
 
         this.props.on('RematchStarted', gameState => this.RematchStarted(gameState));
         
-        this.props.startConnection()
-        .then(() => this.populatePlayerClientInfo())
-        .then(res =>  this.populateGameState());
+        this.props.startConnection().then(() => this.populatePlayerClientInfo())
+        .then(res =>  this.populateGameState())
+        .then(() => this.props.onLoadComplete())
     }
 
     move = col =>
@@ -46,14 +46,13 @@ export default class ConnectFour extends Component {
         // if the playerinfo is null, the player is a spectator and thus can't move.
         if (this.state.playerInfo == null) return;
 
-        this.props.invoke('Move', col).catch(err => console.error(err));;
+        this.props.invoke('Move', col);
     }
     
     JoinGame = name => {
         this.props.invoke('JoinGame', name)
             .then(this.populatePlayerClientInfo())
             .then(this.populateGameState())
-            .catch(res => this.setState({gameMessage: "oopsie daisy"}));
     }
 
     RematchStarted = gameState =>

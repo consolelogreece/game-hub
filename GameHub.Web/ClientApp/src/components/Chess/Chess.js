@@ -30,7 +30,7 @@ export default class Chess extends Component {
         }
     }
 
-    componentDidMount() 
+    async componentDidMount() 
     {
         this.props.on('PlayerMoved', this.playerMoved);
 
@@ -44,19 +44,14 @@ export default class Chess extends Component {
 
         this.props.on('RematchStarted', gameState => this.RematchStarted(gameState));
    
-        this.props.startConnection()
-        .then(() => {
-            this.initilaize();
-        })
-        .then(() => this.props.onLoadComplete())
-        .catch(res => this.props.onLoadFail(res));
+        this.props.startConnection().then(() => this.initilaize()).then(() => this.props.onLoadComplete());
     }
 
     initilaize()
     {
         return this.populatePlayerClientInfo()
-        .then(this.populateGameState())
-        .then(this.populateAvailableMoves());
+        .then(() => this.populateGameState())
+        .then(() => this.populateAvailableMoves());
     }
 
     playerMoved = res =>
@@ -171,7 +166,7 @@ export default class Chess extends Component {
 
     populateAvailableMoves = () =>
     {
-        this.props.invoke('GetMoves').then(res => this.mapMoves(res))
+        return this.props.invoke('GetMoves').then(res => this.mapMoves(res))
     }
 
     populatePlayerClientInfo = () =>

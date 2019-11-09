@@ -11,7 +11,6 @@ export default class ChessForm extends React.PureComponent
         axios.post('/api/chess/createroom', {})
         .then(res => this.props.history.push("/chess/game?g=" + res.data))
         .catch(res => {
-            console.log(res);
             this.props.history.push("/");
         });
     }

@@ -7,8 +7,7 @@ export default class ConnectFourPage extends React.PureComponent
 {
     state={
         loading: true,
-        game: null,
-        ls: null
+        game: null
     }
 
     componentDidMount()
@@ -16,7 +15,7 @@ export default class ConnectFourPage extends React.PureComponent
         let game = withSignalrConnection(ConnectFour,{
             hubUrl: `/connectfourhub${window.location.search}`, 
             onFail: this.onFail, 
-            onConnectionClose: this.onConnectionClosed,
+            onConnectionClosed: this.onConnectionClosed,
             onLoadComplete: this.onLoadComplete
         });
 
@@ -25,19 +24,17 @@ export default class ConnectFourPage extends React.PureComponent
 
     onLoadComplete = () =>
     {
-        this.setState({loading: false});
+        
     }
 
-    onFail = async res => 
+    onFail = res => 
     {
-        await this.props.history.push("/");
-        throw res;
+        //this.props.history.push("/");
     }
 
-    onConnectionClosed = async () =>
+    onConnectionClosed = () =>
     {
-        await this.props.history.push("/");
-        throw "connection closed";
+        this.props.history.push("/");
     }
 
     render()
@@ -45,7 +42,7 @@ export default class ConnectFourPage extends React.PureComponent
         return (
             <div>
                 <LoadingScreen render={this.state.loading}/>
-                {!!this.state.game && <this.state.game />}
+                {!!this.state.game && <this.state.game onLoadComplete={() => this.setState({loading: false})}/>}
             </div>
         )
     } 
