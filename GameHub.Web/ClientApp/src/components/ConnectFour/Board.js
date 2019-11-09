@@ -12,7 +12,7 @@ export default class Board extends Component {
         };
     }
 
-    componentWillReceiveProps(props)
+    static getDerivedStateFromProps(props, state)
     {
         var borderThickness = props.containerWidth / 75;
 
@@ -21,11 +21,16 @@ export default class Board extends Component {
         // must times borderThickness by 2, to factor in BOTH sides
         var tileWidth = Math.floor(props.containerWidth / props.boardState[0].length) - (borderThickness * 2 / props.boardState[0].length);
 
-        this.setState({
-            boardState: props.boardState, 
-            tileWidth: tileWidth,
-            borderThickness: borderThickness
-        });    
+        if (borderThickness !== state.borderThickness || tileWidth !== state.tileWidth)
+        {
+            return {
+                boardState: props.boardState, 
+                tileWidth: tileWidth,
+                borderThickness: borderThickness
+            }
+        }  
+
+        return null;
     }
     
     getDefaultBoard = () =>
