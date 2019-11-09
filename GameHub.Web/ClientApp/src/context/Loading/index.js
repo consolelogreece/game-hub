@@ -18,7 +18,7 @@ export class LoadingProvider extends Component {
 
     render() {
         return (
-           <LoadingCtx.Provider value={{update: this.update}}>      
+           <LoadingCtx.Provider value={{setIsLoading: this.update}}>      
               <LoadingScreen render={this.state.loading} /> 
               {this.props.children}
            </LoadingCtx.Provider>

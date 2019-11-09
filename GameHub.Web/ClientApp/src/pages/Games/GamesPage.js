@@ -34,7 +34,7 @@ export default class Games extends Component {
   
   componentDidMount()
   {
-    this.props.context.update(true);
+    this.props.context.setIsLoading(true);
     
     axios.get("api/games/getgames").then(res => {
       this.setState({
@@ -54,13 +54,13 @@ export default class Games extends Component {
   {
     if (this.state.imagesLoaded === this.state.games.length && this.state.loading)
     {
-        this.props.context.update(false)
+        this.props.context.setIsLoading(false)
     }
   }
 
   componentWillUnmount()
   {
-    this.props.context.update(false)
+    this.props.context.setIsLoading(true)
   }
 
   closePopup = () =>
