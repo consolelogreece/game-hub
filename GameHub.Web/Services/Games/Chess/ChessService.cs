@@ -9,7 +9,7 @@ public class ChessService
     private GameResigner _gameResigner;
     private GameRestarter _gameRestarter;
     private GamePlayerGetter<ChessPlayer> _gamePlayerGetter;
-    private GameStateGetter<GameStateChess> _gameStateGetter;
+    private GameStateGetter<ChessGameState> _gameStateGetter;
     private GameMover<Move> _gameMover;
     // id of player using the service
     private string _playerId;
@@ -28,7 +28,7 @@ public class ChessService
 
         _gamePlayerGetter = new GamePlayerGetter<ChessPlayer>(game);
 
-        _gameStateGetter = new GameStateGetter<GameStateChess>(game);
+        _gameStateGetter = new GameStateGetter<ChessGameState>(game);
 
         _gameMover = new GameMover<Move>(game);
 
@@ -42,11 +42,12 @@ public class ChessService
     public ActionResult JoinGame(string playerNick) => _gameJoiner.JoinGame(_playerId, playerNick);
 
     public ChessPlayer GetPlayer() => (ChessPlayer)_gamePlayerGetter.Get(_playerId);
+    
     public ActionResult Resign() => _gameResigner.Resign(_playerId);
 
     public ActionResult Restart() => _gameRestarter.Restart(_playerId);
 
-    public GameStateChess GetGameState() => (GameStateChess)_gameStateGetter.Get();
+    public ChessGameState GetGameState() => (ChessGameState)_gameStateGetter.Get();
 
     public ActionResult Move(Move move) => _gameMover.Move(_playerId, move);
 
