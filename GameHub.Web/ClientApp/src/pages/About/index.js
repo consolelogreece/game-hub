@@ -6,7 +6,7 @@ export default class AboutPageWrapper extends Component
   render()
   {
     return (
-      <Page {...this.props} context={context} />
+      <Page {...this.props} />
     )
   }
 }
