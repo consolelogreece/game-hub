@@ -4,7 +4,7 @@ import Card  from '../../components/Card/Card';
 import Grid from '../../components/Grid/Grid';
 import HoverFadeOverlay from '../../components/HoverFadeOverlay';
 import { Title } from '../../components/Common/Text';
-import Popup from '../../components/Common/Popup';
+import Popup from '../../components/Popup';
 import ConnectFourForm from '../../forms/ConnectFour';
 import ChessForm from '../../forms/Chess';
 import { transition_period } from './styles.scss';

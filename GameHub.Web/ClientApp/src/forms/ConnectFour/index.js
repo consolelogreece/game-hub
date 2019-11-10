@@ -1,7 +1,7 @@
 ﻿import React, { Component } from 'react';
 import axios from 'axios';
-import IncrementalInput from '../../components/Common/Forms/IncrementalInput';
-import FormRegion from '../../components/Common/Forms/FormRegion';
+import IncrementalInput from '../../components/Forms/IncrementalInput';
+import FormRegion from '../../components/Forms/FormRegion';
 import Button from '../../components/Button';
 import Tooltip from '../../components/Tooltip';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';

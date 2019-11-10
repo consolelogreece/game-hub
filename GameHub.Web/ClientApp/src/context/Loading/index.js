@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import LoadingScreen from '../../components/Common/LoadingScreen'
+import LoadingScreen from '../../components/LoadingScreen'
 
 export let LoadingCtx = React.createContext();
 

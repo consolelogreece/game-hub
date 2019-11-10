@@ -1,7 +1,7 @@
 ﻿import React, { Component } from "react";
 import Chessboard from "chessboardjsx";
 import OptionPanel from '../Common/OptionPanel';
-import Popup from '../Common/Popup'
+import Popup from '../Popup';
 import PromotionSelection from './PromotionSelection';
 import { Title, Subtitle } from '../Common/Text';
 
