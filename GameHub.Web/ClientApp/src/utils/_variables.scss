@@ -1,0 +1,7 @@
+$transition_period: 300;
+$transition_period_ms: $transition_period + ms;
+
+:export
+{
+    transition_period: $transition_period;
+}

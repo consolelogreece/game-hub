@@ -1,6 +1,6 @@
 import React from 'react';
 import ErrorMessage from '../../ErrorMessage';
-import './styles.css'
+import { transition_period } from './styles.scss';
 
 // name of error related classes in styles.css
 const errorStyleInput = "form-region-error";
@@ -33,7 +33,7 @@ export default class FormRegion extends React.PureComponent {
                             errorMessage: this.props.errors,
                             messageRenderClassName: errorStyleMessage
                         })
-                    }, 300)
+                    }, transition_period)
                 });
             }
         }
