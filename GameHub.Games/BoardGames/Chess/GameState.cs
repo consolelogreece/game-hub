@@ -3,7 +3,7 @@ using GameHub.Games.BoardGames.Common;
 
 namespace GameHub.Games.BoardGames.Chess
 {
-    public class GameStateChess : GameState
+    public class ChessGameState : GameState
     {
         public string BoardStateFen { get; set; }
 

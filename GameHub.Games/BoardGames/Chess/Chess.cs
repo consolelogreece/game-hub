@@ -11,7 +11,7 @@ namespace GameHub.Games.BoardGames.Chess
         IResignable, 
         IMoveable<Move>,
         IGamePlayerGetter<ChessPlayer>, 
-        IGameStateGetter<GameStateChess>
+        IGameStateGetter<ChessGameState>
     {
         private ChessGame _game = new ChessGame();
 
@@ -200,7 +200,7 @@ namespace GameHub.Games.BoardGames.Chess
             return new ActionResult(true);
         }
 
-        public GameStateChess GetGameState()
+        public ChessGameState GetGameState()
         {
             var currentTurnPlayer =  this.GetPlayer(_game.WhoseTurn);
 
@@ -209,7 +209,7 @@ namespace GameHub.Games.BoardGames.Chess
             if (White != null) players.Add(White);
             if (Black != null) players.Add(Black);
             
-            return new GameStateChess
+            return new ChessGameState
             {
                 BoardStateFen = _game.GetFen(),
                 CurrentTurnPlayer = currentTurnPlayer,
