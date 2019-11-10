@@ -34,7 +34,7 @@ export default class Tooltip extends React.PureComponent
         <Popper placement="top">
           {({ref, style, placement, arrowProps, scheduleUpdate}) => {
             return (
-              <TooltipElement transitionPeriod={this.props.transitionPeriod} annahroof={ref} style={style} arrowProps={arrowProps} placement={placement} scheduleUpdate={scheduleUpdate} tooltip={this.props.tooltip} renderSpecificClass={renderSpecificClass}/>
+              <TooltipElement parentTransitionPeriod={this.props.parentTransitionPeriod} tooltipref={ref} style={style} arrowProps={arrowProps} placement={placement} scheduleUpdate={scheduleUpdate} tooltip={this.props.tooltip} renderSpecificClass={renderSpecificClass}/>
             )}}
         </Popper>
       </Manager>
