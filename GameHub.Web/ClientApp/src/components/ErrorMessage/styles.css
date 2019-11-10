@@ -1,0 +1,16 @@
+.error-message-container {
+    padding: 10px;
+    border-radius: 3px 3px 3px 3px;
+    display: inline-flex;
+    padding-right: 30px;
+    width: 100%;
+    color: #D8000C;
+    background-color: #fDD;
+}
+
+.error-message-icon-container {
+    width:40px;
+    padding-right:10px;
+    text-align: center;
+    vertical-align: middle;
+}
