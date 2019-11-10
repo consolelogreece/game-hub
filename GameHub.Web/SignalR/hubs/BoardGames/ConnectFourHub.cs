@@ -62,7 +62,7 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
             ActionResultHandler(result, "RematchStarted");
         }
 
-        public GameStateConnectFour GetGameState()
+        public ConnectFourGameState GetGameState()
         {
            return GetGameService().GetGameState();
         }

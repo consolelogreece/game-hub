@@ -7,7 +7,7 @@ public class ConnectFourService
     private GameResigner _gameResigner;
     private GameRestarter _gameRestarter;
     private GamePlayerGetter<ConnectFourPlayer> _gamePlayerGetter;
-    private GameStateGetter<GameStateConnectFour> _gameStateGetter;
+    private GameStateGetter<ConnectFourGameState> _gameStateGetter;
     private GameMover<int> _gameMover;
     // id of player using the service
     private string _playerId;
@@ -24,7 +24,7 @@ public class ConnectFourService
 
         _gamePlayerGetter = new GamePlayerGetter<ConnectFourPlayer>(game);
 
-        _gameStateGetter = new GameStateGetter<GameStateConnectFour>(game);
+        _gameStateGetter = new GameStateGetter<ConnectFourGameState>(game);
 
         _gameMover = new GameMover<int>(game);
 
@@ -41,7 +41,7 @@ public class ConnectFourService
 
     public ActionResult Restart() => _gameRestarter.Restart(_playerId);
 
-    public GameStateConnectFour GetGameState() => (GameStateConnectFour)_gameStateGetter.Get();
+    public ConnectFourGameState GetGameState() => (ConnectFourGameState)_gameStateGetter.Get();
 
     public ActionResult Move(int col) => _gameMover.Move(_playerId, col);
 }

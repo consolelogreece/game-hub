@@ -5,7 +5,7 @@ using GameHub.Games.BoardGames.Common;
 
 namespace GameHub.Games.BoardGames.ConnectFour
 {
-    public class GameStateConnectFour : GameState
+    public class ConnectFourGameState : GameState
     {
         public List<ConnectFourPlayer> Players { get; set; }
 

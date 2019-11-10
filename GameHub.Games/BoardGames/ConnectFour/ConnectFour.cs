@@ -10,7 +10,7 @@ namespace GameHub.Games.BoardGames.ConnectFour
         IResignable, 
         IMoveable<int>,
         IGamePlayerGetter<ConnectFourPlayer>, 
-        IGameStateGetter<GameStateConnectFour>
+        IGameStateGetter<ConnectFourGameState>
     {
         #region private props
         private ConnectFourGame _game;
@@ -231,9 +231,9 @@ namespace GameHub.Games.BoardGames.ConnectFour
             return new GameProgress(status, endReason);
         }
 
-        public GameStateConnectFour GetGameState()
+        public ConnectFourGameState GetGameState()
         {
-            var gameState = new GameStateConnectFour();
+            var gameState = new ConnectFourGameState();
 
             gameState.Status = this.GetGameStatus();
 
