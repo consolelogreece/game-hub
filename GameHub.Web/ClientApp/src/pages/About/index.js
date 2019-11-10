@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
+import Page from './AboutPage';
 
-export default class about extends Component {
-  render () {
+export default class AboutPageWrapper extends Component
+{
+  render()
+  {
     return (
-      <div>
-        <p>
-            Real time games, no signup.
-        </p>
-      </div>
-    );
+      <Page {...this.props} context={context} />
+    )
   }
 }

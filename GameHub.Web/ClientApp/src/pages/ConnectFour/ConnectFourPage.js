@@ -37,11 +37,6 @@ export default class ConnectFourPage extends React.PureComponent
         this.props.history.push("/");
     }
 
-    componentWillUnmount()
-    {
-        this.props.context.setIsLoading(true);
-    }
-
     render()
     {
         return (
