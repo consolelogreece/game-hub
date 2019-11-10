@@ -7,7 +7,7 @@ import { Title } from '../../components/Common/Text';
 import Popup from '../../components/Common/Popup';
 import ConnectFourForm from '../../forms/ConnectFour';
 import ChessForm from '../../forms/Chess';
-import './styles.css';
+import { transition_period } from './styles.scss';
 
 const showFormClass = "game-form-show";
 const hideFormClass = "game-form-hide";
@@ -70,7 +70,7 @@ export default class Games extends Component {
           this.setState({
               selectedForm: ""
           })
-      }, 300)
+      }, transition_period)
     });
   }
 

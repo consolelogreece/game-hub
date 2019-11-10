@@ -1,21 +1,23 @@
+@import '../../utils/variables';
+
 .game-form-show
 {
-    animation: fadeinform 300ms;
+    animation: fadeinform $transition_period_ms;
 }
 
 .game-form-hide
 {
-    animation: fadeoutform 300ms;
+    animation: fadeoutform $transition_period_ms;
 }
 
 .game-popup-show
 {
-    animation: fadeinpopup 300ms;
+    animation: fadeinpopup $transition_period_ms;
 }
 
 .game-popup-hide
 {
-    animation: fadeoutpopup 300ms;
+    animation: fadeoutpopup $transition_period_ms;
 }
 
 @keyframes fadeinpopup
