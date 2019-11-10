@@ -57,6 +57,11 @@ export default class Games extends Component {
         this.props.context.setIsLoading(false)
     }
   }
+
+  componentWillUnmount()
+  {
+      this.props.context.setIsLoading(false);
+  }
   
   closePopup = () =>
   {
