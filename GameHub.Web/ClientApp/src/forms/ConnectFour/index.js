@@ -6,7 +6,7 @@ import Button from '../../components/Button';
 import Tooltip from '../../components/Tooltip';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
-import './styles.css';
+import { transition_period } from './styles.scss';
 
 export default class NewGameForm extends Component {
     constructor(props) {
@@ -61,7 +61,7 @@ export default class NewGameForm extends Component {
                     </FormRegion>
                     <FormRegion name="winThreshold" label={
                     <span>
-                        Win Threshold <Tooltip transitionPeriod={300} text={<FontAwesomeIcon icon={faQuestionCircle} />} tooltip={"Number of tokens needed in a row to win"}/>
+                        Win Threshold <Tooltip transitionPeriod={transition_period} text={<FontAwesomeIcon icon={faQuestionCircle} />} tooltip={"Number of tokens needed in a row to win"}/>
                     </span>
                     } errors={this.state.errors.winThreshold}>
                         <IncrementalInput 
