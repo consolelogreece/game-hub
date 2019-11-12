@@ -34,21 +34,9 @@
     transition: color $transition_period_ms linear;
 
 }
-.form-region-error .value-button 
-{
-    border-color:#f66;
-    background-color: #fDD; 
-    transition: all $transition_period_ms linear;
-}
+
 
 .form-region-no-error input
-{
-    background-color: #f5f6f7;
-    border-color: #ddd;
-    transition: all $transition_period_ms linear;
-}
-
-.form-region-no-error .value-button 
 {
     background-color: #f5f6f7;
     border-color: #ddd;

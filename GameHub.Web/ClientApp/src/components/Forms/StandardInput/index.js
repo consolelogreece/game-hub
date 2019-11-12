@@ -1,5 +1,5 @@
 import React from 'react';
-import './styles.css';
+import './styles.scss';
 
 export default class StandardInput extends React.PureComponent 
 {
@@ -7,7 +7,7 @@ export default class StandardInput extends React.PureComponent
         return (
             <div className="standard-container">
                 <input 
-                    className="standard-input" 
+                    className="standard-input"
                     name={this.props.name}
                     value={this.props.value}
                     onChange={this.props.onValueChange}

@@ -27,13 +27,11 @@ export default class optionsPanel extends React.Component
         await timeout(transition_period);
 
         this.setState({displayJoin: false, error: undefined});
-
-        return new Promise(resolve => resolve())
     }
 
     HandleChange = e =>
     {
-        this.setState({...this.state, [e.target.name]: e.target.value})
+        this.setState({...this.state, error:"", [e.target.name]: e.target.value})
     }
 
     joinGame = async e =>
@@ -41,10 +39,17 @@ export default class optionsPanel extends React.Component
         e.preventDefault();
 
         var result = await this.props.JoinGame(this.state.username);
+
+        console.log(result)
+
+
         
         if (result.wasSuccessful)
         {
+            console.log("we in succ")
             await this.closePopup();
+
+            console.log("succ closed")
 
             this.props.GameJoined();
         }
@@ -85,8 +90,9 @@ export default class optionsPanel extends React.Component
                                     onClose={this.closePopup}
                                 >
                                     <form>
-                                        <div style={{padding: "10px", backgroundColor: "white", borderRadius:"15px"}}>
-                                            <FormRegion errors={this.state.error} label="Please enter your name">
+                                        <div style={{padding: "10px", backgroundColor: "white", borderRadius:"15px", textAlign: "left"}}>
+                                            <span id="option-panel-join-form-title">Enter your name</span>
+                                            <FormRegion errors={this.state.error}>
                                                 <StandardInput name="username" value={this.state.username} onValueChange={this.HandleChange}/>
                                             </FormRegion>
                                             <Button style={{margin: "0 auto"}} onClick={this.joinGame}>Join</Button>
