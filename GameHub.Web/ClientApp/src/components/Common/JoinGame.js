@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import FormRegion from '../Forms/FormRegion';
+import Button from '../Button';
 
 export default class JoinGame extends Component
 {   
@@ -28,7 +30,29 @@ export default class JoinGame extends Component
     {
         return(
             <div style={{margin: "15px auto 0px auto", textAlign: "center"}}>
-                <h6>{this.props.title}</h6>
+                <FormRegion name="nCols" label={"Name"}>
+                    <input  
+                        name="text" 
+                        value={this.state.playerNick} 
+                        onChange={e => this.HandleChange(e)}
+                        style={{
+                            width:"100%",
+                            border: "2px solid #aaa",
+                            borderRadius: "4px",
+                            margin: "8px 0",
+                            padding: "8px"
+                        }}
+                    />
+                </FormRegion>
+          
+            </div>
+        )
+    }
+}
+
+
+
+      {/* <h6>{this.props.title}</h6>
                 <input  
                     name="text" 
                     value={this.state.playerNick} 
@@ -48,9 +72,6 @@ export default class JoinGame extends Component
                     borderRadius: "4px",
                     margin: "8px 0",
                     padding: "8px"
-                }}
-                onClick={() => this.JoinGame()}>Join</button>
-            </div>
-        )
-    }
-}
+                }} 
+
+            onClick={() => this.JoinGame()}>Join</button>*/}

@@ -1,0 +1,65 @@
+@import '../../../utils/variables';
+
+.option-panel-form-show
+{
+    animation: fadeinform $transition_period_ms;
+}
+
+.option-panel-form-hide
+{
+    animation: fadeoutform $transition_period_ms;
+}
+
+.option-panel-popup-show
+{
+    animation: fadeinpopup $transition_period_ms;
+}
+
+.option-panel-popup-hide
+{
+    animation: fadeoutpopup $transition_period_ms;
+}
+
+@keyframes fadeinpopup
+{
+    0% {
+        background-color: rgba(0,0,0,0);
+    }
+    100% {
+        background-color: rgba(0,0,0,0.5);
+    }
+}
+
+@keyframes fadeoutpopup
+{
+    100% {
+        background-color: rgba(0,0,0,0);
+    }
+    0% {
+        background-color: rgba(0,0,0, 0.5);
+    }
+}
+
+@keyframes fadeinform
+{
+    0% {
+        opacity: 0;
+        transform: scale(0.8, 0.8);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1,1);
+    }
+}
+
+@keyframes fadeoutform
+{
+    100% {
+        opacity: 0;
+        transform: scale(0.8, 0.8);
+    }
+    0% {
+        opacity: 1;
+        transform: scale(1,1);
+    }
+}

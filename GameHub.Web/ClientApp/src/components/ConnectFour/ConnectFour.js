@@ -178,13 +178,13 @@ export default class ConnectFour extends Component {
     {
         var Aboard = ResizeWithContainerHOC(Board);
 
+        let clientName = this.state.playerInfo != null ? this.state.playerInfo.playerNick : "";
+
         let gameState = this.state.gameState;
 
         let isHost = this.isHost();
 
         let isGameFull = this.state.isGameFull;
-
-        let clientName = this.state.playerInfo != null ? this.state.playerInfo.playerNick : "";
 
         let isPlayerRegistered = !!this.state.playerInfo;
 
@@ -216,3 +216,17 @@ export default class ConnectFour extends Component {
         )
     }
 }
+
+
+
+{/* <OptionPanel
+                    isHost = {isHost}
+                    JoinGame = {this.JoinGame}
+                    gameState = {gameState}
+                    isGameFull = {isGameFull}
+                    isPlayerRegistered = {isPlayerRegistered}
+                    hasPlayerResigned = {hasPlayerResigned}
+                    StartGame = {() => this.invoke('StartGame')}
+                    Rematch = {() => this.invoke('Rematch')}
+                    Resign = {() => this.Resign()}
+                /> */}
