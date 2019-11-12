@@ -3,7 +3,7 @@ import './styles.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons'
 
-export default class IncrementalInput extends React.PureComponent 
+export default class StandardInput extends React.PureComponent 
 {
     onDecrement = () =>
     {

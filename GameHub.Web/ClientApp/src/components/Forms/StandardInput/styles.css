@@ -1,0 +1,10 @@
+.standard-input {
+  text-align: center;
+  border: none;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  margin: 0px;
+  height: 40px;
+  z-index: 1;
+  width:100%;
+}

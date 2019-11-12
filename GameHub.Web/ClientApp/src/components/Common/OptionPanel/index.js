@@ -2,6 +2,7 @@ import React from 'react';
 import Popup from '../../Popup';
 import FormRegion from '../../Forms/FormRegion';
 import Button from '../../Button';
+import StandardInput from '../../Forms/StandardInput';
 import { transition_period } from './styles.scss';
 import { timeout } from '../../../utils/sleep';
 
@@ -15,7 +16,8 @@ export default class optionsPanel extends React.Component
     state = {
         username: "",
         displayJoin: false,
-        renderPopup: false
+        renderPopup: false,
+        error: ""
     }
 
     closePopup = async () =>
@@ -24,12 +26,12 @@ export default class optionsPanel extends React.Component
 
         await timeout(transition_period);
 
-        this.setState({displayJoin: false});
+        this.setState({displayJoin: false, error: undefined});
 
         return new Promise(resolve => resolve())
     }
 
-    HandleChange(e)
+    HandleChange = e =>
     {
         this.setState({...this.state, [e.target.name]: e.target.value})
     }
@@ -38,14 +40,23 @@ export default class optionsPanel extends React.Component
     {
         e.preventDefault();
 
-        await this.closePopup();
+        var result = await this.props.JoinGame(this.state.username);
+        
+        if (result.wasSuccessful)
+        {
+            await this.closePopup();
 
-        this.props.JoinGame(this.state.username);
+            this.props.GameJoined();
+        }
+        else
+        {
+            this.setState({error: result.message})
+        }
     }
 
     toggleJoinForm = () => 
     {
-        this.setState({displayJoin: !this.state.displayJoin, renderPopup: true});
+        this.setState({displayJoin: !this.state.displayJoin, renderPopup: true, error: undefined});
     }
 
     render()
@@ -75,21 +86,10 @@ export default class optionsPanel extends React.Component
                                 >
                                     <form>
                                         <div style={{padding: "10px", backgroundColor: "white", borderRadius:"15px"}}>
-                                            <FormRegion label="Please enter your name">
-                                                <input  
-                                                    name="username" 
-                                                    value={this.state.username} 
-                                                    onChange={e => this.HandleChange(e)}
-                                                    style={{
-                                                        width:"100%",
-                                                        border: "2px solid #aaa",
-                                                        borderRadius: "4px",
-                                                        margin: "8px 0",
-                                                        padding: "8px"
-                                                    }}
-                                                />
-                                                <Button style={{margin: "0 auto"}} onClick={this.joinGame}>Join</Button>
+                                            <FormRegion errors={this.state.error} label="Please enter your name">
+                                                <StandardInput name="username" value={this.state.username} onValueChange={this.HandleChange}/>
                                             </FormRegion>
+                                            <Button style={{margin: "0 auto"}} onClick={this.joinGame}>Join</Button>
                                         </div>
                                     </form>
                                 </Popup>

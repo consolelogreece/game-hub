@@ -50,9 +50,13 @@ export default class ConnectFour extends Component {
     }
     
     JoinGame = name => {
-        this.props.invoke('JoinGame', name)
-            .then(this.populatePlayerClientInfo())
-            .then(this.populateGameState())
+        return this.props.invoke('JoinGame', name);
+    }
+
+    GameJoined = () =>
+    {
+        this.populatePlayerClientInfo()
+        .then(this.populateGameState())
     }
 
     RematchStarted = gameState =>
@@ -204,6 +208,7 @@ export default class ConnectFour extends Component {
                 <OptionPanel
                     isHost = {isHost}
                     JoinGame = {this.JoinGame}
+                    GameJoined = {this.GameJoined}
                     gameState = {gameState}
                     isGameFull = {isGameFull}
                     isPlayerRegistered = {isPlayerRegistered}
