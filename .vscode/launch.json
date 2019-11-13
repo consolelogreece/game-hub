@@ -23,7 +23,12 @@
             "sourceFileMap": {
                 "/Views": "${workspaceFolder}/GameHub.Web/Views"
             }
+        },
+        {
+            "name": "Launch index.html",
+            "type": "firefox",
+            "request": "launch",
+            "file": "${workspaceFolder}/GameHub.Web/ClientApp/public/index.html"
         }
-
     ]
 }
