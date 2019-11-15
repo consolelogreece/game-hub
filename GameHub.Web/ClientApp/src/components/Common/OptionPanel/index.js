@@ -17,16 +17,18 @@ export default class optionsPanel extends React.Component
         username: "",
         displayJoin: false,
         renderPopup: false,
-        error: ""
+        gameState: "lobby",
+        error: "",
+        renderCount: 0
     }
 
     closePopup = async () =>
     {
-        this.setState({renderPopup: false});
-
+        this.setState({renderPopup: false}, () => console.log("RENDER POPUP SET TO FALSE"));
+        
         await timeout(transition_period);
 
-        this.setState({displayJoin: false, error: undefined});
+        this.setState({displayJoin: false, error: undefined}, () => console.log("DISPLAY JOIN SET TO FALSE"));
     }
 
     HandleChange = e =>
@@ -38,18 +40,11 @@ export default class optionsPanel extends React.Component
     {
         e.preventDefault();
 
-        var result = await this.props.JoinGame(this.state.username);
-
-        console.log(result)
-
-
+        var result = await this.props.JoinGame(this.state.username); // issue here
         
         if (result.wasSuccessful)
         {
-            console.log("we in succ")
             await this.closePopup();
-
-            console.log("succ closed")
 
             this.props.GameJoined();
         }
@@ -57,6 +52,11 @@ export default class optionsPanel extends React.Component
         {
             this.setState({error: result.message})
         }
+    }
+
+    componentDidUpdate()
+    {
+
     }
 
     toggleJoinForm = () => 
@@ -71,12 +71,14 @@ export default class optionsPanel extends React.Component
         let renderDependentClassForm = this.state.renderPopup ? showFormClass : hideFormClass;
         let renderDependentClassPopup = this.state.renderPopup ? showPopupClass : hidePopupClass;
 
+        let shouldRenderJoinPopup = !isGameFull || this.state.displayJoin || this.state.renderPopup;
+
         let optionsPanel = <div />;
 
         switch (gameState)
         {
             case "lobby":
-                if (!isPlayerRegistered && !isGameFull)
+                if (!isPlayerRegistered && shouldRenderJoinPopup)
                 {
                     if (this.state.displayJoin)
                     {
@@ -108,12 +110,12 @@ export default class optionsPanel extends React.Component
                         optionsPanel = <Button onClick={this.toggleJoinForm}>Join</Button>
                     }
                 }
-                else if(isHost)
-                    {
-                        optionsPanel = (
-                            <button onClick={() => this.props.StartGame()}>Start Game</button>   
-                        )
-                    }
+                // else if(isHost)
+                //     {
+                //         optionsPanel = (
+                //             <button onClick={() => this.props.StartGame()}>Start Game</button>   
+                //         )
+                //     }
                 break;
 
             case "started":
