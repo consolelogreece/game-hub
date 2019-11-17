@@ -221,17 +221,3 @@ export default class ConnectFour extends Component {
         )
     }
 }
-
-
-
-{/* <OptionPanel
-                    isHost = {isHost}
-                    JoinGame = {this.JoinGame}
-                    gameState = {gameState}
-                    isGameFull = {isGameFull}
-                    isPlayerRegistered = {isPlayerRegistered}
-                    hasPlayerResigned = {hasPlayerResigned}
-                    StartGame = {() => this.invoke('StartGame')}
-                    Rematch = {() => this.invoke('Rematch')}
-                    Resign = {() => this.Resign()}
-                /> */}

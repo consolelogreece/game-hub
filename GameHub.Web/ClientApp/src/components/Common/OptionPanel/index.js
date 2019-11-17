@@ -91,7 +91,7 @@ export default class optionsPanel extends React.Component
                                     superContainerStyles={{backgroundColor: "rgba(0,0,0, 0.5)"}}
                                     onClose={this.closePopup}
                                 >
-                                    <form>
+                                    <form onSubmit={this.joinGame}>
                                         <div style={{padding: "10px", backgroundColor: "white", borderRadius:"15px", textAlign: "left"}}>
                                             <span id="option-panel-join-form-title">Enter your name</span>
                                             <FormRegion errors={this.state.error}>
@@ -110,12 +110,12 @@ export default class optionsPanel extends React.Component
                         optionsPanel = <Button onClick={this.toggleJoinForm}>Join</Button>
                     }
                 }
-                // else if(isHost)
-                //     {
-                //         optionsPanel = (
-                //             <button onClick={() => this.props.StartGame()}>Start Game</button>   
-                //         )
-                //     }
+                else if(isHost)
+                    {
+                        optionsPanel = (
+                            <button onClick={() => this.props.StartGame()}>Start Game</button>   
+                        )
+                    }
                 break;
 
             case "started":
