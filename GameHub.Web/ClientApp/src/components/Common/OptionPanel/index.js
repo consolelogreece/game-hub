@@ -54,11 +54,6 @@ export default class optionsPanel extends React.Component
         }
     }
 
-    componentDidUpdate()
-    {
-
-    }
-
     toggleJoinForm = () => 
     {
         this.setState({displayJoin: !this.state.displayJoin, renderPopup: true, error: undefined});
