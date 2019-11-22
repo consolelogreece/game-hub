@@ -24,11 +24,11 @@ export default class optionsPanel extends React.Component
 
     closePopup = async () =>
     {
-        this.setState({renderPopup: false}, () => console.log("RENDER POPUP SET TO FALSE"));
+        this.setState({renderPopup: false});
         
         await timeout(transition_period);
 
-        this.setState({displayJoin: false, error: undefined}, () => console.log("DISPLAY JOIN SET TO FALSE"));
+        this.setState({displayJoin: false, error: undefined});
     }
 
     HandleChange = e =>
