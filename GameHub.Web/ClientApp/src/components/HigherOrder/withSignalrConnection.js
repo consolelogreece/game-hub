@@ -52,9 +52,9 @@ export default function(WrappedComponent, config)
 
         startConnection = async () => 
         {
-            var x = await this.state.connection.start();
+            var conn = await this.state.connection.start();
 
-            if (x === undefined)
+            if (conn === undefined)
             {
                 this._connected = true;
             }
