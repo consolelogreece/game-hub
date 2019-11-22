@@ -3,12 +3,14 @@ import './ConnectFour.css';
 import { Title, Subtitle } from '../Common/Text';
 import ResizeWithContainerHOC from '../HigherOrder/GetRenderedWidthHOC';
 import OptionPanel from '../Common/OptionPanel';
-
+import { timeout } from '../../utils/sleep';
 import Board from './Board';
 
 export default class ConnectFour extends Component {
     constructor(props) {
         super(props);
+
+        this.messageTimeoutDurationMS = 3000;
 
         this.state = {
             column: 0,
@@ -24,7 +26,7 @@ export default class ConnectFour extends Component {
 
     async componentDidMount() 
     {
-        this.props.on('IllegalAction', res => {this.setState({ gameMessage: res })});
+        this.props.on('IllegalAction', res => this.displayTimedMessage(res));
 
         this.props.on([
             'PlayerResigned',
@@ -46,11 +48,11 @@ export default class ConnectFour extends Component {
         // if the playerinfo is null, the player is a spectator and thus can't move.
         if (this.state.playerInfo == null) return;
 
-        this.props.invoke('Move', col);
+        this.invoke('Move', col);
     }
     
     JoinGame = name => {
-        return this.props.invoke('JoinGame', name);
+        return this.invoke('JoinGame', name);
     }
 
     GameJoined = () =>
@@ -69,14 +71,28 @@ export default class ConnectFour extends Component {
         this.updateStateWithNewGameState(gameState);
     }
 
-    invoke = destination =>
+    invoke = (destination, ...rest) =>
     {
-        return this.props.invoke(destination).catch(res => this.setState({gameMessage:res}));
+        return this.props.invoke(destination, ...rest).catch(res => this.displayTimedMessage(res));
+    }
+
+    displayTimedMessage = (message, duration) => 
+    {
+        if (duration === undefined) duration = this.messageTimeoutDurationMS;
+
+        var currentMessage = this.state.gameMessage;
+
+        this.setState({gameMessage:message}, async () =>
+        {
+            await timeout(duration);
+            
+            this.setState({gameMessage: currentMessage});
+        });
     }
 
     populateGameState = () =>
     {
-        return this.props.invoke('GetGameState')
+        return this.invoke('GetGameState')
         .then(gameState => this.updateStateWithNewGameState(gameState));
     }
 
@@ -148,7 +164,7 @@ export default class ConnectFour extends Component {
 
     populatePlayerClientInfo = () =>
     {
-        return this.props.invoke('GetClientPlayerInfo')
+        return this.invoke('GetClientPlayerInfo')
             .then(res => 
                 {
                     if (res === null) return; 
