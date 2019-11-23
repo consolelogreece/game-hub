@@ -108,7 +108,7 @@ export default class optionsPanel extends React.Component
                 else if(isHost)
                     {
                         optionsPanel = (
-                            <button onClick={() => this.props.StartGame()}>Start Game</button>   
+                            <Button onClick={() => this.props.StartGame()}>Start Game</Button>   
                         )
                     }
                 break;
