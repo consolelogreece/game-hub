@@ -4,6 +4,7 @@ import OptionPanel from '../Common/OptionPanel';
 import Popup from '../Popup';
 import PromotionSelection from './PromotionSelection';
 import { Title, Subtitle } from '../Common/Text';
+import { timeout } from '../../utils/sleep';
 
 /*
     todos:
@@ -96,9 +97,7 @@ export default class Chess extends Component {
 
     illegalAction = message => 
     {
-        this.setState({
-           gameMessage: message 
-        });
+        this.displayTimedMessage(message);
     }
 
     gameOverHandler = gameState =>
@@ -108,7 +107,7 @@ export default class Chess extends Component {
 
     populateGameState = () =>
     {
-        return this.props.invoke('GetGameState')
+        return this.invoke('GetGameState')
             .then(res => this.updateStateWithNewGameState(res));
     }
 
@@ -166,12 +165,12 @@ export default class Chess extends Component {
 
     populateAvailableMoves = () =>
     {
-        return this.props.invoke('GetMoves').then(res => this.mapMoves(res))
+        return this.invoke('GetMoves').then(res => this.mapMoves(res))
     }
 
     populatePlayerClientInfo = () =>
     {
-        return this.props.invoke('GetClientPlayerInfo')
+        return this.invoke('GetClientPlayerInfo')
         .then(res => {
             this.setState({
                 playerInfo: res
@@ -288,10 +287,29 @@ export default class Chess extends Component {
                 return;
             }
 
-            this.props.invoke('Move', move);
+            this.invoke('Move', move);
         }
 
         this.setState({pieceSquare: "", squareStyles: {}})
+    }
+
+    invoke = (destination, ...rest) =>
+    {
+        return this.props.invoke(destination, ...rest).catch(res => this.displayTimedMessage(res));
+    }
+
+    displayTimedMessage = (message, duration) => 
+    {
+        if (duration === undefined) duration = this.messageTimeoutDurationMS;
+
+        var currentMessage = this.state.gameMessage;
+
+        this.setState({gameMessage:message}, async () =>
+        {
+            await timeout(duration);
+            
+            this.setState({gameMessage: currentMessage});
+        });
     }
 
     makePromotion = promotion =>
@@ -312,7 +330,7 @@ export default class Chess extends Component {
 
         move.promotion = promotion;
 
-        this.props.invoke('Move', move)
+        this.invoke('Move', move)
         .then(res => {
             this.setState({displayPromotionPrompt: false, promotionMove: null})
         });
@@ -324,20 +342,23 @@ export default class Chess extends Component {
     }
 
     JoinGame = name => {
-        this.props.invoke('JoinGame', name)
-            .then(this.populatePlayerClientInfo())
-            .then(this.populateGameState())
-            .catch(() => this.setState({gameMessage: "oopsie daisy"}));
+        return this.invoke('JoinGame', name);
+    }
+
+    GameJoined = () =>
+    {
+        this.populatePlayerClientInfo()
+        .then(this.populateGameState())
     }
 
     StartGame = () =>
     {
-        this.props.invoke('StartGame').catch(res => this.setState({gameMessage:res}));
+        this.invoke('StartGame');
     }
 
     Rematch = () =>
     {
-        this.props.invoke('Rematch');
+        this.invoke('Rematch');
     }
 
     Resign = () =>
@@ -346,7 +367,7 @@ export default class Chess extends Component {
         {
             this.setState({playerInfo:{...this.state.playerInfo, resigned: false}});
 
-            this.props.invoke('Resign');
+            this.invoke('Resign');
         }
     }
 
@@ -410,12 +431,13 @@ export default class Chess extends Component {
                 <OptionPanel
                     isHost = {isHost}
                     JoinGame = {this.JoinGame}
+                    GameJoined = {this.GameJoined}
                     gameState = {gameState}
                     isPlayerRegistered = {isPlayerRegistered}
                     StartGame = {this.StartGame}
                     isGameFull = {isGameFull}
                     hasPlayerResigned = {hasPlayerResigned}
-                    Rematch = {() => this.props.invoke('Rematch')}
+                    Rematch = {() => this.invoke('Rematch')}
                     Resign = {this.Resign}
                 />
             </div>

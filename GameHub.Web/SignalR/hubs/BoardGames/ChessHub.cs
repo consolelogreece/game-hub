@@ -38,11 +38,17 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
             ActionResultHandler(result, "GameStarted");
         }
 
-        public void JoinGame(string playerNick)
+        public ActionResult JoinGame(string playerNick)
         {
             var result = GetGameService().JoinGame(playerNick);
 
-            ActionResultHandler(result, "PlayerJoined");
+            // todo: refactor
+            if (result.WasSuccessful)
+            {
+                ActionResultHandler(result, "PlayerJoined");
+            }
+            
+            return result;
         }
 
         public ChessPlayer GetClientPlayerInfo()

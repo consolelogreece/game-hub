@@ -40,6 +40,8 @@ export default class optionsPanel extends React.Component
     {
         e.preventDefault();
 
+        console.log(this.props.JoinGame)
+
         var result = await this.props.JoinGame(this.state.username);
         
         if (result.wasSuccessful)
