@@ -15,35 +15,44 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
             _connectFourServiceFactory = connectFourServiceFactory;
         }
 
-        private void ActionResultHandler(ActionResult result, string successEndpoint)
+        private ConnectFourService GetGameService()
         {
-            var gameId = Context.Items["GameId"].ToString();
-
-            if (result.WasSuccessful)
-            {
-               Clients.Group(gameId).SendAsync(successEndpoint, GetGameService().GetGameState());
-            }
-            else
-            {
-                Clients.Caller.SendAsync("IllegalAction", result.Message);
-            }
+            return Context.Items["GameService"] as ConnectFourService;
         }
 
-        public void StartGame() 
+        public ConnectFourGameState GetGameState()
+        {
+           return GetGameService().GetGameState();
+        }
+
+        private void SendGamestate(string endpoint)
+        {
+            var gameState = GetGameState();
+
+            var gameId = Context.Items["GameId"].ToString();
+
+            Clients.Group(gameId).SendAsync(endpoint, gameState);
+        }
+
+        public ActionResult StartGame() 
         {
             var result = GetGameService().StartGame();
 
-            ActionResultHandler(result, "GameStarted");
+            if (result.WasSuccessful)
+            {
+                SendGamestate("GameStarted");
+            }
+
+            return result;
         }
 
         public ActionResult JoinGame(string playerNick)
         {
             var result = GetGameService().JoinGame(playerNick);
-
-            // todo: refactor
+            
             if (result.WasSuccessful)
             {
-                ActionResultHandler(result, "PlayerJoined");
+                SendGamestate("PlayerJoined");
             }
             
             return result;
@@ -54,35 +63,40 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
             return GetGameService().GetPlayer();
         }
 
-        public void Resign() 
+        public ActionResult Resign() 
         {
             var result = GetGameService().Resign();
 
-            ActionResultHandler(result, "PlayerResigned");
+            if (result.WasSuccessful)
+            {
+                SendGamestate("PlayerResigned");
+            }
+            
+            return result;
         }
 
-        public void Rematch() 
+        public ActionResult Rematch() 
         {
             var result = GetGameService().Restart();
 
-            ActionResultHandler(result, "RematchStarted");
+            if (result.WasSuccessful)
+            {
+                SendGamestate("RematchStarted");
+            }
+            
+            return result;
         }
 
-        public ConnectFourGameState GetGameState()
-        {
-           return GetGameService().GetGameState();
-        }
-
-        public void Move(int col) 
+        public ActionResult Move(int col) 
         {
             var result = GetGameService().Move(col);
 
-            ActionResultHandler(result, "PlayerMoved");
-        }
-
-        private ConnectFourService GetGameService()
-        {
-            return Context.Items["GameService"] as ConnectFourService;
+            if (result.WasSuccessful)
+            {
+                SendGamestate("PlayerMoved");
+            }
+            
+            return result;
         }
 
         public override Task OnConnectedAsync()
@@ -115,6 +129,7 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
                 return base.OnDisconnectedAsync(new Exception("Game doesn't exist"));
             }
 
+            // Have to store in context instead of properties as otherwise can't access them in later calls.
             Context.Items.Add("GameService", service);
 
             // Store playerid in hub context.

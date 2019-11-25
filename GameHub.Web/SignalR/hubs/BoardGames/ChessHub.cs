@@ -17,37 +17,46 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
             _chessServiceFactory = chessServiceFactory;
         }
 
-        private void ActionResultHandler(ActionResult result, string successEndpoint)
+        public ChessGameState GetGameState()
         {
-            var gameId = Context.Items["GameId"].ToString();
-
-            if (result.WasSuccessful)
-            {
-               Clients.Group(gameId).SendAsync(successEndpoint, GetGameService().GetGameState());
-            }
-            else
-            {
-                Clients.Caller.SendAsync("IllegalAction", result.Message);
-            }
+           return GetGameService().GetGameState();
         }
 
-        public void StartGame() 
+        private ChessService GetGameService()
+        {
+            return Context.Items["GameService"] as ChessService;
+        }
+
+        private void SendGamestate(string endpoint)
+        {
+            var gameState = GetGameState();
+
+            var gameId = Context.Items["GameId"].ToString();
+
+            Clients.Group(gameId).SendAsync(endpoint, gameState);
+        }
+
+        public ActionResult StartGame() 
         {
             var result = GetGameService().StartGame();
 
-            ActionResultHandler(result, "GameStarted");
+            if (result.WasSuccessful)
+            {
+                SendGamestate("GameStarted");
+            }
+
+            return result;
         }
 
         public ActionResult JoinGame(string playerNick)
         {
             var result = GetGameService().JoinGame(playerNick);
 
-            // todo: refactor
             if (result.WasSuccessful)
             {
-                ActionResultHandler(result, "PlayerJoined");
+                SendGamestate("PlayerJoined");
             }
-            
+
             return result;
         }
 
@@ -56,38 +65,45 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
             return GetGameService().GetPlayer();
         }
 
-        public void Resign() 
+        public ActionResult Resign() 
         {
             var result = GetGameService().Resign();
 
-            ActionResultHandler(result, "PlayerResigned");
+            if (result.WasSuccessful)
+            {
+                SendGamestate("PlayerResigned");
+            }
+
+            return result;
         }
 
-        public void Rematch() 
+        public ActionResult Rematch() 
         {
             var result = GetGameService().Restart();
 
-            ActionResultHandler(result, "RematchStarted");
+            if (result.WasSuccessful)
+            {
+                SendGamestate("RematchStarted");
+            }
+
+            return result;
         }
 
-        public ChessGameState GetGameState()
-        {
-           return GetGameService().GetGameState();
-        }
 
-        public void Move(Move move) 
+        public ActionResult Move(Move move) 
         {
             var result = GetGameService().Move(move);
 
-            ActionResultHandler(result, "PlayerMoved");
+            if (result.WasSuccessful)
+            {
+                SendGamestate("PlayerMoved");
+            }
+
+            return result;
         }
 
         public List<Move> GetMoves() => GetGameService().GetMoves();
 
-        private ChessService GetGameService()
-        {
-            return Context.Items["GameService"] as ChessService;
-        }
 
         public override Task OnConnectedAsync()
         {
