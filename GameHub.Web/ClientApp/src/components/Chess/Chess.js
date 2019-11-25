@@ -95,11 +95,6 @@ export default class Chess extends Component {
         this.updateStateWithNewGameState(gameState);
     }
 
-    illegalAction = message => 
-    {
-        this.displayTimedMessage(message);
-    }
-
     gameOverHandler = gameState =>
     {
         this.updateStateWithNewGameState(gameState);
@@ -295,7 +290,16 @@ export default class Chess extends Component {
 
     invoke = (destination, ...rest) =>
     {
-        return this.props.invoke(destination, ...rest).catch(res => this.displayTimedMessage(res));
+        return this.props.invoke(destination, ...rest)
+        .then(res => {
+            if (res !== null && !res.wasSuccessful)
+            {
+                this.displayTimedMessage(res.message);
+            }
+
+            return res;
+        })
+        .catch(res => this.displayTimedMessage(res));
     }
 
     displayTimedMessage = (message, duration) => 

@@ -26,8 +26,6 @@ export default class ConnectFour extends Component {
 
     async componentDidMount() 
     {
-        this.props.on('IllegalAction', res => this.displayTimedMessage(res));
-
         this.props.on([
             'PlayerResigned',
             'PlayerJoined',
@@ -73,7 +71,16 @@ export default class ConnectFour extends Component {
 
     invoke = (destination, ...rest) =>
     {
-        return this.props.invoke(destination, ...rest).catch(res => this.displayTimedMessage(res));
+        return this.props.invoke(destination, ...rest)
+        .then(res => {
+            if (res !== null && !res.wasSuccessful)
+            {
+                this.displayTimedMessage(res.message);
+            }
+            
+            return res;
+        })
+        .catch(res => this.displayTimedMessage(res));
     }
 
     displayTimedMessage = (message, duration) => 
@@ -167,7 +174,7 @@ export default class ConnectFour extends Component {
         return this.invoke('GetClientPlayerInfo')
             .then(res => 
                 {
-                    if (res === null) return; 
+                    if (res === undefined) return; 
                     this.setState ({
                         playerInfo: res
                     })

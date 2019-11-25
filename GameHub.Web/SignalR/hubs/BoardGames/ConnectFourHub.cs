@@ -22,7 +22,7 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
 
         public ConnectFourGameState GetGameState()
         {
-           return GetGameService().GetGameState();
+            return GetGameService().GetGameState();
         }
 
         private void SendGamestate(string endpoint)
