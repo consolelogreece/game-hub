@@ -5,13 +5,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using Microsoft.AspNetCore.DataProtection;
-using Microsoft.AspNetCore.Http;
 using Caching;
 using GameHub.Games.BoardGames.ConnectFour;
 using GameHub.Games.BoardGames.Chess;
 using GameHub.Web.Services.Games.ConnectFourServices;
+using GameHub.Web.Models;
+using GameHub.Web.Middleware;
 
 namespace GameHub.Web
 {
@@ -41,6 +40,8 @@ namespace GameHub.Web
 
             services.AddSingleton<ICache<Chess>, ChessCache>();
 
+            services.AddSingleton<ICache<User>, UserCache>();
+
             services.AddTransient<IConnectFourServiceFactory, ConnectFourServiceFactory>();
 
             services.AddTransient<IChessServiceFactory, ChessServiceFactory>();
@@ -68,38 +69,7 @@ namespace GameHub.Web
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
 
-            app.Use((context, next) =>
-            {
-                //currently ids are "protected" when sent to front end, so cant just paste in another players id as it hasn't been protected.
-                //that is what this middleware is doing.
-                var playerIdExists = context.Request.Cookies.ContainsKey("GHPID");
-
-                var playerId = playerIdExists ? context.Request.Cookies["GHPID"] : Guid.NewGuid().ToString();
-
-                var protector = DataProtectionProvider.Create("Gamehub.Web").CreateProtector("CookieEncryptPlayerId");
-
-                if (playerIdExists)
-                {             
-                    playerId = protector.Unprotect(playerId);
-                }
-
-                // todo: encode datetime expire with cookie to help date tampering.
-                // todo: perhaps remove ids and just use unique temporary names chosen on page load. check if in use like any other username.
-                // consider signed jwts or something
-            
-                context.Items.Add("GHPID", playerId);
-
-                var protectedPlayerId = protector.Protect(playerId);
-
-                context.Response.Cookies.Append("GHPID", protectedPlayerId, new CookieOptions
-                {
-                    HttpOnly = true,
-                    Expires = DateTimeOffset.Now + TimeSpan.FromMinutes(15),
-                    SameSite = SameSiteMode.Strict
-                });
-                   
-                return next();
-            });
+            app.UseAuthMiddleware();
 
             app.UseSignalR(routes =>
             {

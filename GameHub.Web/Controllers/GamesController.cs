@@ -1,9 +1,6 @@
-using Caching;
-using GameHub.Games.BoardGames.ConnectFour;
 using GameHub.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using System;
 using System.Collections.Generic;
 
 namespace GameHub.Web.Controllers

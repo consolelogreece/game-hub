@@ -1,9 +1,7 @@
 using Caching;
 using GameHub.Games.BoardGames.Chess;
-using GameHub.Games.BoardGames.ConnectFour;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Text.Encodings.Web;
 
 namespace GameHub.Web.Controllers
 {
