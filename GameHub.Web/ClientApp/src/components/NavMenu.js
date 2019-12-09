@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { Collapse, Container, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from 'reactstrap';
 import { Link } from 'react-router-dom';
+import Signin from '../forms/Signin';
 import './NavMenu.css';
+import Button from './Button';
 
 export class NavMenu extends Component {
   static displayName = NavMenu.name;
@@ -11,8 +13,14 @@ export class NavMenu extends Component {
 
     this.toggleNavbar = this.toggleNavbar.bind(this);
     this.state = {
-      collapsed: true
+      collapsed: true,
+      displayChooseUsernameForm: false
     };
+  }
+
+  toggleChooseUsername()
+  {
+    this.setState({displayChooseUsernameForm: !this.state.displayChooseUsernameForm})
   }
 
   toggleNavbar () {
@@ -37,12 +45,15 @@ export class NavMenu extends Component {
                   <NavLink tag={Link} className="text-dark" to="/games">Games</NavLink>
                 </NavItem>
                 <NavItem>
-                  <NavLink tag={Link} className="text-dark" to="/about">About</NavLink>
+                  <NavLink style={{cursor:"pointer"}} onClick={() => this.toggleChooseUsername()} className="text-dark">Choose username</NavLink>
                 </NavItem>
               </ul>
             </Collapse>
           </Container>
         </Navbar>
+        {this.state.displayChooseUsernameForm && (
+          <Signin toggle={() => this.toggleChooseUsername()} render={this.state.displayChooseUsernameForm} />
+        )}
       </header>
     );
   }
