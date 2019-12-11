@@ -39,6 +39,7 @@ export default class ConnectFour extends Component {
         this.props.startConnection().then(() => this.populatePlayerClientInfo())
         .then(res =>  this.populateGameState())
         .then(() => this.props.onLoadComplete())
+        .catch(x => console.log(x))
     }
 
     move = col =>
@@ -49,8 +50,8 @@ export default class ConnectFour extends Component {
         this.invoke('Move', col);
     }
     
-    JoinGame = name => {
-        return this.invoke('JoinGame', name);
+    JoinGame = () => {
+        return this.invoke('JoinGame');
     }
 
     GameJoined = () =>

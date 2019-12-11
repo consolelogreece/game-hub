@@ -41,16 +41,14 @@ namespace GameHub.Web.Controllers
                 }
                 else
                 {
-                    var newId = Guid.NewGuid().ToString();
+                    var id = userMetaFromRequest.profile.Id;
 
                     var newUser = new User {
                         Username = username,
-                        Id = newId
+                        Id = id
                     };
 
-                    _users.Set(newId, newUser);
-
-                    Response.Cookies.Append("GHPID", newId);
+                    _users.Set(id, newUser);
 
                     return Ok(username);
                 }

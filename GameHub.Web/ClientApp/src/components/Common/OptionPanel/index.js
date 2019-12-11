@@ -4,9 +4,6 @@ import Button from '../../Button';
 export default class optionsPanel extends React.Component
 {
     state = {
-        username: "",
-        displayJoin: false,
-        renderPopup: false,
         gameState: "lobby",
         error: "",
         renderCount: 0
@@ -21,12 +18,10 @@ export default class optionsPanel extends React.Component
     {
         e.preventDefault();
 
-        var result = await this.props.JoinGame(this.state.username);
+        var result = await this.props.JoinGame();
         
         if (result.wasSuccessful)
         {
-            await this.closePopup();
-
             this.props.GameJoined();
         }
         else
@@ -35,33 +30,18 @@ export default class optionsPanel extends React.Component
         }
     }
 
-
     render()
     {
         let {gameState, isHost, isPlayerRegistered, isGameFull, hasPlayerResigned} = this.props;
-
-        let shouldRenderJoinPopup = !isGameFull || this.state.displayJoin || this.state.renderPopup;
 
         let optionsPanel = <div />;
 
         switch (gameState)
         {
             case "lobby":
-                if (!isPlayerRegistered && shouldRenderJoinPopup)
-                {
-                    if (this.state.displayJoin)
-                    {
-                        optionsPanel = (
-                            <div>
-                                {/* todo: have this toggle choose username if user not signed in. maybe have a spectate option that just hides this option */}
-                                <Button onClick={this.renderPopup}>Join</Button>
-                            </div>
-                        )
-                    }
-                    else
-                    {
-                        optionsPanel = <Button onClick={this.toggleJoinForm}>Join</Button>
-                    }
+                if (!isPlayerRegistered)
+                {       
+                    optionsPanel = <Button onClick={this.joinGame}>Join</Button>
                 }
                 else if(isHost)
                     {

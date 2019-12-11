@@ -39,14 +39,18 @@ export default class JoinGame extends Component
         this.setState({...this.state, [e.target.name]: e.target.value})
     }
 
-    JoinGame = () =>
+    JoinGame = (e) =>
     {
+        e.preventDefault();
+
         var username = this.state.text;
 
         //todo validation
 
         // prepending with "=" is necessary for binding primitives in asp net core actions. see https://blog.codenamed.nl/2015/05/12/why-your-frombody-parameter-is-always-null/
-        axios.post('/api/auth/signup', "=" + username).then(X => console.log(X)).catch(X => console.log(X));
+        axios.post('/api/auth/signup', "=" + username)
+        .then(X => console.log(X))
+        .catch(X => console.log(X.message) /*this.setState({error: X})*/);
     }
 
     render()
