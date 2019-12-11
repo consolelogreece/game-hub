@@ -3,6 +3,7 @@ using GameHub.Web.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 
 namespace GameHub.Web.Controllers
 {
@@ -19,6 +20,11 @@ namespace GameHub.Web.Controllers
         [HttpPost("signup")]
         public IActionResult Signup(string username)
         {
+            //todo better validation
+            if (username == null)
+            {
+                return BadRequest("Username not provided"); 
+            }
             lock(_users)
             {
                 var isUsernameInUse = _users.Get(username) != null;
