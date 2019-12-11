@@ -16,6 +16,7 @@ export default class ConnectFour extends Component {
             column: 0,
             isGameFull: false,
             gameMessage: "",
+            errorMessage: "",
             playerTurn: "",
             gameState: "lobby",
             playerInfo: null,
@@ -76,25 +77,23 @@ export default class ConnectFour extends Component {
         .then(res => {
             if (res !== null && !res.wasSuccessful)
             {
-                this.displayTimedMessage(res.message);
+                this.displayTimedErrorMessage(res.message);
             }
             
             return res;
         })
-        .catch(res => this.displayTimedMessage(res));
+        .catch(res => this.displayTimedErrorMessage(res));
     }
 
-    displayTimedMessage = (message, duration) => 
+    displayTimedErrorMessage = (message, duration) => 
     {
         if (duration === undefined) duration = this.messageTimeoutDurationMS;
 
-        var currentMessage = this.state.gameMessage;
-
-        this.setState({gameMessage:message}, async () =>
+        this.setState({errorMessage:message}, async () =>
         {
             await timeout(duration);
             
-            this.setState({gameMessage: currentMessage});
+            this.setState({errorMessage: ""});
         });
     }
 
@@ -228,6 +227,8 @@ export default class ConnectFour extends Component {
                     move={(col) => this.move(col)}
                     boardColor={this.state.boardColor} 
                 />
+                {this.state.errorMessage}
+                <br />
                 {this.state.gameMessage}
                 <OptionPanel
                     isHost = {isHost}
