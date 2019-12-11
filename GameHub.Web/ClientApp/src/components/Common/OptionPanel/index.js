@@ -39,22 +39,22 @@ export default class optionsPanel extends React.Component
         switch (gameState)
         {
             case "lobby":
-                if (!isPlayerRegistered)
+                if (!isPlayerRegistered && !isGameFull)
                 {       
                     optionsPanel = <Button onClick={this.joinGame}>Join</Button>
                 }
                 else if(isHost)
-                    {
-                        optionsPanel = (
-                            <Button onClick={() => this.props.StartGame()}>Start Game</Button>   
-                        )
-                    }
+                {
+                    optionsPanel = (
+                        <Button onClick={this.props.StartGame}>Start Game</Button>   
+                    )
+                }
                 break;
 
             case "started":
                 optionsPanel = (
                     <div>
-                    {!!isPlayerRegistered && !hasPlayerResigned && <button onClick={() => this.props.Resign()}>Resign</button>}
+                    {!!isPlayerRegistered && !hasPlayerResigned && <Button onClick={() => this.props.Resign()}>Resign</Button>}
                     </div>
                 )
                 break;
@@ -63,7 +63,7 @@ export default class optionsPanel extends React.Component
                 optionsPanel = (
                     <div>
                         {isHost &&
-                            <button onClick={() => this.props.Rematch()}>Re-match</button>
+                            <Button onClick={() => this.props.Rematch()}>Re-match</Button>
                         }
                     </div>
                 )
