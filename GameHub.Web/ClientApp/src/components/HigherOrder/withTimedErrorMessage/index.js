@@ -64,7 +64,7 @@ export default function(WrappedComponent, duration)
                             <Popup
                                 superContainerClassNames={"timed-error-super-container " + renderSpecificClass}
                             >
-                                <span>
+                                <span onClick={this.close}>
                                     {this.state.message}
                                 </span>
                             </Popup>
