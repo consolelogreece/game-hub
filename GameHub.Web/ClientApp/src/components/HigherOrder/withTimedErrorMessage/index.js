@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import { timeout } from '../../../utils/sleep';
 import Popup from '../../Popup';
-import './styles.scss';
+import { transition_period } from './styles.scss';
+
+let show = "timed-error-super-container-show";
+let hide = "timed-error-super-container-hide";
 
 export default function(WrappedComponent, duration)
 {
@@ -13,7 +16,8 @@ export default function(WrappedComponent, duration)
 
             this.state = {
                 message: "",
-                messageTimeoutDurationMS: duration == undefined ? 3000 : duration
+                messageTimeoutDurationMS: duration == undefined ? 3000 : duration,
+                render: false
             };
         }
 
@@ -22,33 +26,50 @@ export default function(WrappedComponent, duration)
             // don't bother changing if same message as can cause rendering issues.
             if (this.state.message == message) return;
 
-            if (message == undefined) return;
+            if (message === undefined) return;
+        
+            if(this.state.message != "")
+            {
+                await this.close();
+            }
 
-            this.setState({message:message}, async () =>
+            this.setState({message:message, render: true}, async () =>
             {
                 await timeout(this.state.messageTimeoutDurationMS);
 
                 // if the message has changed, dont wipe it as it's the responsibilty of another process now. wiping it can cause shortened messages.
                 if (this.state.message == message)
                 {
-                    this.setState({message: ""});
+                    this.close();
                 }
             });
         }
 
+        close = async () =>
+        {
+            this.setState({render: false});
+
+            await timeout(transition_period);
+
+            this.setState({message: ""});
+        }
+
         render = () =>
         {
+            let renderSpecificClass = this.state.render ? show : hide;
             return (
                 <div>
-                    {this.state.message != "" && (
-                        <Popup
-                            superContainerClassNames={"timed-error-super-container"}
-                        >
-                            <span style={{color: "red"}}>
-                                {this.state.message}
-                            </span>
-                        </Popup>
-                    )}
+                    <div onClick={this.close}>
+                        {this.state.message != "" && (
+                            <Popup
+                                superContainerClassNames={"timed-error-super-container " + renderSpecificClass}
+                            >
+                                <span>
+                                    {this.state.message}
+                                </span>
+                            </Popup>
+                        )}
+                     </div>
                     <WrappedComponent 
                         {...this.props}
                         displayTimedError={this.display}

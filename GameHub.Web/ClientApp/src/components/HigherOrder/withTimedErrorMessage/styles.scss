@@ -1,9 +1,54 @@
+@import '../../../utils/variables';
+
+$height: 60px;
+
 .timed-error-super-container
 {
-    width: 40%;
-    top: 0 !important;
+    width: 100%;
+    top: 0;
+    overflow: hidden;
+    left: 0;
     z-index: 99;
     position: fixed;
-    height: 30px;
-    background-color: blue;
+    height: 60px;
+    background-color: #FDD;
+    color: #D8000C;
+    text-align: center;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.timed-error-super-container:hover
+{
+    background-color: #FCC;
+}
+
+.timed-error-super-container-show
+{
+    animation: dropdownshow $transition_period_ms;
+}
+
+.timed-error-super-container-hide
+{
+    animation: dropdownhide $transition_period_ms;
+}
+
+@keyframes dropdownshow
+{
+    0% {
+        height: 0px
+    }
+    100% {
+        height: $height
+    }
+}
+
+@keyframes dropdownhide
+{
+    0% {
+        height: $height
+    }
+    100% {
+        height: 0px;
+    }
 }
