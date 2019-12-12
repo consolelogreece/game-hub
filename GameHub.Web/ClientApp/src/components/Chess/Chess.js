@@ -294,26 +294,12 @@ export default class Chess extends Component {
         .then(res => {
             if (res !== null && !res.wasSuccessful)
             {
-                this.displayTimedMessage(res.message);
+                this.props.displayTimedError(res.message);
             }
 
             return res;
         })
-        .catch(res => this.displayTimedMessage(res));
-    }
-
-    displayTimedMessage = (message, duration) => 
-    {
-        if (duration === undefined) duration = this.messageTimeoutDurationMS;
-
-        var currentMessage = this.state.gameMessage;
-
-        this.setState({gameMessage:message}, async () =>
-        {
-            await timeout(duration);
-            
-            this.setState({gameMessage: currentMessage});
-        });
+        .catch(res => this.props.displayTimedError(res));
     }
 
     makePromotion = promotion =>
@@ -345,8 +331,8 @@ export default class Chess extends Component {
         this.setState({displayPromotionPrompt: false, promotion: null})
     }
 
-    JoinGame = name => {
-        return this.invoke('JoinGame', name);
+    JoinGame = () => {
+        return this.invoke('JoinGame');
     }
 
     GameJoined = () =>
@@ -445,6 +431,6 @@ export default class Chess extends Component {
                     Resign = {this.Resign}
                 />
             </div>
-            )
+        )
     }
 }

@@ -6,6 +6,7 @@ using GameHub.Games.BoardGames.Common;
 using GameHub.Games.BoardGames.Chess;
 using ChessDotNet;
 using System.Collections.Generic;
+using GameHub.Web.Models;
 
 namespace GameHub.Web.SignalR.hubs.BoardGames
 {
@@ -48,9 +49,11 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
             return result;
         }
 
-        public ActionResult JoinGame(string playerNick)
+        public ActionResult JoinGame()
         {
-            var result = GetGameService().JoinGame(playerNick);
+            var username = GetUserRequestMeta().profile.Username;
+
+            var result = GetGameService().JoinGame(username);
 
             if (result.WasSuccessful)
             {
@@ -59,6 +62,12 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
 
             return result;
         }
+
+        public UserRequestMeta GetUserRequestMeta()
+        {
+            return Context.Items["user"] as UserRequestMeta;
+        }
+
 
         public ChessPlayer GetClientPlayerInfo()
         {
@@ -89,7 +98,6 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
             return result;
         }
 
-
         public ActionResult Move(Move move) 
         {
             var result = GetGameService().Move(move);
@@ -104,15 +112,13 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
 
         public List<Move> GetMoves() => GetGameService().GetMoves();
 
-
         public override Task OnConnectedAsync()
         {
-            // Get player id from http context. This is taken from a cookie and put in httpcontext items dictionary in an earlier piece of middleware.
             var httpContext = Context.GetHttpContext();
 
-            if (!httpContext.Items.ContainsKey("GHPID"))
+            if (!httpContext.Items.ContainsKey("user"))
             {
-                throw new Exception("Got to hub without GHPID. This shouldn't happen, everybody panic!");
+                throw new Exception("Got to hub without user. This shouldn't happen, everybody panic!");
             }
 
             if (!httpContext.Request.Query.ContainsKey("g"))
@@ -122,11 +128,18 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
                 return base.OnDisconnectedAsync(new Exception("Game doesn't exist"));
             }
 
-            var playerId = httpContext.Items["GHPID"].ToString();
+            var player = httpContext.Items["user"] as UserRequestMeta;
+
+            if (!player.isSignedIn)
+            {
+                this.Context.Abort();
+
+                return base.OnDisconnectedAsync(new Exception("Not signed in"));
+            }
 
             var gameId = httpContext.Request.Query["g"];
 
-            var service = _chessServiceFactory.Create(gameId, playerId);
+            var service = _chessServiceFactory.Create(gameId, player.profile.Id);
 
             if (service == null)
             {
@@ -135,10 +148,11 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
                 return base.OnDisconnectedAsync(new Exception("Game doesn't exist"));
             }
 
+            // Have to store in context instead of properties as otherwise can't access them in later calls.
             Context.Items.Add("GameService", service);
 
             // Store playerid in hub context.
-            Context.Items.Add("PlayerId", playerId);
+            Context.Items.Add("user", player);
 
             // Store gameid in hub context
             Context.Items.Add("GameId", gameId);

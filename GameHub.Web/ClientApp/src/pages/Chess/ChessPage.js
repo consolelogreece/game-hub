@@ -2,6 +2,7 @@ import React from 'react';
 import Chess from '../../components/Chess/Chess';
 import withSignalrConnection from '../../components/HigherOrder/withSignalrConnection';
 import ResizeWithContainerHOC from '../../components/HigherOrder/GetRenderedWidthHOC';
+import withTimedErrorMessage from '../../components/HigherOrder/withTimedErrorMessage';
 
 export default class ConnectFourPage extends React.PureComponent
 {
@@ -13,7 +14,7 @@ export default class ConnectFourPage extends React.PureComponent
     {
         this.props.context.setIsLoading(true);
 
-        let game = withSignalrConnection(ResizeWithContainerHOC(Chess), {
+        let game = withSignalrConnection(ResizeWithContainerHOC(withTimedErrorMessage(Chess)), {
             hubUrl: `/chesshub${window.location.search}`, 
             onFail: this.onFail, 
             onConnectionClosed: this.onConnectionClosed,

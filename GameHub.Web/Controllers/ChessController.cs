@@ -1,5 +1,6 @@
 using Caching;
 using GameHub.Games.BoardGames.Chess;
+using GameHub.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
 
@@ -23,7 +24,14 @@ namespace GameHub.Web.Controllers
 
             var Id = System.Guid.NewGuid().ToString();
 
-            var playerId = Request.HttpContext.Items["GHPID"].ToString();
+            var player = Request.HttpContext.Items["user"] as UserRequestMeta;
+
+            if (!player.isSignedIn)
+            {
+                return BadRequest("Not signed in");
+            }
+
+            var playerId = player.profile.Id;
 
             if (playerId == null)
             {
