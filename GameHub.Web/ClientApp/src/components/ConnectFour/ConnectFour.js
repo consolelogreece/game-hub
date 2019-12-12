@@ -89,11 +89,18 @@ export default class ConnectFour extends Component {
     {
         if (duration === undefined) duration = this.messageTimeoutDurationMS;
 
+        // don't bother changing if same message as can cause rendering issues.
+        if (this.state.errorMessage == message) return;
+
         this.setState({errorMessage:message}, async () =>
         {
             await timeout(duration);
-            
-            this.setState({errorMessage: ""});
+
+            // if the message has changed, dont wipe it as it's the responsibilty of another process now. wiping it can cause shortened messages.
+            if (this.state.errorMessage == message)
+            {
+                this.setState({errorMessage: ""});
+            }
         });
     }
 
@@ -227,7 +234,9 @@ export default class ConnectFour extends Component {
                     move={(col) => this.move(col)}
                     boardColor={this.state.boardColor} 
                 />
-                {this.state.errorMessage}
+                <span style={{color: "red"}}>
+                    {this.state.errorMessage}
+                </span>
                 <br />
                 {this.state.gameMessage}
                 <OptionPanel
