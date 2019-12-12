@@ -1,4 +1,5 @@
 @import '../../utils/variables';
+@import '../../components/Popup/styles.scss';
 
 .game-form-show
 {
@@ -12,11 +13,13 @@
 
 .game-popup-show
 {
+    @extend .popup-super-container;
     animation: fadeinpopup $transition_period_ms;
 }
 
 .game-popup-hide
 {
+    @extend .popup-super-container;
     animation: fadeoutpopup $transition_period_ms;
 }
 

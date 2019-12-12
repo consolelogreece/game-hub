@@ -1,6 +1,7 @@
 import React from 'react';
 import ConnectFour from '../../components/ConnectFour/ConnectFour';
 import withSignalrConnection from '../../components/HigherOrder/withSignalrConnection';
+import withTimedErrorMessage from '../../components/HigherOrder/withTimedErrorMessage';
 
 export default class ConnectFourPage extends React.PureComponent
 {
@@ -12,7 +13,7 @@ export default class ConnectFourPage extends React.PureComponent
     {
         this.props.context.setIsLoading(true);
 
-        let game = withSignalrConnection(ConnectFour,{
+        let game = withSignalrConnection(withTimedErrorMessage(ConnectFour), {
             hubUrl: `/connectfourhub${window.location.search}`, 
             onFail: this.onFail, 
             onConnectionClosed: this.onConnectionClosed,

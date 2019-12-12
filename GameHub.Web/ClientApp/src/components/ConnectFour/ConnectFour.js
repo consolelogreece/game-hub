@@ -3,14 +3,11 @@ import './ConnectFour.css';
 import { Title, Subtitle } from '../Common/Text';
 import ResizeWithContainerHOC from '../HigherOrder/GetRenderedWidthHOC';
 import OptionPanel from '../Common/OptionPanel';
-import { timeout } from '../../utils/sleep';
 import Board from './Board';
 
 export default class ConnectFour extends Component {
     constructor(props) {
         super(props);
-
-        this.messageTimeoutDurationMS = 3000;
 
         this.state = {
             column: 0,
@@ -77,31 +74,12 @@ export default class ConnectFour extends Component {
         .then(res => {
             if (res !== null && !res.wasSuccessful)
             {
-                this.displayTimedErrorMessage(res.message);
+                this.props.displayTimedError(res.message);
             }
             
             return res;
         })
-        .catch(res => this.displayTimedErrorMessage(res));
-    }
-
-    displayTimedErrorMessage = (message, duration) => 
-    {
-        if (duration === undefined) duration = this.messageTimeoutDurationMS;
-
-        // don't bother changing if same message as can cause rendering issues.
-        if (this.state.errorMessage == message) return;
-
-        this.setState({errorMessage:message}, async () =>
-        {
-            await timeout(duration);
-
-            // if the message has changed, dont wipe it as it's the responsibilty of another process now. wiping it can cause shortened messages.
-            if (this.state.errorMessage == message)
-            {
-                this.setState({errorMessage: ""});
-            }
-        });
+        .catch(res => this.props.displayTimedError(res));
     }
 
     populateGameState = () =>
