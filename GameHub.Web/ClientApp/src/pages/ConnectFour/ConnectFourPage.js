@@ -35,7 +35,6 @@ export default class ConnectFourPage extends React.PureComponent
 
     onConnectionClosed = res =>
     {
-        console.log(";AJDA;LJD;LKJSA;LKJF", res)
         this.props.history.push("/");
     }
 
