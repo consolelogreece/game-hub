@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import { Collapse, Container, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import Signin from '../forms/Signin';
+import Signin from '../../forms/Signin';
 import './NavMenu.css';
-import Button from './Button';
 
-export class NavMenu extends Component {
+export default class NavMenu extends Component {
   static displayName = NavMenu.name;
 
   constructor (props) {
@@ -30,6 +29,12 @@ export class NavMenu extends Component {
   }
 
   render () {
+    let usernameItem = this.props.context.username == null ? (
+      <NavLink style={{cursor:"pointer"}} onClick={() => this.toggleChooseUsername()} className="text-dark">Choose username</NavLink>
+    ) : (
+      <NavLink className="text-dark">{this.props.context.username}</NavLink>
+    );
+
     return (
       <header>
         <Navbar className="navbar-expand-sm navbar-toggleable-sm ng-white border-bottom box-shadow mb-3" style={{zIndex:3}} light>
@@ -45,7 +50,7 @@ export class NavMenu extends Component {
                   <NavLink tag={Link} className="text-dark" to="/games">Games</NavLink>
                 </NavItem>
                 <NavItem>
-                  <NavLink style={{cursor:"pointer"}} onClick={() => this.toggleChooseUsername()} className="text-dark">Choose username</NavLink>
+                  {usernameItem}
                 </NavItem>
               </ul>
             </Collapse>

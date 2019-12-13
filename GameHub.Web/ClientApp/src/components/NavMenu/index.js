@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { UsernameCtx } from  '../../context/Username';
-import SigninForm from './Signin';
+import { UsernameCtx } from  './../../context/Username';
+import NavMenu from './NavMenu';
 
-export default class SigninFormWrapper extends Component
+export default class NavMenuWrapper extends Component
 {
   render()
   {
@@ -10,7 +10,7 @@ export default class SigninFormWrapper extends Component
       <div>
         <UsernameCtx.Consumer>
           {context => (
-            <SigninForm {...this.props} context={context} />
+            <NavMenu {...this.props} context={context} />
           )}
         </UsernameCtx.Consumer>
       </div>
