@@ -50,7 +50,7 @@ export default class JoinGame extends Component
         // prepending with "=" is necessary for binding primitives in asp net core actions. see https://blog.codenamed.nl/2015/05/12/why-your-frombody-parameter-is-always-null/
         axios.post('/api/auth/signup', "=" + username)
         .then(X => console.log(X))
-        .catch(X => console.log(X.message) /*this.setState({error: X})*/);
+        .catch(res => this.setState({error: res.response.data}));
     }
 
     render()
