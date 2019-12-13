@@ -190,8 +190,6 @@ export default class ConnectFour extends Component {
     {
         var Aboard = ResizeWithContainerHOC(Board);
 
-        let clientName = this.state.playerInfo != null ? this.state.playerInfo.playerNick : "";
-
         let gameState = this.state.gameState;
 
         let isHost = this.isHost();
@@ -205,16 +203,12 @@ export default class ConnectFour extends Component {
         return (
             <div id="ConnectFour" className="vertical_center">  
                 <Title text="Connect Four"/> 
-                <Subtitle>{clientName}</Subtitle>
                 <Aboard  
                     className="vertical_center" 
                     boardState={this.state.boardState} 
                     move={(col) => this.move(col)}
                     boardColor={this.state.boardColor} 
                 />
-                <span style={{color: "red"}}>
-                    {this.state.errorMessage}
-                </span>
                 <br />
                 {this.state.gameMessage}
                 <OptionPanel
