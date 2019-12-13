@@ -55,17 +55,12 @@ namespace GameHub.Web.Controllers
             }
         }
 
-        [HttpPost("getusername")]
+        [HttpGet("getusername")]
         public IActionResult GetUsername()
         {
             var user = GetUserRequestMeta();
 
-            if (user.isSignedIn)
-            {
-                Ok(user.profile.Username);
-            }
-
-            return BadRequest("User not signed in");
+            return Ok(user);
         }
 
         private UserRequestMeta GetUserRequestMeta()

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Collapse, Container, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from 'reactstrap';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 import Signin from '../../forms/Signin';
 import './NavMenu.css';
 
@@ -15,6 +16,15 @@ export default class NavMenu extends Component {
       collapsed: true,
       displayChooseUsernameForm: false
     };
+  }
+
+  componentDidMount()
+  {
+    axios.get('/api/auth/getusername')
+        .then(res => {
+            this.props.context.setUsername(res.data.profile.username);
+            this.setState({displayChooseUsernameForm: false});
+        })
   }
 
   toggleChooseUsername()
