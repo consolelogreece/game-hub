@@ -6,6 +6,7 @@ import StandardInput from '../../components/Forms/StandardInput';
 import { timeout } from '../../utils/sleep'
 import { transition_period } from './styles.scss';
 import axios from 'axios';
+import LoadingSpinner from '../../components/LoadingSpinner';
 
 const showFormClass = "option-panel-form-show";
 const hideFormClass = "option-panel-form-hide";
@@ -21,7 +22,8 @@ export default class JoinGame extends Component
         this.state = {
             text:"",
             renderPopup: true,
-            error: ""
+            error: "",
+            loadingStatus: "none"
         }
     }
 
@@ -36,7 +38,7 @@ export default class JoinGame extends Component
 
     HandleChange = e =>
     {
-        this.setState({...this.state, [e.target.name]: e.target.value})
+        this.setState({...this.state, [e.target.name]: e.target.value, loadingStatus: "none"})
     }
 
     JoinGame = (e) =>
@@ -45,15 +47,22 @@ export default class JoinGame extends Component
 
         var username = this.state.text;
 
+        this.setState({loadingStatus: "loading"})
+
         //todo validation
 
         // prepending with "=" is necessary for binding primitives in asp net core actions. see https://blog.codenamed.nl/2015/05/12/why-your-frombody-parameter-is-always-null/
         axios.post('/api/auth/signup', "=" + username)
-        .then(res => {
+        .then(async res => {
+            this.setState({loadingStatus: "success"});
+
             this.props.context.setUsername(res.data);     
+
+            await timeout(transition_period * 2);
+
             this.closePopup();
         })
-        .catch(res => this.setState({error: res.response.data}));
+        .catch(res => this.setState({error: res.response.data, loadingStatus: "failure"}));
     }
 
     render()
@@ -61,10 +70,17 @@ export default class JoinGame extends Component
         let renderDependentClassForm = this.state.renderPopup ? showFormClass : hideFormClass;
         let renderDependentClassPopup = this.state.renderPopup ? showPopupClass : hidePopupClass;
 
+        let superContainerClassNames = renderDependentClassPopup;
+
+        // if (this.state.loadingStatus !== "none")
+        // {
+        //     superContainerClassNames += " blur-filter";
+        // }
+
         return(
             <div>
                 <Popup 
-                    superContainerClassNames={renderDependentClassPopup} 
+                    superContainerClassNames={superContainerClassNames} 
                     containerClassNames={renderDependentClassForm} 
                     popupStyles={{width:" 100%", maxWidth: "700px"}} 
                     superContainerStyles={{backgroundColor: "rgba(0,0,0, 0.5)"}}
@@ -75,7 +91,14 @@ export default class JoinGame extends Component
                             <div style={{padding: "10px", backgroundColor: "white", borderRadius:"15px", textAlign: "left"}}>
                                 <span id="option-panel-join-form-title">Enter your name</span>
                                 <FormRegion errors={this.state.error}>
-                                    <StandardInput name="text" value={this.state.text} onValueChange={this.HandleChange}/>
+                                    <div style={{display: "flex"}}> 
+                                        <div style={{width: "100%"}}>
+                                            <StandardInput name="text" value={this.state.text} onValueChange={this.HandleChange}/>
+                                        </div>
+                                        <div className={"signin-loading-spinner"}>
+                                            <LoadingSpinner status={this.state.loadingStatus} />
+                                        </div>
+                                    </div>
                                 </FormRegion>
                                 <Button style={{margin: "0 auto"}} onClick={this.JoinGame}>Join</Button>
                             </div>

@@ -17,6 +17,19 @@
     animation: fadeinpopup $transition_period_ms;
 }
 
+.signin-loading-spinner
+{
+    z-index: 999;
+}
+
+.blur-filter {
+    -webkit-filter: blur(2px);
+    -moz-filter: blur(2px);
+    -o-filter: blur(2px);
+    -ms-filter: blur(2px);
+    filter: blur(2px);
+}
+
 .option-panel-popup-hide
 {
     @extend .popup-super-container;
