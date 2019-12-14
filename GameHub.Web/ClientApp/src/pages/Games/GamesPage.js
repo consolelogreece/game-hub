@@ -28,7 +28,8 @@ export default class Games extends Component {
         "Chess": ChessForm
       },
       selectedForm:"",
-      renderPopup: false
+      renderPopup: false,
+      loadSt: "loading"
     }
   }
   
