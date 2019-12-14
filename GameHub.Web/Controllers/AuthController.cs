@@ -10,9 +10,9 @@ namespace GameHub.Web.Controllers
     [Route("api/auth")]
     public class AuthContoller : Controller
     {
-        private ICache<User> _users;
+        private UserCache _users;
 
-        public AuthContoller(ICache<User> users)
+        public AuthContoller(UserCache users)
         {
             _users = users;
         }
@@ -27,15 +27,13 @@ namespace GameHub.Web.Controllers
             }
             lock(_users)
             {
-                var isUsernameInUse = _users.Get(username) != null;
-
                 var userMetaFromRequest = GetUserRequestMeta();
 
                 if (userMetaFromRequest.isSignedIn)
                 {
                     return BadRequest("User already signed in");
                 }
-                else if (isUsernameInUse)
+                else if (_users.DoesUsernameExist(username))
                 {
                     return BadRequest("Username in use");
                 }

@@ -17,7 +17,7 @@ namespace GameHub.Web.Middleware
             _next = next;
         }
 
-        public async Task InvokeAsync(HttpContext context, ICache<User> userCache)
+        public async Task InvokeAsync(HttpContext context, UserCache userCache)
         {
             // currently ids are "protected" when sent to front end, so cant just paste in another players id as it hasn't been protected.
             var playerIdExists = context.Request.Cookies.ContainsKey("GHPID");

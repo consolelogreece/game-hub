@@ -40,7 +40,7 @@ namespace GameHub.Web
 
             services.AddSingleton<ICache<Chess>, ChessCache>();
 
-            services.AddSingleton<ICache<User>, UserCache>();
+            services.AddSingleton<UserCache>();
 
             services.AddTransient<IConnectFourServiceFactory, ConnectFourServiceFactory>();
 
