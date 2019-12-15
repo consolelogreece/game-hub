@@ -41,13 +41,15 @@ export default class JoinGame extends Component
         this.setState({...this.state, [e.target.name]: e.target.value, loadingStatus: "none"})
     }
 
-    JoinGame = (e) =>
+    JoinGame = async (e) =>
     {
         e.preventDefault();
 
         var username = this.state.text;
 
         this.setState({loadingStatus: "loading"})
+        
+        await timeout(1500)
 
         //todo validation
 
@@ -70,12 +72,15 @@ export default class JoinGame extends Component
         let renderDependentClassForm = this.state.renderPopup ? showFormClass : hideFormClass;
         let renderDependentClassPopup = this.state.renderPopup ? showPopupClass : hidePopupClass;
 
+        let submitButtonStyles = {color: "white", margin: "0 auto"};
+
         let superContainerClassNames = renderDependentClassPopup;
 
-        // if (this.state.loadingStatus !== "none")
-        // {
-        //     superContainerClassNames += " blur-filter";
-        // }
+        if (this.state.loadingStatus !== "none")
+        {
+            //superContainerClassNames += " blur-filter";
+            submitButtonStyles.color = "#333";
+        }
 
         return(
             <div>
@@ -91,16 +96,20 @@ export default class JoinGame extends Component
                             <div style={{padding: "10px", backgroundColor: "white", borderRadius:"15px", textAlign: "left"}}>
                                 <span id="option-panel-join-form-title">Enter your name</span>
                                 <FormRegion errors={this.state.error}>
-                                    <div style={{display: "flex"}}> 
-                                        <div style={{width: "100%"}}>
-                                            <StandardInput name="text" value={this.state.text} onValueChange={this.HandleChange}/>
-                                        </div>
-                                        <div className={"signin-loading-spinner"}>
-                                            <LoadingSpinner status={this.state.loadingStatus} />
-                                        </div>
+                                    <div style={{width: "100%"}}>
+                                        <StandardInput name="text" value={this.state.text} onValueChange={this.HandleChange}/>
                                     </div>
                                 </FormRegion>
-                                <Button style={{margin: "0 auto"}} onClick={this.JoinGame}>Join</Button>
+                                <div>
+                                    {this.state.loadingStatus !== "none" && (
+                                        <div className={"signin-loading-spinner-container"}>
+                                            <div className={"signin-loading-spinner"}>
+                                                <LoadingSpinner colorScheme={"colored"} status={this.state.loadingStatus} />
+                                            </div>
+                                        </div>
+                                    )}
+                                    <Button style={submitButtonStyles} onClick={this.JoinGame}>Join</Button>
+                                </div>
                             </div>
                         </form>
                     </div>
@@ -109,3 +118,4 @@ export default class JoinGame extends Component
         )
     }
 }
+                                   
