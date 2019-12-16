@@ -1,17 +1,17 @@
 @import '../../utils/variables';
 @import '../../components/Popup/styles.scss';
 
-.option-panel-form-show
+.signin-form-show
 {
     animation: fadeinform $transition_period_ms;
 }
 
-.option-panel-form-hide
+.signin-form-hide
 {
     animation: fadeoutform $transition_period_ms;
 }
 
-.option-panel-popup-show
+.signin-popup-show
 {
     @extend .popup-super-container;
     animation: fadeinpopup $transition_period_ms;
@@ -25,7 +25,7 @@
     filter: blur(2px);
 }
 
-.option-panel-popup-hide
+.signin-popup-hide
 {
     @extend .popup-super-container;
     animation: fadeoutpopup $transition_period_ms;
@@ -75,7 +75,7 @@
     }
 }
 
-#option-panel-join-form-title
+#signin-join-form-title
 {
     display:table;
     margin:0 auto;

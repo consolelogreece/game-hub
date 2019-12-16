@@ -7,10 +7,10 @@ import { timeout } from '../../utils/sleep'
 import { transition_period } from './styles.scss';
 import axios from 'axios';
 
-const showFormClass = "option-panel-form-show";
-const hideFormClass = "option-panel-form-hide";
-const showPopupClass = "option-panel-popup-show";
-const hidePopupClass = "option-panel-popup-hide";
+const showFormClass = "signin-form-show";
+const hideFormClass = "signin-form-hide";
+const showPopupClass = "signin-popup-show";
+const hidePopupClass = "signin-popup-hide";
 
 export default class JoinGame extends Component
 {   
@@ -47,8 +47,6 @@ export default class JoinGame extends Component
         var username = this.state.text;
 
         this.setState({loadingStatus: "loading"})
-        
-        await timeout(1500)
 
         //todo validation
 
@@ -93,7 +91,7 @@ export default class JoinGame extends Component
                     <div style={{margin: "15px auto 0px auto", textAlign: "center"}}>
                         <form onSubmit={this.JoinGame}>
                             <div style={{padding: "10px", backgroundColor: "white", borderRadius:"15px", textAlign: "left"}}>
-                                <span id="option-panel-join-form-title">Enter your name</span>
+                                <span id="signin-join-form-title">Enter your name</span>
                                 <FormRegion errors={this.state.error}>
                                     <div style={{width: "100%"}}>
                                         <StandardInput name="text" value={this.state.text} onValueChange={this.HandleChange}/>
@@ -108,4 +106,3 @@ export default class JoinGame extends Component
         )
     }
 }
-                                   
