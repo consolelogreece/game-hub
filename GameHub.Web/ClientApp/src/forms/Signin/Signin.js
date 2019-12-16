@@ -57,7 +57,7 @@ export default class JoinGame extends Component
 
             this.props.context.setUsername(res.data);     
 
-            await timeout(transition_period * 2);
+            await timeout(transition_period * 3);
 
             this.closePopup();
         })

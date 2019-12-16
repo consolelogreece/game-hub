@@ -2,8 +2,9 @@
 import axios from 'axios';
 import IncrementalInput from '../../components/Forms/IncrementalInput';
 import FormRegion from '../../components/Forms/FormRegion';
-import Button from '../../components/Buttons/Standard';
+import Button from '../../components/Buttons/StandardWithSpinner';
 import Tooltip from '../../components/Tooltip';
+import { timeout } from '../../utils/sleep';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { transition_period } from './styles.scss';
@@ -18,7 +19,8 @@ export default class NewGameForm extends Component {
                 winThreshold: 4,
                 nPlayersMax: 2
             },
-            errors:{}
+            errors:{},
+            loadingStatus: "none"
         };
     }
 
@@ -30,7 +32,13 @@ export default class NewGameForm extends Component {
     {
         e.preventDefault();
         axios.post('/api/connectfour/createroom', this.state.roomConfig)
-        .then(res => this.props.history.push("/connectfour/game?g=" + res.data))
+        .then(async res => {
+            this.setState({loadingStatus: "success"});
+
+            await timeout(transition_period * 3);
+            
+            this.props.history.push("/connectfour/game?g=" + res.data);
+        })
         .catch(res => this.setState({errors: res.response.data}))
     }
 
@@ -83,7 +91,7 @@ export default class NewGameForm extends Component {
                             increment={1}
                         />
                     </FormRegion>
-                    <Button style={{margin: "0 auto"}} onClick={this.CreateRoom}>Create</Button>
+                    <Button loadingStatus={this.state.loadingStatus} style={{margin: "0 auto"}} onClick={this.CreateRoom}>Create</Button>
                 </form>
             </div>
         )
