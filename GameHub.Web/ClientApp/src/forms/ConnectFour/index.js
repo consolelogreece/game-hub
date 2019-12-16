@@ -2,7 +2,7 @@
 import axios from 'axios';
 import IncrementalInput from '../../components/Forms/IncrementalInput';
 import FormRegion from '../../components/Forms/FormRegion';
-import Button from '../../components/Button';
+import Button from '../../components/Buttons/Standard';
 import Tooltip from '../../components/Tooltip';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';

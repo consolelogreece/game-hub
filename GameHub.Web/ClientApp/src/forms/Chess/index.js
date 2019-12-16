@@ -1,5 +1,5 @@
 import React from 'react';
-import Button from '../../components/Button';
+import Button from '../../components/Buttons/Standard';
 import axios from 'axios';
 import './styles.css';
 

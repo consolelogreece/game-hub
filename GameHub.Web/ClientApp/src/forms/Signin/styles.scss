@@ -17,19 +17,6 @@
     animation: fadeinpopup $transition_period_ms;
 }
 
-.signin-loading-spinner-container
-{
-    text-align: center;
-    width: 100%;
-    z-index: 999;
-    position: absolute;
-}
-
-.signin-loading-spinner
-{
-    z-index: 999;
-}
-
 .blur-filter {
     -webkit-filter: blur(2px);
     -moz-filter: blur(2px);

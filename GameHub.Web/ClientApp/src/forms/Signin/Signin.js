@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import FormRegion from '../../components/Forms/FormRegion';
-import Button from '../../components/Button';
+import Button from '../../components/Buttons/StandardWithSpinner';
 import Popup from '../../components/Popup';
 import StandardInput from '../../components/Forms/StandardInput';
 import { timeout } from '../../utils/sleep'
 import { transition_period } from './styles.scss';
 import axios from 'axios';
-import LoadingSpinner from '../../components/LoadingSpinner';
 
 const showFormClass = "option-panel-form-show";
 const hideFormClass = "option-panel-form-hide";
@@ -100,16 +99,7 @@ export default class JoinGame extends Component
                                         <StandardInput name="text" value={this.state.text} onValueChange={this.HandleChange}/>
                                     </div>
                                 </FormRegion>
-                                <div>
-                                    {this.state.loadingStatus !== "none" && (
-                                        <div className={"signin-loading-spinner-container"}>
-                                            <div className={"signin-loading-spinner"}>
-                                                <LoadingSpinner colorScheme={"colored"} status={this.state.loadingStatus} />
-                                            </div>
-                                        </div>
-                                    )}
-                                    <Button style={submitButtonStyles} onClick={this.JoinGame}>Join</Button>
-                                </div>
+                                <Button onClick={this.JoinGame} loadingStatus={this.state.loadingStatus}>Join</Button>
                             </div>
                         </form>
                     </div>
