@@ -64,7 +64,7 @@ export default class JoinGame extends Component
 
             this.closePopup();
         })
-        .catch(res => this.setState({error: res.response.data, loadingStatus: "failure"}));
+        .catch(res => this.setState({error: res.response.data, loadingStatus: "none"}));
     }
 
     render()
