@@ -32,7 +32,6 @@ namespace GameHub.Test.BoardGames.ChessTests
             Assert.False(resignResult.WasSuccessful);
         }
 
-
         [Fact]
         public void CantResignTwice()
         {

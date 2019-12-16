@@ -9,7 +9,6 @@ import './styles.css';
 import { LoadingProvider } from  './context/Loading';
 import { UsernameProvider } from './context/Username';
 
-
 export default class App extends Component {
   static displayName = App.name;
 

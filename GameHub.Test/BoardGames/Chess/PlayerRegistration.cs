@@ -35,7 +35,6 @@ namespace GameHub.Test.BoardGames.ChessTests
              Assert.False(registrationResult.WasSuccessful, "Was able to register player after game has already started");
         }  
 
-
         public void CantRegisterMoreThanMaxPlayers()
         {
             // arrange

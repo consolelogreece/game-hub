@@ -88,12 +88,10 @@ namespace GameHub.Test.BoardGames.ConnectFourTests
             game.Move(player2Id, 2);
             game.Move(player1Id, 1);
 
-
             var gameState = game.GetGameState();
 
             Assert.Equal(gameState.Status.Status,"finished");
         }
-
 
         [Fact]
         public void DetectsWinHorizontal()

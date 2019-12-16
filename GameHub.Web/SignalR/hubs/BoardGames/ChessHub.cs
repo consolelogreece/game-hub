@@ -68,7 +68,6 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
             return Context.Items["user"] as UserRequestMeta;
         }
 
-
         public ChessPlayer GetClientPlayerInfo()
         {
             return GetGameService().GetPlayer();
