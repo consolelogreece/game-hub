@@ -14,8 +14,6 @@ export default props =>
 
     let properinos = {...props, style: {...props.style, ...submitButtonStyles}};
 
-    console.log(properinos)
-
     return (
         <div>
             {props.loadingStatus !== "none" && (
