@@ -131,15 +131,11 @@ export default class Chess extends Component {
 
         if (status === "lobby")
         {
-            if (this.state.playerInfo === null)
+            if (this.state.playerInfo === null && !this.isHost())
             {
                 if (isGameFull)
                 {
                     message = "Game full, waiting for host to start..."
-                }
-                else
-                {
-                    message = "Please enter your name"
                 }
             }
             else if (!this.isHost())
