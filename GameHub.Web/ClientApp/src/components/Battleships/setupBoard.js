@@ -9,6 +9,8 @@ export default class BattleshipsSetupBoard extends Component
     {
         super(props);
 
+        this.gridRef = React.createRef();
+
         this.state = {
             rows: 10,
             cols: 10,
@@ -19,8 +21,15 @@ export default class BattleshipsSetupBoard extends Component
                     x: 0,
                     y: 0,
                     length: 3
+                },
+                {
+                    orientation: "horizontal",
+                    x: 1 ,
+                    y: 0,
+                    length: 3
                 } 
-            ]
+            ],
+            selectedShipIndex: -1
         }
     }
 
@@ -30,26 +39,78 @@ export default class BattleshipsSetupBoard extends Component
         let ship = this.state.ships[event.target.id];
     }
 
-    calculateOffsets = (event) => {
-        let grid = {}
-        let gridLengthPx = this.state.singleSquareDimension;
-        let relativeX = event.clientX -  grid.offsetLeft;
+    onMouseDown = event =>
+    {
+        let target = event.target.parentNode;
+
+        if (target.attributes.name == undefined) return;
+
+        let targetName = target.attributes.name.nodeValue;
+
+        if (targetName != "ship") return;
+        
+        this.setState({selectedShipIndex: target.id});
+    }
+
+    onMouseUp = event =>
+    {
+        this.setState({selectedShipIndex: -1});
+    }
+
+    onMouseMove = event =>
+    {
+        if (this.state.selectedShipIndex == -1) return;
+
+        let ships = this.state.ships;
+
+        let offsets = this.calculateOffsets(event, ships[this.state.selectedShipIndex]);
+
+        ships[this.state.selectedShipIndex].x = offsets.left;
+        ships[this.state.selectedShipIndex].y = offsets.top;
+
+        this.setState({ships:[...ships]})
+
+        console.log(ships)
+    }
+
+    calculateOffsets = (event, ship) => {
+        let gridBoundingRect = this.gridRef.current.getBoundingClientRect();
+
+        let gridLeft = gridBoundingRect.left;
+        let gridTop = gridBoundingRect.top;
+
+        let leftSquareMultiplier = ship.orientation === "horizontal" ? ship.length : 1;
+        let topSquareMultiplier = ship.orientation === "vertical" ? ship.length : 1;
+
+        let gridLengthPx = this.state.nPixelsSquare * this.state.rows ;
+
+        let relativeX = event.clientX - gridLeft;
         if (relativeX < 0) relativeX = 0;
         
         // minus single square dimension to keep it inside grid, otherwise you'd be able to move the square on the outside
-        if (relativeX > gridLengthPx) relativeX = gridLengthPx - this.state.singleSquareDimension;
+        if (relativeX > gridLengthPx - (leftSquareMultiplier * this.state.nPixelsSquare)) relativeX = gridLengthPx - (this.state.nPixelsSquare * leftSquareMultiplier);
         
-        let relativeY = event.clientY - grid.offsetTop;
+        let relativeY = event.clientY - gridTop;
         if (relativeY < 0) relativeY = 0;
-        if (relativeY > gridLengthPx) relativeY = gridLengthPx - this.state.singleSquareDimension;
+        if (relativeY > gridLengthPx - (topSquareMultiplier * this.state.nPixelsSquare)) relativeY = gridLengthPx - (this.state.nPixelsSquare * topSquareMultiplier);
         
-        let blockX = Math.floor(relativeX / this.state.singleSquareDimension);
-        let blockY = Math.floor(relativeY / this.state.singleSquareDimension);
+        let trueOffsetX = Math.floor(relativeX / this.state.nPixelsSquare);
+        let trueOffsetY = Math.floor(relativeY / this.state.nPixelsSquare);
             
-        
-        // + 1 to center in grid. this will be a different number depending on dimensions of grid/squares
-        let trueOffsetX = (blockX * this.state.singleSquareDimension) + 1;
-        let trueOffsetY = (blockY * this.state.singleSquareDimension) + 1;
+        // let trueOffsetX = (blockX * this.state.nPixelsSquare);
+        // let trueOffsetY = (blockY * this.state.nPixelsSquare);
+
+        // console.log({
+        //     gridTop: gridTop,
+        //     gridLeft: gridLeft,
+        //     gridLengthPx: gridLengthPx,
+        //     relativeX: relativeX,
+        //     relativeY: relativeY,
+        //     blockX: blockX,
+        //     blockY: blockY,
+        //     trueOffsetX: trueOffsetX,
+        //     trueOffsetY: trueOffsetY
+        // })
         
         // var squareOccupied = availableDraggables.find(el => {
         //     return el.style.left == `${trueOffsetX}px` && el.style.top == `${trueOffsetY}px` && el != activeDraggable
@@ -65,11 +126,11 @@ export default class BattleshipsSetupBoard extends Component
 
     render()
     {
-        let ships = this.state.ships.map((ship, index) => <Ship id={index} handleDrag={this.handleDrag} {...ship} />)
+        let ships = this.state.ships.map((ship, index) => <Ship nPixelsSquare={this.state.nPixelsSquare} id={index} handleDrag={this.handleDrag} {...ship} />)
 
         return(
-            <div onDragOver={this.handleDrag}>
-                <Grid rows={10} cols={10} styles={{"1,3":{backgroundColor: "pink"}}} >
+            <div>
+                <Grid gridRef={this.gridRef} onMouseDown={this.onMouseDown} onMouseUp={this.onMouseUp} onMouseMove={this.onMouseMove} rows={10} cols={10} styles={{"1,3":{backgroundColor: "pink"}}} >
                     {ships}
                 </Grid>
             </div>

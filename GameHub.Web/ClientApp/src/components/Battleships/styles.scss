@@ -32,6 +32,7 @@
 
 .ship
 {
+  display: flex;
   position: absolute;
   z-index: 999;
 }

@@ -17,7 +17,7 @@ export default class Ship extends Component
         }
 
         return (
-            <div id={this.props.id} draggable={true} className={"ship-" + this.props.orientation}>
+            <div style={{top: this.props.y * this.props.nPixelsSquare, left: this.props.x * this.props.nPixelsSquare}} name="ship" id={this.props.id} draggable={true} className={"ship-" + this.props.orientation}>
                 <div className="ship-head"/>
                 {body}
                 <div className="ship-head"/>

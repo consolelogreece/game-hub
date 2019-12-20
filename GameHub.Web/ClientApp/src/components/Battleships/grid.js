@@ -38,7 +38,7 @@ export default class BattleshipsGrid extends Component
         }
 
         return(
-            <div id="grid">
+            <div ref={this.props.gridRef} {...this.props} id="grid">
                 {squares}
                 {this.props.children}
             </div>
