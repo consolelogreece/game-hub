@@ -96,32 +96,27 @@ export default class BattleshipsSetupBoard extends Component
         
         let trueOffsetX = Math.floor(relativeX / this.state.nPixelsSquare);
         let trueOffsetY = Math.floor(relativeY / this.state.nPixelsSquare);
-            
-        // let trueOffsetX = (blockX * this.state.nPixelsSquare);
-        // let trueOffsetY = (blockY * this.state.nPixelsSquare);
-
-        // console.log({
-        //     gridTop: gridTop,
-        //     gridLeft: gridLeft,
-        //     gridLengthPx: gridLengthPx,
-        //     relativeX: relativeX,
-        //     relativeY: relativeY,
-        //     blockX: blockX,
-        //     blockY: blockY,
-        //     trueOffsetX: trueOffsetX,
-        //     trueOffsetY: trueOffsetY
-        // })
-        
-        // var squareOccupied = availableDraggables.find(el => {
-        //     return el.style.left == `${trueOffsetX}px` && el.style.top == `${trueOffsetY}px` && el != activeDraggable
-        // }) != undefined;
-        
-        // // if (squareOccupied) return;
-        
-        // activeDraggable.style.left = `${trueOffsetX}px`;
-        // activeDraggable.style.top = `${trueOffsetY}px`;
 
         return {left: trueOffsetX, top: trueOffsetY};
+    }
+
+    detectCollision = (shipIndex, newOffsets) =>
+    {
+        let collision = false;
+
+        let ship = this.state.ships[shipIndex];
+
+        let newlyOccupiedSquares = [];
+
+        for (let i = 0; i < ship.length; i++)
+        {}
+
+        this.state.ships.forEach((ship, index) =>
+        {
+            if (shipIndex === index) continue;
+
+
+        })
     }
 
     render()
