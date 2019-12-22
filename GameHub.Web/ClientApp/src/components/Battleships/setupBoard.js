@@ -109,7 +109,27 @@ export default class BattleshipsSetupBoard extends Component
         let newlyOccupiedSquares = [];
 
         for (let i = 0; i < ship.length; i++)
-        {}
+        {
+            newlyOccupiedSquares.push([ship[variableDimension]])
+        }
+
+        function horizontal(length)
+        {
+            for (let i = 0; i < length; i++)
+            {
+                newlyOccupiedSquares.push([ship[ship.x, ship.y + i]])
+            }
+        }
+
+        ship.orientation === "horizontal" ? horizontal(ship.length) : vertical(length)
+
+        function vertical(length)
+        {
+            for (let i = 0; i < length; i++)
+            {
+                newlyOccupiedSquares.push([ship[ship.x + i, ship.y]])
+            }
+        }
 
         this.state.ships.forEach((ship, index) =>
         {
