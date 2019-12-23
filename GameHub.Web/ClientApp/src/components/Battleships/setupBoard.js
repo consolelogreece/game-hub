@@ -1,7 +1,9 @@
 import React, {Component} from 'react';
 import Grid from './grid';
-import Ship from './ship';
+import Ship from './Ships/ShipSetup';
 import './styles.scss';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSyncAlt } from '@fortawesome/free-solid-svg-icons';
 
 export default class BattleshipsSetupBoard extends Component
 {
@@ -17,23 +19,34 @@ export default class BattleshipsSetupBoard extends Component
             nPixelsSquare: 40,
             ships: [
                 {
-                    orientation: "vertical",
-                    x: 0,
-                    y: 0,
-                    length: 3
+                    orientation: "horizontal",
+                    x: 1,
+                    y: 1,
+                    length: 5
                 },
                 {
                     orientation: "vertical",
-                    x: 1 ,
-                    y: 0,
-                    length: 3
+                    x: 9 ,
+                    y: 3,
+                    length: 4
                 },
-
                 {
                     orientation: "horizontal",
-                    x: 1 ,
-                    y: 4,
-                    length: 5
+                    x: 2,
+                    y: 7,
+                    length: 3
+                },
+                {
+                    orientation: "vertical",
+                    x: 5,
+                    y: 3,
+                    length: 3
+                },
+                {
+                    orientation: "horizontal",
+                    x: 7,
+                    y: 9,
+                    length: 2
                 } 
             ],
             selectedShipIndex: -1,
@@ -85,8 +98,6 @@ export default class BattleshipsSetupBoard extends Component
         });
 
         return newSquareStyles;
-
-        //this.setState({squareStyles: newSquareStyles});
     }
 
     onMouseMove = event =>
@@ -120,9 +131,7 @@ export default class BattleshipsSetupBoard extends Component
         let gridTop = gridBoundingRect.top;
 
         let relativeX = x - gridLeft;
-        
         let relativeY = y - gridTop;
-   
 
         return {row: relativeX, col: relativeY};
     }
@@ -215,19 +224,44 @@ export default class BattleshipsSetupBoard extends Component
     render()
     {
         let ships = this.state.ships.map((ship, index) => {
+            let extragoodstyles = {};
+
+            if (ship.orientation === "vertical")
+            {
+                extragoodstyles.left = `${- this.state.nPixelsSquare / 3}px`;
+                extragoodstyles.top = `${- this.state.nPixelsSquare / 3}px`;
+            }
+            else
+            {
+                extragoodstyles.left = `${- this.state.nPixelsSquare / 3}px`;
+                extragoodstyles.top = `${- this.state.nPixelsSquare / 3}px`;
+            }
+
             return (
-                <Ship style={{cursor: this.state.selectedShipIndex === -1 ? "grab" : "grabbing"}} nPixelsSquare={this.state.nPixelsSquare} id={index} handleDrag={this.handleDrag} {...ship}>
-                    <button onClick={() => {this.rotateShip(index)}}>test</button>
+                <Ship status="setup" style={{cursor: this.state.selectedShipIndex === -1 ? "grab" : "grabbing"}} nPixelsSquare={this.state.nPixelsSquare} id={index} handleDrag={this.handleDrag} {...ship}>
+                   <FontAwesomeIcon style={{fontSize: `${this.state.nPixelsSquare / 1.5}px`, ...extragoodstyles}} icon={faSyncAlt} onClick={() => {this.rotateShip(index)}}/>
                 </Ship>
             )}
         )
 
         return(
             <div>
-                <Grid gridRef={this.gridRef} onMouseDown={this.onMouseDown} onMouseUp={this.onMouseUp} onMouseMove={this.onMouseMove} rows={10} cols={10} styles={this.state.squareStyles} >
+                <Grid 
+                    width={this.state.nPixelsSquare * this.state.cols}
+                    height={this.state.nPixelsSquare * this.state.rows}
+                    gridRef={this.gridRef} 
+                    onMouseDown={this.onMouseDown} 
+                    onMouseUp={this.onMouseUp} 
+                    onMouseMove={this.onMouseMove} 
+                    nPixelsSquare={this.state.nPixelsSquare} 
+                    rows={10} 
+                    cols={10} 
+                    styles={this.state.squareStyles} >
                     {ships}
                 </Grid>
             </div>
         );
     }
+
+    //onTouchMove={this.onMouseMove}
 }

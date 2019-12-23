@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-
 export default class Ship extends Component
 {   
     constructor(props)
@@ -17,17 +16,21 @@ export default class Ship extends Component
 
         style.left = this.props.x * this.props.nPixelsSquare;
 
+        let Head = this.props.Head;
+
+        let Body = this.props.Body;
+
         for(let i = 1; i < this.props.length - 1; i++)
         {
-            body.push(<div className="ship-body"/>);
+            body.push(<Body height={this.props.nPixelsSquare} width={this.props.nPixelsSquare} />);
         }
 
         return (
             <div style={style} name="ship" id={this.props.id} className={"ship-" + this.props.orientation}>
                 {this.props.children}
-                <div className="ship-head"/>
+                <Head height={this.props.nPixelsSquare} width={this.props.nPixelsSquare} />
                 {body}
-                <div className="ship-head"/>
+                <Head height={this.props.nPixelsSquare} width={this.props.nPixelsSquare} />
             </div>
         );
     }

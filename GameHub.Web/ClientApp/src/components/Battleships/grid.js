@@ -7,8 +7,6 @@ let defaultStyle = {
 
 export default class BattleshipsGrid extends Component 
 {
-
-
     getStyle = (row, col) =>
     {
         let key = `${row},${col}`;
@@ -23,12 +21,16 @@ export default class BattleshipsGrid extends Component
 
     render()
     {
+        let squareSize = this.props.nPixelsSquare === undefined ? 40 : this.props.nPixelsSquare;
+
         let squares = [];
         for (let i = 0; i < this.props.cols; i++)
         {
             for (let j = 0; j < this.props.rows; j++)
             {
-                let style = this.getStyle(j, i);
+                let style = {...this.getStyle(j, i)};
+                style.height = squareSize;
+                style.width = squareSize;
                 squares.push(
                     <div className="square" style={style}>
                         {j},{i}
@@ -38,7 +40,7 @@ export default class BattleshipsGrid extends Component
         }
 
         return(
-            <div ref={this.props.gridRef} {...this.props} id="grid">
+            <div style={{height: this.props.height, width: this.props.width}} ref={this.props.gridRef} {...this.props} id="grid">
                 {squares}
                 {this.props.children}
             </div>
