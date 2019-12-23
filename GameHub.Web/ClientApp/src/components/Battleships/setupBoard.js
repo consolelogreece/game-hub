@@ -90,6 +90,8 @@ export default class BattleshipsSetupBoard extends Component
                 overlappingSquares.push(...this.detectOverlap(s1, s2))   
             })
         });
+
+        return overlappingSquares;
     }
 
     getStyles()
