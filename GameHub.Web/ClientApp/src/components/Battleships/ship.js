@@ -24,6 +24,7 @@ export default class Ship extends Component
 
         return (
             <div style={style} name="ship" id={this.props.id} className={"ship-" + this.props.orientation}>
+                {this.props.children}
                 <div className="ship-head"/>
                 {body}
                 <div className="ship-head"/>

@@ -65,6 +65,30 @@ export default class BattleshipsSetupBoard extends Component
         this.setState({selectedShipIndex: -1});
     }
 
+    getStyles()
+    {
+        let overlappingSquares = [];
+
+        let ships = this.state.ships;
+
+        ships.forEach(s1 => {
+            ships.forEach(s2 => {
+                if (s1 === s2) return;
+                overlappingSquares.push(...this.detectOverlap(s1, s2))   
+            })
+        });
+
+        let newSquareStyles =  {};
+
+        overlappingSquares.forEach(sq => {
+            newSquareStyles[`${sq[0]},${sq[1]}`] = {backgroundColor: "red"};
+        });
+
+        return newSquareStyles;
+
+        //this.setState({squareStyles: newSquareStyles});
+    }
+
     onMouseMove = event =>
     {
         if (this.state.selectedShipIndex == -1) return;
@@ -81,25 +105,9 @@ export default class BattleshipsSetupBoard extends Component
         ship.x = offsets.left;
         ship.y = offsets.top;
 
-        this.setState({ships:[...ships]})
+        let styles = this.getStyles();
 
-        let overlappingSquares = [];
-
-        ships.forEach(s1 => {
-            ships.forEach(s2 => {
-                if (s1 === s2) return;
-                overlappingSquares.push(...this.detectOverlap(s1, s2))   
-            })
-        });
-
-        let newSquareStyles =  {};
-
-        overlappingSquares.forEach(sq => {
-            newSquareStyles[`${sq[0]},${sq[1]}`] = {backgroundColor: "red"};
-        });
-
-
-        this.setState({squareStyles: newSquareStyles});
+        this.setState({ships:[...ships], squareStyles: styles})
     }
 
     calculateOffsets = (event, ship) => {
@@ -150,6 +158,19 @@ export default class BattleshipsSetupBoard extends Component
         return overlappingSquares;
     }
 
+    rotateShip(index)
+    {
+        let ships = [...this.state.ships];
+
+        let ship = ships[index];
+
+        ship.orientation = ship.orientation === "vertical" ? "horizontal" : "vertical";
+
+        let styles = this.getStyles();
+
+        this.setState({ships: ships, squareStyles: styles});
+    }
+
     getShipSquares(ship)
     {
         let newlyOccupiedSquares = [];
@@ -177,7 +198,13 @@ export default class BattleshipsSetupBoard extends Component
 
     render()
     {
-        let ships = this.state.ships.map((ship, index) => <Ship style={{cursor: this.state.selectedShipIndex === -1 ? "grab" : "grabbing"}} nPixelsSquare={this.state.nPixelsSquare} id={index} handleDrag={this.handleDrag} {...ship} />)
+        let ships = this.state.ships.map((ship, index) => {
+            return (
+                <Ship style={{cursor: this.state.selectedShipIndex === -1 ? "grab" : "grabbing"}} nPixelsSquare={this.state.nPixelsSquare} id={index} handleDrag={this.handleDrag} {...ship}>
+                    <button onClick={() => {this.rotateShip(index)}}>test</button>
+                </Ship>
+            )}
+        )
 
         return(
             <div>
