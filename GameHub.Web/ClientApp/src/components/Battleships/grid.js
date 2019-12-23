@@ -24,14 +24,14 @@ export default class BattleshipsGrid extends Component
     render()
     {
         let squares = [];
-        for (let i = 0; i < this.props.rows; i++)
+        for (let i = 0; i < this.props.cols; i++)
         {
-            for (let j = 0; j < this.props.cols; j++)
+            for (let j = 0; j < this.props.rows; j++)
             {
-                let style = this.getStyle(i,j);
+                let style = this.getStyle(j, i);
                 squares.push(
                     <div className="square" style={style}>
-                        {i},{j}
+                        {j},{i}
                     </div>
                 );
             }

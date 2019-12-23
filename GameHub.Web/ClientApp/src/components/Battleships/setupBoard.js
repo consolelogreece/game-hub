@@ -23,13 +23,21 @@ export default class BattleshipsSetupBoard extends Component
                     length: 3
                 },
                 {
-                    orientation: "horizontal",
+                    orientation: "vertical",
                     x: 1 ,
                     y: 0,
                     length: 3
+                },
+
+                {
+                    orientation: "horizontal",
+                    x: 1 ,
+                    y: 4,
+                    length: 5
                 } 
             ],
-            selectedShipIndex: -1
+            selectedShipIndex: -1,
+            squareStyles: {}
         }
     }
 
@@ -63,14 +71,35 @@ export default class BattleshipsSetupBoard extends Component
 
         let ships = this.state.ships;
 
-        let offsets = this.calculateOffsets(event, ships[this.state.selectedShipIndex]);
+        let ship = ships[this.state.selectedShipIndex];
 
-        ships[this.state.selectedShipIndex].x = offsets.left;
-        ships[this.state.selectedShipIndex].y = offsets.top;
+        let offsets = this.calculateOffsets(event, ship);
+
+        // if the new position is the same as the old one, no need to update styles etc..
+        if (ship.x === offsets.left && ship.y === offsets.top) return;
+
+        ship.x = offsets.left;
+        ship.y = offsets.top;
 
         this.setState({ships:[...ships]})
 
-        console.log(ships)
+        let overlappingSquares = [];
+
+        ships.forEach(s1 => {
+            ships.forEach(s2 => {
+                if (s1 === s2) return;
+                overlappingSquares.push(...this.detectOverlap(s1, s2))   
+            })
+        });
+
+        let newSquareStyles =  {};
+
+        overlappingSquares.forEach(sq => {
+            newSquareStyles[`${sq[0]},${sq[1]}`] = {backgroundColor: "red"};
+        });
+
+
+        this.setState({squareStyles: newSquareStyles});
     }
 
     calculateOffsets = (event, ship) => {
@@ -100,52 +129,59 @@ export default class BattleshipsSetupBoard extends Component
         return {left: trueOffsetX, top: trueOffsetY};
     }
 
-    detectCollision = (shipIndex, newOffsets) =>
+    detectOverlap = (ship1, ship2) =>
     {
-        let collision = false;
+        let ship1Squares = this.getShipSquares(ship1);
 
-        let ship = this.state.ships[shipIndex];
+        let ship2Squares = this.getShipSquares(ship2);
 
+        let overlappingSquares = [];
+
+        ship1Squares.forEach(s1 => {
+            ship2Squares.forEach(s2 =>
+            {
+                if (s1[0] == s2[0] && s1[1] == s2[1]) 
+                {
+                    overlappingSquares.push(s1);
+                }
+            })
+        });
+
+        return overlappingSquares;
+    }
+
+    getShipSquares(ship)
+    {
         let newlyOccupiedSquares = [];
-
-        for (let i = 0; i < ship.length; i++)
-        {
-            newlyOccupiedSquares.push([ship[variableDimension]])
-        }
 
         function horizontal(length)
         {
             for (let i = 0; i < length; i++)
             {
-                newlyOccupiedSquares.push([ship[ship.x, ship.y + i]])
+                newlyOccupiedSquares.push([ship.x + i, ship.y])
             }
         }
-
-        ship.orientation === "horizontal" ? horizontal(ship.length) : vertical(length)
 
         function vertical(length)
         {
             for (let i = 0; i < length; i++)
             {
-                newlyOccupiedSquares.push([ship[ship.x + i, ship.y]])
+                newlyOccupiedSquares.push([ship.x, ship.y + i])
             }
         }
+        
+        ship.orientation === "horizontal" ? horizontal(ship.length) : vertical(ship.length);
 
-        this.state.ships.forEach((ship, index) =>
-        {
-            if (shipIndex === index) continue;
-
-
-        })
+        return newlyOccupiedSquares;
     }
 
     render()
     {
-        let ships = this.state.ships.map((ship, index) => <Ship nPixelsSquare={this.state.nPixelsSquare} id={index} handleDrag={this.handleDrag} {...ship} />)
+        let ships = this.state.ships.map((ship, index) => <Ship style={{cursor: this.state.selectedShipIndex === -1 ? "grab" : "grabbing"}} nPixelsSquare={this.state.nPixelsSquare} id={index} handleDrag={this.handleDrag} {...ship} />)
 
         return(
             <div>
-                <Grid gridRef={this.gridRef} onMouseDown={this.onMouseDown} onMouseUp={this.onMouseUp} onMouseMove={this.onMouseMove} rows={10} cols={10} styles={{"1,3":{backgroundColor: "pink"}}} >
+                <Grid gridRef={this.gridRef} onMouseDown={this.onMouseDown} onMouseUp={this.onMouseUp} onMouseMove={this.onMouseMove} rows={10} cols={10} styles={this.state.squareStyles} >
                     {ships}
                 </Grid>
             </div>

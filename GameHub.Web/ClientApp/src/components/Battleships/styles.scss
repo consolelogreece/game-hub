@@ -38,7 +38,6 @@
 {
   display: flex;
   position: absolute;
-  z-index: 999;
 }
 
 .ship-vertical
@@ -55,14 +54,16 @@
 
 .ship-body
 {
-  background-color: aquamarine;
+  //background-color: aquamarine;
+  background:rgba(255,255,255,0.5);
   height: 40px;
   width: 40px;
 }
 
 .ship-head
 {
-  background-color: aqua;
+ // background-color: aqua;
+ background:rgba(255,255,255,0.5);
   height: 40px;
   width: 40px;
 }
