@@ -78,7 +78,7 @@ export default class BattleshipsSetupBoard extends Component
         this.setState({selectedShipIndex: -1});
     }
 
-    getStyles()
+    getOverlappingSquares()
     {
         let overlappingSquares = [];
 
@@ -90,8 +90,13 @@ export default class BattleshipsSetupBoard extends Component
                 overlappingSquares.push(...this.detectOverlap(s1, s2))   
             })
         });
+    }
 
+    getStyles()
+    {
         let newSquareStyles =  {};
+
+        let overlappingSquares = getOverlappingSquares();
 
         overlappingSquares.forEach(sq => {
             newSquareStyles[`${sq[0]},${sq[1]}`] = {backgroundColor: "red"};
@@ -100,7 +105,17 @@ export default class BattleshipsSetupBoard extends Component
         return newSquareStyles;
     }
 
+    onTouchMove = event => 
+    {
+        this.onMove(event.touches[0].clientX, event.touches[0].clientY);
+    }
+
     onMouseMove = event =>
+    {
+        this.onMove(event.clientX, event.clientY) 
+    }
+
+    onMove = (x, y) => 
     {
         if (this.state.selectedShipIndex == -1) return;
 
@@ -108,7 +123,7 @@ export default class BattleshipsSetupBoard extends Component
 
         let ship = ships[this.state.selectedShipIndex];
 
-        let {row, col} = this.calculateRelativePositon(event.clientX, event.clientY)
+        let {row, col} = this.calculateRelativePositon(x, y);
 
         let offsets = this.calculateOffsets(row, col, ship);
 
@@ -221,6 +236,15 @@ export default class BattleshipsSetupBoard extends Component
         return newlyOccupiedSquares;
     }
 
+    areShipPositionsValid()
+    {
+        let overlappingSquares = this.getOverlappingSquares();
+
+        if (overlappingSquares.length > 0) return false;
+
+        return true;
+    }
+
     render()
     {
         let ships = this.state.ships.map((ship, index) => {
@@ -253,6 +277,9 @@ export default class BattleshipsSetupBoard extends Component
                     onMouseDown={this.onMouseDown} 
                     onMouseUp={this.onMouseUp} 
                     onMouseMove={this.onMouseMove} 
+                    onTouchStart={this.onMouseDown} 
+                    onTouchEnd={this.onMouseUp} 
+                    onTouchMove={this.onTouchMove}
                     nPixelsSquare={this.state.nPixelsSquare} 
                     rows={10} 
                     cols={10} 
@@ -262,6 +289,4 @@ export default class BattleshipsSetupBoard extends Component
             </div>
         );
     }
-
-    //onTouchMove={this.onMouseMove}
 }
