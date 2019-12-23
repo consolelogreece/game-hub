@@ -40,6 +40,12 @@
   position: absolute;
 }
 
+.ship button
+{
+  position: absolute;
+  z-index: 999;
+}
+
 .ship-vertical
 {
   @extend .ship;

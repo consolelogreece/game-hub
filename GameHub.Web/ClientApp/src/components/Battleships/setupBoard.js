@@ -97,7 +97,9 @@ export default class BattleshipsSetupBoard extends Component
 
         let ship = ships[this.state.selectedShipIndex];
 
-        let offsets = this.calculateOffsets(event, ship);
+        let {row, col} = this.calculateRelativePositon(event.clientX, event.clientY)
+
+        let offsets = this.calculateOffsets(row, col, ship);
 
         // if the new position is the same as the old one, no need to update styles etc..
         if (ship.x === offsets.left && ship.y === offsets.top) return;
@@ -110,29 +112,37 @@ export default class BattleshipsSetupBoard extends Component
         this.setState({ships:[...ships], squareStyles: styles})
     }
 
-    calculateOffsets = (event, ship) => {
+    calculateRelativePositon(x,y)
+    {
         let gridBoundingRect = this.gridRef.current.getBoundingClientRect();
 
         let gridLeft = gridBoundingRect.left;
         let gridTop = gridBoundingRect.top;
 
+        let relativeX = x - gridLeft;
+        
+        let relativeY = y - gridTop;
+   
+
+        return {row: relativeX, col: relativeY};
+    }
+
+    calculateOffsets = (row,col, ship) => {
+
+        let gridLengthPx = this.state.nPixelsSquare * this.state.rows;
+
         let leftSquareMultiplier = ship.orientation === "horizontal" ? ship.length : 1;
         let topSquareMultiplier = ship.orientation === "vertical" ? ship.length : 1;
 
-        let gridLengthPx = this.state.nPixelsSquare * this.state.rows ;
-
-        let relativeX = event.clientX - gridLeft;
-        if (relativeX < 0) relativeX = 0;
-        
+        if (row < 0) row = 0;
         // minus single square dimension to keep it inside grid, otherwise you'd be able to move the square on the outside
-        if (relativeX > gridLengthPx - (leftSquareMultiplier * this.state.nPixelsSquare)) relativeX = gridLengthPx - (this.state.nPixelsSquare * leftSquareMultiplier);
-        
-        let relativeY = event.clientY - gridTop;
-        if (relativeY < 0) relativeY = 0;
-        if (relativeY > gridLengthPx - (topSquareMultiplier * this.state.nPixelsSquare)) relativeY = gridLengthPx - (this.state.nPixelsSquare * topSquareMultiplier);
-        
-        let trueOffsetX = Math.floor(relativeX / this.state.nPixelsSquare);
-        let trueOffsetY = Math.floor(relativeY / this.state.nPixelsSquare);
+        if (row > gridLengthPx - (leftSquareMultiplier * this.state.nPixelsSquare)) row = gridLengthPx - (this.state.nPixelsSquare * leftSquareMultiplier);
+
+        if (col < 0) col = 0;
+        if (col > gridLengthPx - (topSquareMultiplier * this.state.nPixelsSquare)) col = gridLengthPx - (this.state.nPixelsSquare * topSquareMultiplier);
+
+        let trueOffsetX = Math.floor(row / this.state.nPixelsSquare);
+        let trueOffsetY = Math.floor(col / this.state.nPixelsSquare);
 
         return {left: trueOffsetX, top: trueOffsetY};
     }
@@ -167,6 +177,12 @@ export default class BattleshipsSetupBoard extends Component
         ship.orientation = ship.orientation === "vertical" ? "horizontal" : "vertical";
 
         let styles = this.getStyles();
+
+        let newOffsets = this.calculateOffsets(ship.x *this.state.nPixelsSquare, ship.y * this.state.nPixelsSquare, ship);
+
+        ship.x = newOffsets.left;
+
+        ship.y = newOffsets.top;
 
         this.setState({ships: ships, squareStyles: styles});
     }
