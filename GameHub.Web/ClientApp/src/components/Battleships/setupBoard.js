@@ -96,7 +96,7 @@ export default class BattleshipsSetupBoard extends Component
     {
         let newSquareStyles =  {};
 
-        let overlappingSquares = getOverlappingSquares();
+        let overlappingSquares = this.getOverlappingSquares();
 
         overlappingSquares.forEach(sq => {
             newSquareStyles[`${sq[0]},${sq[1]}`] = {backgroundColor: "red"};
