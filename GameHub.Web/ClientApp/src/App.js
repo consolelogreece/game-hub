@@ -4,6 +4,7 @@ import { Layout } from './components/Layout';
 import gamesPage from './pages/Games';
 import aboutPage from './pages/About';
 import ConnectFourPage from './pages/ConnectFour'
+import BattleshipsPage from './pages/Battleships';
 import ChessPage from './pages/Chess';
 import './styles.css';
 import { LoadingProvider } from  './context/Loading';
@@ -23,7 +24,7 @@ export default class App extends Component {
                 <Route exact path='/about' component={aboutPage} />
                 <Route exact path='/connectfour/:gameId' component={ConnectFourPage} />
                 <Route exact path='/chess/:gameId' component={ChessPage} />
-                <Route exact path='/battleships' component={battleships} />
+                <Route exact path='/battleships/:gameId' component={BattleshipsPage} />
                 <Route path='/' component={gamesPage} />
             </Switch>
           </LoadingProvider>

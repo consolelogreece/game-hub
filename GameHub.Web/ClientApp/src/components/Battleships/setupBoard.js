@@ -54,10 +54,18 @@ export default class BattleshipsSetupBoard extends Component
         }
     }
 
-    handleDrag = event =>
+    static getDerivedStateFromProps(props, state)
     {
-        event.persist()
-        let ship = this.state.ships[event.target.id];
+        let nPixelsSquare = props.containerWidth / state.rows;
+
+        if (nPixelsSquare !== state.nPixelsSquare)
+        {
+            return {
+                nPixelsSquare: nPixelsSquare
+            }
+        }  
+
+        return null;
     }
 
     onMouseDown = event =>
@@ -288,6 +296,8 @@ export default class BattleshipsSetupBoard extends Component
                     styles={this.state.squareStyles} >
                     {ships}
                 </Grid>
+
+                <button onClick={()=>console.log(this.props.containerWidth)}>tsfd</button>
             </div>
         );
     }
