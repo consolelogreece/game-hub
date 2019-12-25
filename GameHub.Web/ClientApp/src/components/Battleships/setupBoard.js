@@ -296,8 +296,6 @@ export default class BattleshipsSetupBoard extends Component
                     styles={this.state.squareStyles} >
                     {ships}
                 </Grid>
-
-                <button onClick={()=>console.log(this.props.containerWidth)}>tsfd</button>
             </div>
         );
     }
