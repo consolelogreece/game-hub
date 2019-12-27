@@ -9,6 +9,11 @@
             "Name": "Chess",
             "Thumbnail": "images/chess.png",
             "Url": "/chess"
+        },
+        {
+            "Name": "Battleships",
+            "Thumbnail": "images/chess.png",
+            "Url": "/battleships"
         }
     ]
 }

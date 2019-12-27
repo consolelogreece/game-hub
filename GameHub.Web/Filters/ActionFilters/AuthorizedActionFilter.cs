@@ -7,12 +7,12 @@ namespace GameHub.Web.Filters.ActionFilters
 {
     public class AuthorizedActionFilter : ActionFilterAttribute, IActionFilter
     {
-        public void OnActionExecuted(ActionExecutedContext context)
+        public override void OnActionExecuted(ActionExecutedContext context)
         {
             //throw new System.NotImplementedException();
         }
 
-        public void OnActionExecuting(ActionExecutingContext context)
+        public override void OnActionExecuting(ActionExecutingContext context)
         {
             var player = context.HttpContext.Request.HttpContext.Items["user"] as UserRequestMeta;
 
