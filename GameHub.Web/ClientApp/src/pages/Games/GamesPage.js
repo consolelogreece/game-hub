@@ -7,6 +7,7 @@ import { Title } from '../../components/Common/Text';
 import Popup from '../../components/Popup';
 import ConnectFourForm from '../../forms/ConnectFour';
 import ChessForm from '../../forms/Chess';
+import BattleshipsForm from '../../forms/Battleships';
 import { transition_period } from './styles.scss';
 
 const showFormClass = "game-form-show";
@@ -25,7 +26,8 @@ export default class Games extends Component {
       imagesLoaded:0,
       formMap: {
         "Connect Four": ConnectFourForm,
-        "Chess": ChessForm
+        "Chess": ChessForm,
+        "Battleships": BattleshipsForm
       },
       selectedForm:"",
       renderPopup: false,

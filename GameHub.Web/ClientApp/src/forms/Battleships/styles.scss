@@ -1,0 +1,21 @@
+@import '../../utils/variables';
+
+#battlships-new-game-form-title
+{
+    display:table;
+    margin:0 auto;
+    margin-top: 10px;
+    border-bottom: 1px #999 solid;
+    font-size: 25px;
+    margin-bottom: 50px;
+}
+
+#battleshipsform
+{
+    background-color: white !important;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: left;
+    width: 100%;
+    max-width: 700px;
+}

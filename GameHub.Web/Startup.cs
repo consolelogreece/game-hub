@@ -9,8 +9,8 @@ using Caching;
 using GameHub.Games.BoardGames.ConnectFour;
 using GameHub.Games.BoardGames.Chess;
 using GameHub.Web.Services.Games.ConnectFourServices;
-using GameHub.Web.Models;
 using GameHub.Web.Middleware;
+using GameHub.Games.BoardGames.Battleships;
 
 namespace GameHub.Web
 {
@@ -40,11 +40,15 @@ namespace GameHub.Web
 
             services.AddSingleton<ICache<Chess>, ChessCache>();
 
+            services.AddSingleton<ICache<Battleships>, BattleshipsCache>();
+
             services.AddSingleton<UserCache>();
 
             services.AddTransient<IConnectFourServiceFactory, ConnectFourServiceFactory>();
 
             services.AddTransient<IChessServiceFactory, ChessServiceFactory>();
+
+            services.AddTransient<IBattleshipsServiceFactory, BattleshipsServiceFactory>();
 
             services.AddSignalR();
         }
