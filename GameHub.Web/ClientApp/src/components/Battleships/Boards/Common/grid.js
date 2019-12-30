@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import './styles.scss';
+import '../../styles.scss';
 
 let defaultStyle = {
   backgroundColor: "#333"

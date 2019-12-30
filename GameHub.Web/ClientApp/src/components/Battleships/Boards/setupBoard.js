@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
-import Grid from './grid';
-import Ship from './Ships/ShipSetup';
-import './styles.scss';
+import Grid from './Common/grid';
+import Ship from '../Ships/ShipSetup';
+import '../styles.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSyncAlt } from '@fortawesome/free-solid-svg-icons';
 
@@ -17,38 +17,7 @@ export default class BattleshipsSetupBoard extends Component
             rows: 10,
             cols: 10,
             nPixelsSquare: 40,
-            ships: [
-                {
-                    orientation: "horizontal",
-                    x: 1,
-                    y: 1,
-                    length: 5
-                },
-                {
-                    orientation: "vertical",
-                    x: 9 ,
-                    y: 3,
-                    length: 4
-                },
-                {
-                    orientation: "horizontal",
-                    x: 2,
-                    y: 7,
-                    length: 3
-                },
-                {
-                    orientation: "vertical",
-                    x: 5,
-                    y: 3,
-                    length: 3
-                },
-                {
-                    orientation: "horizontal",
-                    x: 7,
-                    y: 9,
-                    length: 2
-                } 
-            ],
+            ships: [...props.ships],
             selectedShipIndex: -1,
             squareStyles: {}
         }

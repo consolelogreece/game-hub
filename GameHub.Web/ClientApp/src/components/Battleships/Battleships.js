@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import SetupBoard from './setupBoard';
-import InPlayBoard from './inPlayBoard';
+import SetupBoard from './Boards/setupBoard';
+import InPlayBoard from './Boards/inPlayBoard';
 import GetRenderedWidthHOC from '../HigherOrder/GetRenderedWidthHOC';
 import Button from '../Buttons/Standard';
 import OptionPanel from '../Common/OptionPanel';
@@ -70,6 +70,7 @@ export default class Battleships extends Component {
     render()
     {
         let DynamicBoard = GetRenderedWidthHOC(this.state.inPlay ? InPlayBoard : SetupBoard);
+        let OpponentsBoard = GetRenderedWidthHOC(InPlayBoard);
         let isHost, isPlayerRegistered = false;
         let hasPlayerResigned, isGameFull = false;
         let gameState = "lobby";
@@ -77,7 +78,41 @@ export default class Battleships extends Component {
 
         return (
             <div>
-                <DynamicBoard />
+
+                <div style={{display: "flex"}}>
+                    <DynamicBoard ships = {[
+                        {
+                            orientation: "horizontal",
+                            x: 1,
+                            y: 1,
+                            length: 5
+                        },
+                        {
+                            orientation: "vertical",
+                            x: 9 ,
+                            y: 3,
+                            length: 4
+                        },
+                        {
+                            orientation: "horizontal",
+                            x: 2,
+                            y: 7,
+                            length: 3
+                        },
+                        {
+                            orientation: "vertical",
+                            x: 5,
+                            y: 3,
+                            length: 3
+                        },
+                        {
+                            orientation: "horizontal",
+                            x: 7,
+                            y: 9,
+                            length: 2
+                        }]}/>
+                    <OpponentsBoard />
+                </div>
                 
                 <OptionPanel
                     isHost = {isHost}
