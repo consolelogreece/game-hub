@@ -10,17 +10,62 @@ export default class Battleships extends Component {
         super(props);
 
         this.state = {
-            inPlay: false
+            inPlay: false,
+            playerBoardState:[[]],
+            opponentBoardState: [[]]
         };
     }
 
     componentDidMount()
     {
-        console.log(this.props)
+        this.props.on([
+            'PlayerResigned',
+            'PlayerJoined',
+            'GameStarted',
+            'GameOver',
+            'PlayerMoved'
+        ], gameState => this.updateStateWithNewGameState(gameState));
+
+        this.props.on('RematchStarted', gameState => this.RematchStarted(gameState));
+
+        console.log("hmmk")
+        
+        this.props.startConnection().then(x => console.log(x));
     }
 
-    GameJoined = () => {};
-    JoinGame = () => {};
+    GameJoined = () => {console.log("yo ho ho")};
+    JoinGame = () => {
+        return this.invoke('JoinGame');
+    }
+
+    invoke = (destination, ...rest) =>
+    {
+        return this.props.invoke(destination, ...rest)
+        .then(res => {
+            if (res !== null && !res.wasSuccessful)
+            {
+                this.props.displayTimedError(res.message);
+            }
+            
+            return res;
+        })
+        .catch(res => this.props.displayTimedError(res));
+    }
+
+    updateStateWithNewGameState = gameState =>
+    {
+        // var message = this.generateGameMessageFromGameState(gameState);
+        // var isGameFull = this.isGameFull(gameState);
+        // this.setState({
+        //     boardState: gameState.boardState,
+        //     gameState: gameState.status.status,
+        //     playerTurn: this.getTurnIndicator(gameState.currentTurnPlayer),
+        //     isGameFull: isGameFull,
+        //     gameMessage: message
+        // })
+
+        console.log(gameState);
+    }
 
     render()
     {

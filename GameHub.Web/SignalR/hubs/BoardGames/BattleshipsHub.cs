@@ -3,9 +3,6 @@ using System;
 using GameHub.Web.Services.Games.ConnectFourServices;
 using System.Threading.Tasks;
 using GameHub.Games.BoardGames.Common;
-using GameHub.Games.BoardGames.Chess;
-using ChessDotNet;
-using System.Collections.Generic;
 using GameHub.Web.Models;
 using GameHub.Games.BoardGames.Battleships;
 

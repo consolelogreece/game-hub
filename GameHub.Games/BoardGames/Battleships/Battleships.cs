@@ -149,7 +149,8 @@ namespace GameHub.Games.BoardGames.Battleships
 
         BattleshipsGameState IGameStateGetter<BattleshipsGameState>.GetGameState()
         {
-            throw new System.NotImplementedException();
+            //throw new System.NotImplementedException();
+            return new BattleshipsGameState();
         }
     }
 }
