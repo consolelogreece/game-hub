@@ -6,39 +6,37 @@ namespace GameHub.Games.BoardGames.Battleships
 {
     public class Player
     {
-        private Board _board;
+        public Board Board {get; private set;}
 
-        private List<Ship> _ships;
+        public readonly string PlayerId;
 
-        public Player(Board board)
+        public List<Ship> Ships {get; private set;}
+
+        public Player(Board board, string playerId)
         {
-            _board = board;
+            Board = board;
+            
+            PlayerId = playerId;
         }
 
         public void RegisterShips(List<Ship> ships)
         {
-            ships.ForEach(s => _board.MapShip(s));
+            Ships = ships;
+            ships.ForEach(s => Board.MapShip(s));
         }
 
         public bool IsGameOver()
         {
-            return _ships.All(s => s.IsSunk());
-        }
+            return Ships.All(s => s.IsSunk());
+        }        
 
-        private bool SquareAlreadyHit(int row, int col)
+        public BattleshipsMoveResult RegisterHit(BattleshipsPosition move)
         {
-            return _board[row,col].hit;
-        }
+            var validMove = Board.Hit(move);
 
-        public BattleshipsMoveResult RegisterHit(BattleshipsMove move)
-        {
-            if (SquareAlreadyHit(move.row, move.col)) return new BattleshipsMoveResult(false);
+            if (!validMove) return new BattleshipsMoveResult(false);
 
-            _board[move.row, move.col].hit = true;
-
-            if (_board[move.row, move.col].occupyingShip != null) _board[move.row, move.col].occupyingShip.hit();
-
-            return new BattleshipsMoveResult(true, "", _board[move.row, move.col].occupyingShip, IsGameOver());
+            return new BattleshipsMoveResult(true, "", IsGameOver());
         }
     }
 }

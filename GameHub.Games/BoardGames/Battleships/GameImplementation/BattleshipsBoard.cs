@@ -1,17 +1,20 @@
 using System;
-
+using System.Collections.Generic;
 
 namespace GameHub.Games.BoardGames.Battleships
 {
     public class Board
     {
         int _rows, _cols;
-        Square[,] grid;
+        public Square[,] _grid {get; private set;}
+
+        private Dictionary<BattleshipsPosition, Ship> shipMap = new Dictionary<BattleshipsPosition, Ship>();
+        
         public Board(int rows, int cols)
         {
             _rows = rows; _cols = cols;
 
-            grid = new Square[_rows, _cols];
+            _grid = new Square[_rows, _cols];
 
             populateSquares();
         }
@@ -22,7 +25,7 @@ namespace GameHub.Games.BoardGames.Battleships
             {
                 for (int j = 0; j < _cols; j++)
                 {
-                    grid[i,j] = new Square();
+                    _grid[i,j] = new Square();
                 }
             }
         }
@@ -39,8 +42,8 @@ namespace GameHub.Games.BoardGames.Battleships
                     {
                         throw new IndexOutOfRangeException("invalid ship position");
                     }
-                    
-                    grid[row, col].occupyingShip = ship;
+
+                    shipMap[new BattleshipsPosition(row, col)] = ship;
                 }
             }
             else
@@ -54,16 +57,33 @@ namespace GameHub.Games.BoardGames.Battleships
                         throw new IndexOutOfRangeException("invalid ship position");
                     }
 
-                    grid[row, col].occupyingShip = ship;
+                    shipMap[new BattleshipsPosition(row, col)] = ship;
                 }
             }
+        }
+
+        private bool SquareAlreadyHit(int row, int col)
+        {
+            return _grid[row,col].hit;
+        }
+
+        public bool Hit(BattleshipsPosition move)
+        {
+            if (SquareAlreadyHit(move.row, move.col)) return false;
+
+            if(shipMap.TryGetValue(move, out var hitShip) && hitShip != null)
+            {
+                hitShip.hit();
+            }
+
+            _grid[move.row, move.col].hit = true;
+
+            return true;
         }
 
         private bool IsOutsideBoundaries(int row, int col)
         {
             return row < 0 || row >= _rows || col < 0 || row >= _cols;
         }
-
-        public Square this[int row, int col] => grid[row,col];
     }
 }

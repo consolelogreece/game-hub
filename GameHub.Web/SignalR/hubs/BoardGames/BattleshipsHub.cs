@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using GameHub.Games.BoardGames.Common;
 using GameHub.Web.Models;
 using GameHub.Games.BoardGames.Battleships;
+using System.Collections.Generic;
 
 namespace GameHub.Web.SignalR.hubs.BoardGames
 {
@@ -18,7 +19,11 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
 
         public BattleshipsGameState GetGameState()
         {
-           return GetGameService().GetGameState();
+           var unRedactedGameState = GetGameService().GetGameState();
+
+           //unRedactedGameState.Opponent = new Player(unRedactedGameState.Opponent.)
+
+           return unRedactedGameState;
         }
 
         private BattleshipsService GetGameService()
@@ -95,7 +100,7 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
             return result;
         }
 
-        public ActionResult Move(BattleshipsMove move) 
+        public ActionResult Move(BattleshipsPosition move) 
         {
             var result = GetGameService().Move(move);
 
@@ -105,6 +110,11 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
             }
 
             return result;
+        }
+
+        public ActionResult RegisterShips(List<ShipModel> shipModels) 
+        {
+            return GetGameService().RegisterShips(shipModels);
         }
 
         public override Task OnConnectedAsync()

@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using GameHub.Games.BoardGames.Battleships;
 using GameHub.Games.BoardGames.Common;
 
 namespace GameHub.Games.BoardGames.Battleships
@@ -9,5 +8,14 @@ namespace GameHub.Games.BoardGames.Battleships
         public BattleshipsPlayerModel CurrentTurnPlayer {get;set;}
         
         public BattleshipsConfiguration Configuration { get; set; }
+
+        // shows where enemy has shot
+        public Square[,] PlayerBoard {get; set;}
+        
+        public List<Ship> PlayerShips {get; set;}
+
+        // shows where player has shot
+        public Square[,] OpponentBoard {get; set;}
+        public List<Ship> OpponentSunkShips;
     }
 }

@@ -7,9 +7,8 @@ namespace GameHub.Games.BoardGames.Battleships
         IRestartable, 
         IStartable, 
         IResignable, 
-        IMoveable<BattleshipsMove>,
-        IGamePlayerGetter<BattleshipsPlayerModel>, 
-        IGameStateGetter<BattleshipsGameState>
+        IMoveable<BattleshipsPosition>,
+        IGamePlayerGetter<BattleshipsPlayerModel>
     {
         #region private props
         private BattleshipsGame _game;
@@ -69,7 +68,15 @@ namespace GameHub.Games.BoardGames.Battleships
             return new ActionResult(true);
         }
 
-        public ActionResult Move(string playerId, BattleshipsMove move)
+        public ActionResult RegisterShips(List<ShipModel> shipModels, string playerId)
+        {
+            if (!(p1 != null && p1.Id == playerId || p2 != null && p2.Id == playerId)) return new ActionResult(false, "not registered");
+            _game.Register(shipModels, playerId);
+
+            return new ActionResult(true);
+        }
+
+        public ActionResult Move(string playerId, BattleshipsPosition move)
         {
             if (!_started)
             {
@@ -97,10 +104,10 @@ namespace GameHub.Games.BoardGames.Battleships
 
             var message = GenerateMoveString(moveResult);
 
-            return new BattleshipsMoveResult(moveResult.WasSuccessful, message, moveResult.HitShip, moveResult.DidEndGame);
+            return new BattleshipsMoveResult(moveResult.WasSuccessful, message, moveResult.DidEndGame);
         }
 
-        private bool IsMoveInBounds(BattleshipsMove move)
+        private bool IsMoveInBounds(BattleshipsPosition move)
         {
             return !(move.row >= _config.rows || move.row < 0 || move.col >= _config.cols || move.col < 0);
         }
@@ -109,26 +116,28 @@ namespace GameHub.Games.BoardGames.Battleships
         {
             if (!result.WasSuccessful) return "Already moved there!";
             
-            if (result.HitShip == null)
-            {
-                return "Miss";
-            }
-            else
-            {
-                if (result.HitShip.IsSunk())
-                {
-                    if (result.DidEndGame) return "Hit, sink and game!";
+            // if (result.HitShip == null)
+            // {
+            //     return "Miss";
+            // }
+            // else
+            // {
+            //     if (result.HitShip.IsSunk())
+            //     {
+            //         if (result.DidEndGame) return "Hit, sink and game!";
                   
-                    return "Hit and sink";
+            //         return "Hit and sink";
 
                     
-                }
-                else
-                {
-                   return "Hit";
-                }
+            //     }
+            //     else
+            //     {
+            //        return "Hit";
+            //     }
                 
-            }
+            // }
+
+            return "as valid as a cake on cakeday";
         }
 
         public ActionResult Resign(string playerId)
@@ -147,10 +156,49 @@ namespace GameHub.Games.BoardGames.Battleships
             return new ActionResult(true);
         }
 
-        BattleshipsGameState IGameStateGetter<BattleshipsGameState>.GetGameState()
+        private Square[,] GetGrid(Player player)
         {
-            //throw new System.NotImplementedException();
-            return new BattleshipsGameState();
+            if (player == null) return new Square[_config.rows, _config.cols];
+
+            else return player.Board._grid;
+        }
+
+        private List<Ship> GetShips(Player player)
+        {
+            if (player == null || player.Ships == null) return new List<Ship>();
+
+            else return player.Ships;
+        }
+
+        public BattleshipsGameState GetGameState(string playerId)
+        {
+            Player player;
+            Player opponent;
+            
+
+            var plonker = _nextTurnPlayerIndex == 1 ? p1 : p2;
+
+            if (_game.p1 != null && _game.p1.PlayerId == playerId)
+            {
+                player = _game.p1;
+                opponent = _game.p2;
+            }
+            else
+            {
+                player = _game.p2;
+                opponent = _game.p1;
+            }
+
+            return new BattleshipsGameState
+            {
+                PlayerShips = GetShips(player),
+                PlayerBoard = GetGrid(player),
+                OpponentSunkShips = GetShips(opponent).FindAll(s => s.IsSunk()),
+                OpponentBoard = GetGrid(opponent),
+                Configuration = _config, 
+                CurrentTurnPlayer = plonker, 
+                Status = new GameProgress("abc", "123")    
+            };
         }
     }
 }

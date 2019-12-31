@@ -64,7 +64,7 @@ export default class Battleships extends Component {
         //     gameMessage: message
         // })
 
-        console.log(gameState);
+        console.log("//////////\n\n\n", gameState, "\n\n\n/////////////////");
     }
 
     render()
@@ -111,7 +111,7 @@ export default class Battleships extends Component {
                             y: 9,
                             length: 2
                         }]}/>
-                    <OpponentsBoard />
+                    <OpponentsBoard ships={[]}/>
                 </div>
                 
                 <OptionPanel
@@ -127,6 +127,38 @@ export default class Battleships extends Component {
                     Resign = {() => this.Resign()}
                 />
                 <Button onClick={() => this.setState({inPlay: !this.state.inPlay})}>toggle board</Button>
+                <Button onClick={() => this.invoke("GetGameState").then(gs => this.updateStateWithNewGameState(gs))}>ELlo</Button>
+                <Button onClick={() => this.invoke("RegisterShips", [
+                        {
+                            orientation: "horizontal",
+                            x: 1,
+                            y: 1,
+                            length: 5
+                        },
+                        {
+                            orientation: "vertical",
+                            x: 9 ,
+                            y: 3,
+                            length: 4
+                        },
+                        {
+                            orientation: "horizontal",
+                            x: 2,
+                            y: 7,
+                            length: 3
+                        },
+                        {
+                            orientation: "vertical",
+                            x: 5,
+                            y: 3,
+                            length: 3
+                        },
+                        {
+                            orientation: "horizontal",
+                            x: 7,
+                            y: 9,
+                            length: 2
+                        }]).then(gs => this.updateStateWithNewGameState(gs))}>SUBMIT THE SHIPS</Button>
             </div>
         );
     }

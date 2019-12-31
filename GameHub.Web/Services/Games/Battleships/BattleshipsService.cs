@@ -11,7 +11,7 @@ public class BattleshipsService
     private GameRestarter _gameRestarter;
     private GamePlayerGetter<BattleshipsPlayerModel> _gamePlayerGetter;
     private GameStateGetter<BattleshipsGameState> _gameStateGetter;
-    private GameMover<BattleshipsMove> _gameMover;
+    private GameMover<BattleshipsPosition> _gameMover;
     // id of player using the service
     private string _playerId;
 
@@ -29,9 +29,7 @@ public class BattleshipsService
 
         _gamePlayerGetter = new GamePlayerGetter<BattleshipsPlayerModel>(game);
 
-        _gameStateGetter = new GameStateGetter<BattleshipsGameState>(game);
-
-        _gameMover = new GameMover<BattleshipsMove>(game);
+        _gameMover = new GameMover<BattleshipsPosition>(game);
 
         _playerId = playerId;
 
@@ -42,13 +40,27 @@ public class BattleshipsService
 
     public ActionResult JoinGame(string playerNick) => _gameJoiner.JoinGame(_playerId, playerNick);
 
+    public ActionResult RegisterShips(List<ShipModel> shipModels)
+    {
+        lock(_game)
+        {
+            return _game.RegisterShips(shipModels, _playerId);
+        }
+    }
+
     public BattleshipsPlayerModel GetPlayer() => (BattleshipsPlayerModel)_gamePlayerGetter.Get(_playerId);
     
     public ActionResult Resign() => _gameResigner.Resign(_playerId);
 
     public ActionResult Restart() => _gameRestarter.Restart(_playerId);
 
-    public BattleshipsGameState GetGameState() => (BattleshipsGameState)_gameStateGetter.Get();
+    public BattleshipsGameState GetGameState() 
+    {
+        lock(_game)
+        {
+            return _game.GetGameState(_playerId);
+        }
+    }
 
-    public ActionResult Move(BattleshipsMove move) => _gameMover.Move(_playerId, move);
+    public ActionResult Move(BattleshipsPosition move) => _gameMover.Move(_playerId, move);
 }
