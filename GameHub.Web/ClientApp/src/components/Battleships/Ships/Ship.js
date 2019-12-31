@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import { faThumbsDown } from '@fortawesome/free-solid-svg-icons';
 export default class Ship extends Component
 {   
     constructor(props)
@@ -13,9 +12,9 @@ export default class Ship extends Component
 
         let style = typeof(this.props.style) === "object" ? this.props.style : {};
 
-        style.top = this.props.y * this.props.nPixelsSquare;
+        style.left = this.props.row * this.props.nPixelsSquare;
 
-        style.left = this.props.x * this.props.nPixelsSquare;
+        style.top = this.props.col * this.props.nPixelsSquare;
 
         let Head = this.props.Head;
 

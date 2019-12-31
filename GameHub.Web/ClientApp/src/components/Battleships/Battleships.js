@@ -83,32 +83,32 @@ export default class Battleships extends Component {
                     <DynamicBoard ships = {[
                         {
                             orientation: "horizontal",
-                            x: 1,
-                            y: 1,
+                            row:  1,
+                            col:  1,
                             length: 5
                         },
                         {
                             orientation: "vertical",
-                            x: 9 ,
-                            y: 3,
+                            row:  9 ,
+                            col:  3,
                             length: 4
                         },
                         {
                             orientation: "horizontal",
-                            x: 2,
-                            y: 7,
+                            row:  2,
+                            col:  7,
                             length: 3
                         },
                         {
                             orientation: "vertical",
-                            x: 5,
-                            y: 3,
+                            row:  5,
+                            col:  3,
                             length: 3
                         },
                         {
                             orientation: "horizontal",
-                            x: 7,
-                            y: 9,
+                            row:  7,
+                            col:  9,
                             length: 2
                         }]}/>
                     <OpponentsBoard ships={[]}/>
@@ -131,32 +131,32 @@ export default class Battleships extends Component {
                 <Button onClick={() => this.invoke("RegisterShips", [
                         {
                             orientation: "horizontal",
-                            x: 1,
-                            y: 1,
+                            row:  1,
+                            col:  1,
                             length: 5
                         },
                         {
                             orientation: "vertical",
-                            x: 9 ,
-                            y: 3,
+                            row:  9 ,
+                            col:  3,
                             length: 4
                         },
                         {
                             orientation: "horizontal",
-                            x: 2,
-                            y: 7,
+                            row:  2,
+                            col:  7,
                             length: 3
                         },
                         {
                             orientation: "vertical",
-                            x: 5,
-                            y: 3,
+                            row:  5,
+                            col:  3,
                             length: 3
                         },
                         {
                             orientation: "horizontal",
-                            x: 7,
-                            y: 9,
+                            row:  7,
+                            col:  9,
                             length: 2
                         }]).then(gs => this.updateStateWithNewGameState(gs))}>SUBMIT THE SHIPS</Button>
             </div>

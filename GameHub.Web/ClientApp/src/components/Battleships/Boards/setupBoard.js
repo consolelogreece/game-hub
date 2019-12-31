@@ -107,10 +107,10 @@ export default class BattleshipsSetupBoard extends Component
         let offsets = this.calculateOffsets(row, col, ship);
 
         // if the new position is the same as the old one, no need to update styles etc..
-        if (ship.x === offsets.left && ship.y === offsets.top) return;
+        if (ship.row === offsets.left && ship.col === offsets.top) return;
 
-        ship.x = offsets.left;
-        ship.y = offsets.top;
+        ship.row = offsets.left;
+        ship.col = offsets.top;
 
         let styles = this.getStyles();
 
@@ -181,11 +181,11 @@ export default class BattleshipsSetupBoard extends Component
 
         let styles = this.getStyles();
 
-        let newOffsets = this.calculateOffsets(ship.x *this.state.nPixelsSquare, ship.y * this.state.nPixelsSquare, ship);
+        let newOffsets = this.calculateOffsets(ship.row *this.state.nPixelsSquare, ship.col * this.state.nPixelsSquare, ship);
 
-        ship.x = newOffsets.left;
+        ship.row = newOffsets.left;
 
-        ship.y = newOffsets.top;
+        ship.col = newOffsets.top;
 
         this.setState({ships: ships, squareStyles: styles});
     }
@@ -198,7 +198,7 @@ export default class BattleshipsSetupBoard extends Component
         {
             for (let i = 0; i < length; i++)
             {
-                newlyOccupiedSquares.push([ship.x + i, ship.y])
+                newlyOccupiedSquares.push([ship.row + i, ship.col])
             }
         }
 
@@ -206,7 +206,7 @@ export default class BattleshipsSetupBoard extends Component
         {
             for (let i = 0; i < length; i++)
             {
-                newlyOccupiedSquares.push([ship.x, ship.y + i])
+                newlyOccupiedSquares.push([ship.row, ship.col + i])
             }
         }
         
