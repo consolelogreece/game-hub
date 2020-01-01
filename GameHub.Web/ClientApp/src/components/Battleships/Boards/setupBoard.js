@@ -267,7 +267,7 @@ export default class BattleshipsSetupBoard extends Component
                     styles={this.state.squareStyles} >
                     {ships}
                 </Grid>
-                <Button onClick={() => console.log(this.state.ships)}>log ships</Button>
+                <Button onClick={() => this.props.ReadyUp(this.state.ships)}>SUBMIT THE SHIPS</Button>
             </div>
         );
     }

@@ -27,8 +27,6 @@ export default class Battleships extends Component {
         ], gameState => this.updateStateWithNewGameState(gameState));
 
         this.props.on('RematchStarted', gameState => this.RematchStarted(gameState));
-
-        console.log("hmmk")
         
         this.props.startConnection().then(x => console.log(x));
     }
@@ -110,7 +108,9 @@ export default class Battleships extends Component {
                             row:  7,
                             col:  9,
                             length: 2
-                        }]}/>
+                        }]}
+                        ReadyUp={(ships) => this.invoke("RegisterShips", ships).then(gs => this.updateStateWithNewGameState(gs))}
+                        />
                     {/* <OpponentsBoard ships={[]}/> */}
                 </div>
                 
@@ -128,37 +128,6 @@ export default class Battleships extends Component {
                 />
                 <Button onClick={() => this.setState({inPlay: !this.state.inPlay})}>toggle board</Button>
                 <Button onClick={() => this.invoke("GetGameState").then(gs => this.updateStateWithNewGameState(gs))}>ELlo</Button>
-                <Button onClick={() => this.invoke("RegisterShips", [
-                        {
-                            orientation: "horizontal",
-                            row:  1,
-                            col:  1,
-                            length: 5
-                        },
-                        {
-                            orientation: "vertical",
-                            row:  9 ,
-                            col:  3,
-                            length: 4
-                        },
-                        {
-                            orientation: "horizontal",
-                            row:  2,
-                            col:  7,
-                            length: 3
-                        },
-                        {
-                            orientation: "vertical",
-                            row:  5,
-                            col:  3,
-                            length: 3
-                        },
-                        {
-                            orientation: "horizontal",
-                            row:  7,
-                            col:  9,
-                            length: 2
-                        }]).then(gs => this.updateStateWithNewGameState(gs))}>SUBMIT THE SHIPS</Button>
             </div>
         );
     }
