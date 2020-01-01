@@ -4,6 +4,7 @@ import Ship from '../Ships/ShipSetup';
 import '../styles.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSyncAlt } from '@fortawesome/free-solid-svg-icons';
+import Button from '../../Buttons/Standard';
 
 export default class BattleshipsSetupBoard extends Component
 {
@@ -109,8 +110,8 @@ export default class BattleshipsSetupBoard extends Component
         // if the new position is the same as the old one, no need to update styles etc..
         if (ship.row === offsets.left && ship.col === offsets.top) return;
 
-        ship.row = offsets.left;
-        ship.col = offsets.top;
+        ship.col = offsets.col;
+        ship.row = offsets.row;
 
         let styles = this.getStyles();
 
@@ -127,7 +128,7 @@ export default class BattleshipsSetupBoard extends Component
         let relativeX = x - gridLeft;
         let relativeY = y - gridTop;
 
-        return {row: relativeX, col: relativeY};
+        return {row: relativeY, col: relativeX};
     }
 
     calculateOffsets = (row,col, ship) => {
@@ -139,15 +140,15 @@ export default class BattleshipsSetupBoard extends Component
 
         if (row < 0) row = 0;
         // minus single square dimension to keep it inside grid, otherwise you'd be able to move the square on the outside
-        if (row > gridLengthPx - (leftSquareMultiplier * this.state.nPixelsSquare)) row = gridLengthPx - (this.state.nPixelsSquare * leftSquareMultiplier);
+        if (row > gridLengthPx - (topSquareMultiplier * this.state.nPixelsSquare)) row = gridLengthPx - (this.state.nPixelsSquare * topSquareMultiplier);
 
         if (col < 0) col = 0;
-        if (col > gridLengthPx - (topSquareMultiplier * this.state.nPixelsSquare)) col = gridLengthPx - (this.state.nPixelsSquare * topSquareMultiplier);
+        if (col > gridLengthPx - (leftSquareMultiplier * this.state.nPixelsSquare)) col = gridLengthPx - (this.state.nPixelsSquare * leftSquareMultiplier);
 
-        let trueOffsetX = Math.floor(row / this.state.nPixelsSquare);
-        let trueOffsetY = Math.floor(col / this.state.nPixelsSquare);
+        let trueRow = Math.floor(row / this.state.nPixelsSquare);
+        let trueCol = Math.floor(col / this.state.nPixelsSquare);
 
-        return {left: trueOffsetX, top: trueOffsetY};
+        return {row: trueRow, col: trueCol};
     }
 
     detectOverlap = (ship1, ship2) =>
@@ -163,6 +164,7 @@ export default class BattleshipsSetupBoard extends Component
             {
                 if (s1[0] == s2[0] && s1[1] == s2[1]) 
                 {
+                    console.log("hmmok", ship1, ship2)
                     overlappingSquares.push(s1);
                 }
             })
@@ -183,9 +185,9 @@ export default class BattleshipsSetupBoard extends Component
 
         let newOffsets = this.calculateOffsets(ship.row *this.state.nPixelsSquare, ship.col * this.state.nPixelsSquare, ship);
 
-        ship.row = newOffsets.left;
+        ship.row = newOffsets.row;
 
-        ship.col = newOffsets.top;
+        ship.col = newOffsets.col;
 
         this.setState({ships: ships, squareStyles: styles});
     }
@@ -198,7 +200,7 @@ export default class BattleshipsSetupBoard extends Component
         {
             for (let i = 0; i < length; i++)
             {
-                newlyOccupiedSquares.push([ship.row + i, ship.col])
+                newlyOccupiedSquares.push([ship.row, ship.col + i])
             }
         }
 
@@ -206,7 +208,7 @@ export default class BattleshipsSetupBoard extends Component
         {
             for (let i = 0; i < length; i++)
             {
-                newlyOccupiedSquares.push([ship.row, ship.col + i])
+                newlyOccupiedSquares.push([ship.row + i, ship.col])
             }
         }
         
@@ -265,6 +267,7 @@ export default class BattleshipsSetupBoard extends Component
                     styles={this.state.squareStyles} >
                     {ships}
                 </Grid>
+                <Button onClick={() => console.log(this.state.ships)}>log ships</Button>
             </div>
         );
     }

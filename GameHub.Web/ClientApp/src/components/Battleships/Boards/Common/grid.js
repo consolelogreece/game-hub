@@ -24,16 +24,16 @@ export default class BattleshipsGrid extends Component
         let squareSize = this.props.nPixelsSquare === undefined ? 40 : this.props.nPixelsSquare;
 
         let squares = [];
-        for (let i = 0; i < this.props.cols; i++)
+        for (let row = 0; row < this.props.cols; row++)
         {
-            for (let j = 0; j < this.props.rows; j++)
+            for (let col = 0; col < this.props.rows; col++)
             {
-                let style = {...this.getStyle(j, i)};
+                let style = {...this.getStyle(row, col)};
                 style.height = squareSize;
                 style.width = squareSize;
                 squares.push(
                     <div className="square" style={style}>
-                        {j},{i}
+                        {row},{col}
                     </div>
                 );
             }
