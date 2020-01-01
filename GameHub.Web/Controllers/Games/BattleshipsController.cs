@@ -24,6 +24,9 @@ namespace GameHub.Web.Controllers.Games
 
             config.creatorId = player.profile.Id;
 
+            config.rows = 10;
+            config.cols = 10;
+
             var game = new Battleships(config);
 
             _cache.Set(Id, game);

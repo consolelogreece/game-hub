@@ -10,6 +10,7 @@ namespace GameHub.Games.BoardGames.Battleships
             this.col = model.col;
             this.row = model.row;
             this.orientation = model.orientation;
+            this.length = model.length;
         }
 
         public void hit()

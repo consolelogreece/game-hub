@@ -12,9 +12,9 @@ export default class Ship extends Component
 
         let style = typeof(this.props.style) === "object" ? this.props.style : {};
 
-        style.left = this.props.row * this.props.nPixelsSquare;
+        style.top = this.props.row * this.props.nPixelsSquare;
+        style.left = this.props.col * this.props.nPixelsSquare;
 
-        style.top = this.props.col * this.props.nPixelsSquare;
 
         let Head = this.props.Head;
 

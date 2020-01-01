@@ -111,7 +111,7 @@ export default class Battleships extends Component {
                             col:  9,
                             length: 2
                         }]}/>
-                    <OpponentsBoard ships={[]}/>
+                    {/* <OpponentsBoard ships={[]}/> */}
                 </div>
                 
                 <OptionPanel
