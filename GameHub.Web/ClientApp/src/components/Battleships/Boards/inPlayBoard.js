@@ -43,6 +43,8 @@ export default class BattleshipsPlayBoard extends Component
                     nPixelsSquare={this.state.nPixelsSquare} 
                     id={index}  
                     {...ship}
+                    // because backend uses an enum for horizontal/vertical value, we have to convert back to string form here.
+                    orientation={ship.orientation === 1 ? "horizontal" : "vertical"}
                 />
             )}
         )

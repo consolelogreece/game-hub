@@ -66,7 +66,7 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
             return result;
         }
 
-        public UserRequestMeta GetUserRequestMeta()
+        private UserRequestMeta GetUserRequestMeta()
         {
             return Context.Items["user"] as UserRequestMeta;
         }

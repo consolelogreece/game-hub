@@ -164,7 +164,6 @@ export default class BattleshipsSetupBoard extends Component
             {
                 if (s1[0] == s2[0] && s1[1] == s2[1]) 
                 {
-                    console.log("hmmok", ship1, ship2)
                     overlappingSquares.push(s1);
                 }
             })

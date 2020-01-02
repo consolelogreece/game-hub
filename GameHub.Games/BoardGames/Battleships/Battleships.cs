@@ -23,6 +23,8 @@ namespace GameHub.Games.BoardGames.Battleships
 
         private bool _started;
 
+        private bool _gameOver;
+
         #endregion
 
         public Battleships(BattleshipsConfiguration config)
@@ -39,7 +41,9 @@ namespace GameHub.Games.BoardGames.Battleships
 
         public BattleshipsPlayerModel GetPlayer(string playerId)
         {
-            throw new System.NotImplementedException();
+            if (p1 != null && p1.Id == playerId) return p1;
+            if (p2 != null && p2.Id == playerId) return p2;
+            return null;
         }
 
         public ActionResult Join(string playerId, string playerNick)
@@ -71,7 +75,11 @@ namespace GameHub.Games.BoardGames.Battleships
         public ActionResult RegisterShips(List<ShipModel> shipModels, string playerId)
         {
             if (!(p1 != null && p1.Id == playerId || p2 != null && p2.Id == playerId)) return new ActionResult(false, "not registered");
+            if (_game.p1 != null && _game.p1.PlayerId == playerId || _game.p2 != null && _game.p2.PlayerId == playerId) return new ActionResult(false, "Already submitted shiperinos");
+
             _game.Register(shipModels, playerId);
+
+            GetPlayer(playerId).Ready = true;
 
             return new ActionResult(true);
         }
@@ -103,6 +111,11 @@ namespace GameHub.Games.BoardGames.Battleships
             }
 
             var message = GenerateMoveString(moveResult);
+
+            if (moveResult.DidEndGame)
+            {
+                _gameOver = true;
+            }
 
             return new BattleshipsMoveResult(moveResult.WasSuccessful, message, moveResult.DidEndGame);
         }
@@ -170,6 +183,23 @@ namespace GameHub.Games.BoardGames.Battleships
             else return player.Ships;
         }
 
+        private GameProgress GetGameStatus()
+        {
+            var endReason = "";
+
+            var status = (_gameOver ? GameStatus.finished : _started ? GameStatus.started : GameStatus.lobby).ToString();
+
+            if (_gameOver)
+            {
+                var winner = _game.Winner;
+
+                if (winner != null) endReason = GetPlayer(winner.PlayerId).PlayerNick + " has won!";
+                else endReason = "It's a draw!";
+            }
+
+            return new GameProgress(status, endReason);
+        }
+
         public BattleshipsGameState GetGameState(string playerId)
         {
             Player player;
@@ -197,7 +227,7 @@ namespace GameHub.Games.BoardGames.Battleships
                 OpponentBoard = GetGrid(opponent),
                 Configuration = _config, 
                 CurrentTurnPlayer = plonker, 
-                Status = new GameProgress("abc", "123")    
+                Status = this.GetGameStatus()  
             };
         }
     }

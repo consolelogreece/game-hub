@@ -4,6 +4,7 @@ import InPlayBoard from './Boards/inPlayBoard';
 import GetRenderedWidthHOC from '../HigherOrder/GetRenderedWidthHOC';
 import Button from '../Buttons/Standard';
 import OptionPanel from '../Common/OptionPanel';
+import { faThumbsDown } from '@fortawesome/free-solid-svg-icons';
 
 export default class Battleships extends Component {
     constructor(props) {
@@ -12,7 +13,10 @@ export default class Battleships extends Component {
         this.state = {
             inPlay: false,
             playerBoardState:[[]],
-            opponentBoardState: [[]]
+            opponentBoardState: [[]],
+            opponentShips: [],
+            playerShips: [],
+            playerInfo: null
         };
     }
 
@@ -28,10 +32,10 @@ export default class Battleships extends Component {
 
         this.props.on('RematchStarted', gameState => this.RematchStarted(gameState));
         
-        this.props.startConnection().then(x => console.log(x));
+        this.props.startConnection();
     }
 
-    GameJoined = () => {console.log("yo ho ho")};
+    GameJoined = () => {};
     JoinGame = () => {
         return this.invoke('JoinGame');
     }
@@ -52,66 +56,89 @@ export default class Battleships extends Component {
 
     updateStateWithNewGameState = gameState =>
     {
-        // var message = this.generateGameMessageFromGameState(gameState);
-        // var isGameFull = this.isGameFull(gameState);
-        // this.setState({
-        //     boardState: gameState.boardState,
-        //     gameState: gameState.status.status,
-        //     playerTurn: this.getTurnIndicator(gameState.currentTurnPlayer),
-        //     isGameFull: isGameFull,
-        //     gameMessage: message
-        // })
+       this.setState({
+            playerShips: gameState.playerShips, 
+            opponentShips: gameState.opponentSunkShips
+        });
+    }
 
-        console.log("//////////\n\n\n", gameState, "\n\n\n/////////////////");
+    populatePlayerClientInfo = () =>
+    {
+        return this.invoke('GetClientPlayerInfo')
+            .then(res => 
+                {
+                    if (res === undefined) return; 
+                    this.setState ({
+                        playerInfo: res
+                    })
+                })
+    }
+
+    populateGameState = () =>
+    {
+        return this.invoke('GetGameState')
+        .then(gameState => this.updateStateWithNewGameState(gameState));
+    }
+
+
+    GetDynamicBoard()
+    {
+        if (this.state.playerInfo != null && this.state.playerInfo.ready)
+        {
+            
+            let Board = GetRenderedWidthHOC(InPlayBoard);
+            return <Board ships={this.state.playerShips} />
+        }
+        else
+        {
+            let Board = GetRenderedWidthHOC(SetupBoard);
+            return <Board ships = {[
+                {
+                    orientation: "horizontal",
+                    row:  1,
+                    col:  1,
+                    length: 5
+                },
+                {
+                    orientation: "vertical",
+                    row:  3 ,
+                    col:  9,
+                    length: 4
+                },
+                {
+                    orientation: "horizontal",
+                    row:  2,
+                    col:  7,
+                    length: 3
+                },
+                {
+                    orientation: "vertical",
+                    row:  5,
+                    col:  3,
+                    length: 3
+                },
+                {
+                    orientation: "horizontal",
+                    row:  9,
+                    col:  7,
+                    length: 2
+                }]} ReadyUp={(ships) => this.invoke("RegisterShips", ships).then(this.populateGameState).then(this.populatePlayerClientInfo)}/>
+        }
     }
 
     render()
     {
-        let DynamicBoard = GetRenderedWidthHOC(this.state.inPlay ? InPlayBoard : SetupBoard);
+        let DynamicBoard = this.GetDynamicBoard();
         let OpponentsBoard = GetRenderedWidthHOC(InPlayBoard);
         let isHost, isPlayerRegistered = false;
         let hasPlayerResigned, isGameFull = false;
         let gameState = "lobby";
         
-
         return (
             <div>
-
                 <div style={{display: "flex"}}>
-                    <DynamicBoard ships = {[
-                        {
-                            orientation: "horizontal",
-                            row:  1,
-                            col:  1,
-                            length: 5
-                        },
-                        {
-                            orientation: "vertical",
-                            row:  9 ,
-                            col:  3,
-                            length: 4
-                        },
-                        {
-                            orientation: "horizontal",
-                            row:  2,
-                            col:  7,
-                            length: 3
-                        },
-                        {
-                            orientation: "vertical",
-                            row:  5,
-                            col:  3,
-                            length: 3
-                        },
-                        {
-                            orientation: "horizontal",
-                            row:  7,
-                            col:  9,
-                            length: 2
-                        }]}
-                        ReadyUp={(ships) => this.invoke("RegisterShips", ships).then(gs => this.updateStateWithNewGameState(gs))}
-                        />
-                    {/* <OpponentsBoard ships={[]}/> */}
+                    {DynamicBoard}
+                    <OpponentsBoard ships={this.state.opponentShips}/>
                 </div>
                 
                 <OptionPanel
@@ -127,7 +154,6 @@ export default class Battleships extends Component {
                     Resign = {() => this.Resign()}
                 />
                 <Button onClick={() => this.setState({inPlay: !this.state.inPlay})}>toggle board</Button>
-                <Button onClick={() => this.invoke("GetGameState").then(gs => this.updateStateWithNewGameState(gs))}>ELlo</Button>
             </div>
         );
     }

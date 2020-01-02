@@ -8,8 +8,15 @@ namespace GameHub.Games.BoardGames.Battleships
         public Player p1 {get; private set;}
         public Player p2 {get; private set;}
 
-        private int nextTurnPlayer = 1;
+        public Player Winner {
+            get {
+                if (p1.IsGameOver()) return p2;
+                if (p2.IsGameOver()) return p1;
+                return null;
+            }
+        }
 
+        private int nextTurnPlayer = 1;
         private BattleshipsConfiguration _config;
         public BattleshipsGame(BattleshipsConfiguration config)
         {
