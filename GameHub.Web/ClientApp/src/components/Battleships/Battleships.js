@@ -4,7 +4,6 @@ import InPlayBoard from './Boards/inPlayBoard';
 import GetRenderedWidthHOC from '../HigherOrder/GetRenderedWidthHOC';
 import Button from '../Buttons/Standard';
 import OptionPanel from '../Common/OptionPanel';
-import { faThumbsDown } from '@fortawesome/free-solid-svg-icons';
 
 export default class Battleships extends Component {
     constructor(props) {
@@ -80,10 +79,9 @@ export default class Battleships extends Component {
         .then(gameState => this.updateStateWithNewGameState(gameState));
     }
 
-
     GetDynamicBoard()
     {
-        if (this.state.playerInfo != null && this.state.playerInfo.ready)
+        if (this.state.playerInfo !== null && this.state.playerInfo.ready)
         {
             
             let Board = GetRenderedWidthHOC(InPlayBoard);

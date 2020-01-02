@@ -1,12 +1,12 @@
 import React from 'react';
 import Button from '../Buttons/Standard';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes } from '@fortawesome/free-solid-svg-icons'
-import './styles.scss'
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import './styles.scss';
 
 export default props => 
 {
-    let popupSuperContainerClasses = props.superContainerClassNames == undefined ? "popup-super-container" : props.superContainerClassNames;
+    let popupSuperContainerClasses = props.superContainerClassNames === undefined ? "popup-super-container" : props.superContainerClassNames;
     return (
         <div className={popupSuperContainerClasses} style={{...props.superContainerStyles}}>
             <div className={"popup-container " + props.containerClassNames} onClick={props.onClose !== undefined ? props.onClose : () => {}}>

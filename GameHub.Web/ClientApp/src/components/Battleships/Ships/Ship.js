@@ -1,11 +1,6 @@
 import React, {Component} from 'react';
 export default class Ship extends Component
-{   
-    constructor(props)
-    {
-        super(props);
-    }
-
+{
     render()
     {
         let body = [];
@@ -14,7 +9,6 @@ export default class Ship extends Component
 
         style.top = this.props.row * this.props.nPixelsSquare;
         style.left = this.props.col * this.props.nPixelsSquare;
-
 
         let Head = this.props.Head;
 

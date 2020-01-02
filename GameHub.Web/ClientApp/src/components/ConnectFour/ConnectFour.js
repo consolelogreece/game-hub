@@ -1,6 +1,6 @@
 ﻿import React, { Component } from 'react';
 import './ConnectFour.css';
-import { Title, Subtitle } from '../Common/Text';
+import { Title } from '../Common/Text';
 import ResizeWithContainerHOC from '../HigherOrder/GetRenderedWidthHOC';
 import OptionPanel from '../Common/OptionPanel';
 import Board from './Board';
@@ -43,7 +43,7 @@ export default class ConnectFour extends Component {
     move = col =>
     {
         // if the playerinfo is null, the player is a spectator and thus can't move.
-        if (this.state.playerInfo == null) return;
+        if (this.state.playerInfo === null) return;
 
         this.invoke('Move', col);
     }
@@ -164,7 +164,7 @@ export default class ConnectFour extends Component {
 
     isHost = () =>
     {
-        return this.state.playerInfo != null && this.state.playerInfo.isHost;
+        return this.state.playerInfo !== null && this.state.playerInfo.isHost;
     }
 
     Resign = () => 

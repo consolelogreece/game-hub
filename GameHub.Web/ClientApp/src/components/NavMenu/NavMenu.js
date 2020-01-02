@@ -39,7 +39,7 @@ export default class NavMenu extends Component {
   }
 
   render () {
-    let usernameItem = this.props.context.username == null ? (
+    let usernameItem = this.props.context.username === null ? (
       <NavLink style={{cursor:"pointer"}} onClick={() => this.toggleChooseUsername()} className="text-dark">Choose username</NavLink>
     ) : (
       <NavLink className="text-dark">{this.props.context.username}</NavLink>

@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 import Body from './Body/ShipBodyPlay';
 import Head from './Head/ShipHeadPlay';
 import Ship from './Ship';

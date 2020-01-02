@@ -3,8 +3,7 @@ import Chessboard from "chessboardjsx";
 import OptionPanel from '../Common/OptionPanel';
 import Popup from '../Popup';
 import PromotionSelection from './PromotionSelection';
-import { Title, Subtitle } from '../Common/Text';
-import { timeout } from '../../utils/sleep';
+import { Title } from '../Common/Text';
 
 /*
     todos:

@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 
-
 namespace GameHub.Games.BoardGames.Battleships
 {
     public class Player

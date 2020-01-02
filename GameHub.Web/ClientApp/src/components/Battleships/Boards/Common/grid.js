@@ -11,7 +11,7 @@ export default class BattleshipsGrid extends Component
     {
         let key = `${row},${col}`;
 
-        if (this.props.styles != undefined && this.props.styles.hasOwnProperty(key)) 
+        if (this.props.styles !== undefined && this.props.styles.hasOwnProperty(key)) 
         {
             return this.props.styles[key];
         }

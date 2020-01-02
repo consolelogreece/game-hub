@@ -50,7 +50,7 @@ export default class Board extends Component {
 
     generateBoard = (boardState) => 
     {
-        if (boardState == null) return this.getDefaultBoard();
+        if (boardState === null) return this.getDefaultBoard();
 
         let boardRender = [];
 

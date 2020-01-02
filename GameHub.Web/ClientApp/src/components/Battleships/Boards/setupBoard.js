@@ -42,11 +42,11 @@ export default class BattleshipsSetupBoard extends Component
     {
         let target = event.target.parentNode;
 
-        if (target.attributes.name == undefined) return;
+        if (target.attributes.name === undefined) return;
 
         let targetName = target.attributes.name.nodeValue;
 
-        if (targetName != "ship") return;
+        if (targetName !== "ship") return;
         
         this.setState({selectedShipIndex: target.id});
     }
@@ -97,7 +97,7 @@ export default class BattleshipsSetupBoard extends Component
 
     onMove = (x, y) => 
     {
-        if (this.state.selectedShipIndex == -1) return;
+        if (this.state.selectedShipIndex === -1) return;
 
         let ships = this.state.ships;
 
@@ -162,7 +162,7 @@ export default class BattleshipsSetupBoard extends Component
         ship1Squares.forEach(s1 => {
             ship2Squares.forEach(s2 =>
             {
-                if (s1[0] == s2[0] && s1[1] == s2[1]) 
+                if (s1[0] === s2[0] && s1[1] === s2[1]) 
                 {
                     overlappingSquares.push(s1);
                 }
