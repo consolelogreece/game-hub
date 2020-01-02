@@ -242,7 +242,7 @@ export default class BattleshipsSetupBoard extends Component
             }
 
             return (
-                <Ship status="setup" style={{cursor: this.state.selectedShipIndex === -1 ? "grab" : "grabbing"}} nPixelsSquare={this.state.nPixelsSquare} id={index} handleDrag={this.handleDrag} {...ship}>
+                <Ship status="setup" style={{cursor: this.state.selectedShipIndex === -1 ? "grab" : "grabbing"}} nPixelsSquare={this.state.nPixelsSquare} key={index} id={index} handleDrag={this.handleDrag} {...ship}>
                    <FontAwesomeIcon style={{fontSize: `${this.state.nPixelsSquare / 1.5}px`, ...extragoodstyles}} icon={faSyncAlt} onClick={() => {this.rotateShip(index)}}/>
                 </Ship>
             )}

@@ -32,15 +32,18 @@ export default class BattleshipsGrid extends Component
                 style.height = squareSize;
                 style.width = squareSize;
                 squares.push(
-                    <div className="square" style={style}>
+                    <div className="square" key={`${row},${col}`} style={style}>
                         {row},{col}
                     </div>
                 );
             }
         }
 
+        // remove gridref and npixelssquare as we dont want them sent to ship as it'll attempt to render them in dom.
+        let {nPixelsSquare, gridRef, ...props} = this.props;
+
         return(
-            <div style={{height: this.props.height, width: this.props.width}} ref={this.props.gridRef} {...this.props} id="grid">
+            <div style={{height: props.height, width: props.width}} ref={props.gridRef} {...props} id="grid">
                 {squares}
                 {this.props.children}
             </div>

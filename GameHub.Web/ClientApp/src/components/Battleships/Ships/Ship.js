@@ -16,7 +16,7 @@ export default class Ship extends Component
 
         for(let i = 1; i < this.props.length - 1; i++)
         {
-            body.push(<Body height={this.props.nPixelsSquare} width={this.props.nPixelsSquare} />);
+            body.push(<Body height={this.props.nPixelsSquare} key={i} width={this.props.nPixelsSquare} />);
         }
 
         return (
