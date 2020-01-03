@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import SetupBoard from './Boards/setupBoard';
 import InPlayBoard from './Boards/inPlayBoard';
-import GetRenderedWidthHOC from '../HigherOrder/GetRenderedWidthHOC';
 import Button from '../Buttons/Standard';
 import OptionPanel from '../Common/OptionPanel';
 
@@ -83,14 +82,11 @@ export default class Battleships extends Component {
     {
         if (this.state.playerInfo !== null && this.state.playerInfo.ready)
         {
-            
-            let Board = GetRenderedWidthHOC(InPlayBoard);
-            return <Board ships={this.state.playerShips} />
+            return <InPlayBoard width={this.props.containerWidth / 2} ships={this.state.playerShips} />
         }
         else
         {
-            let Board = GetRenderedWidthHOC(SetupBoard);
-            return <Board ships = {[
+            return <SetupBoard ships = {[
                 {
                     orientation: "horizontal",
                     row:  1,
@@ -120,14 +116,16 @@ export default class Battleships extends Component {
                     row:  9,
                     col:  7,
                     length: 2
-                }]} ReadyUp={(ships) => this.invoke("RegisterShips", ships).then(this.populateGameState).then(this.populatePlayerClientInfo)}/>
+                }]} 
+                ReadyUp={(ships) => this.invoke("RegisterShips", ships).then(this.populateGameState).then(this.populatePlayerClientInfo)}
+                width={this.props.containerWidth / 2}
+                />
         }
     }
 
     render()
     {
         let DynamicBoard = this.GetDynamicBoard();
-        let OpponentsBoard = GetRenderedWidthHOC(InPlayBoard);
         let isHost, isPlayerRegistered = false;
         let hasPlayerResigned, isGameFull = false;
         let gameState = "lobby";
@@ -136,7 +134,7 @@ export default class Battleships extends Component {
             <div>
                 <div style={{display: "flex"}}>
                     {DynamicBoard}
-                    <OpponentsBoard ships={this.state.opponentShips}/>
+                    <InPlayBoard width={this.props.containerWidth / 2} ships={this.state.opponentShips}/>
                 </div>
                 
                 <OptionPanel

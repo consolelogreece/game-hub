@@ -2,6 +2,7 @@ import React from 'react';
 import Battleships from '../../components/Battleships/Battleships';
 import withSignalrConnection from '../../components/HigherOrder/withSignalrConnection';
 import withTimedErrorMessage from '../../components/HigherOrder/withTimedErrorMessage';
+import GetRenderedWidthHOC from '../../components/HigherOrder/GetRenderedWidthHOC';
 
 export default class ConnectFourPage extends React.PureComponent
 {
@@ -13,7 +14,7 @@ export default class ConnectFourPage extends React.PureComponent
     {
         this.props.context.setIsLoading(false);
 
-        let game = withSignalrConnection(withTimedErrorMessage(Battleships), {
+        let game = withSignalrConnection(GetRenderedWidthHOC(withTimedErrorMessage(Battleships)), {
             hubUrl: `/battleshipshub${window.location.search}`, 
             onFail: this.onFail, 
             onConnectionClosed: this.onConnectionClosed,

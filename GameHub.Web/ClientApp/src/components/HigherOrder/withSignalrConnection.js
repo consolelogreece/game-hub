@@ -84,14 +84,14 @@ export default function(WrappedComponent, config)
         render = () =>
         {
             return (
-                    <WrappedComponent 
-                        {...this.props}
-                        on={this.on} 
-                        registerPermanentInvokeParam={this.registerPermanentInvokeParam} 
-                        invoke={this.invoke}
-                        startConnection={this.startConnection}
-                    />
-                );
+                <WrappedComponent 
+                    {...this.props}
+                    on={this.on} 
+                    registerPermanentInvokeParam={this.registerPermanentInvokeParam} 
+                    invoke={this.invoke}
+                    startConnection={this.startConnection}
+                />
+            );
         }
     }
 }

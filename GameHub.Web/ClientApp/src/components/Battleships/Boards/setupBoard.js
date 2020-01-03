@@ -26,7 +26,7 @@ export default class BattleshipsSetupBoard extends Component
 
     static getDerivedStateFromProps(props, state)
     {
-        let nPixelsSquare = props.containerWidth / state.rows;
+        let nPixelsSquare = props.width / state.rows;
 
         if (nPixelsSquare !== state.nPixelsSquare)
         {
