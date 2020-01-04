@@ -39,8 +39,8 @@ export default class BattleshipsGrid extends Component
             }
         }
 
-        // remove gridref and npixelssquare as we dont want them sent to ship as it'll attempt to render them in dom.
-        let {nPixelsSquare, gridRef, ...props} = this.props;
+        // remove npixelssquare as we dont want these attributes in dom tree
+        let {nPixelsSquare, ...props} = this.props;
 
         return(
             <div style={{height: props.height, width: props.width}} ref={props.gridRef} {...props} id="grid">

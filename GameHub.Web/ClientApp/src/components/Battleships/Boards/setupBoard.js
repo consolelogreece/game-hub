@@ -1,10 +1,11 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import Grid from './Common/grid';
 import Ship from '../Ships/ShipSetup';
 import '../styles.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSyncAlt } from '@fortawesome/free-solid-svg-icons';
 import Button from '../../Buttons/Standard';
+import {CalculateRelativePositon} from '../../../utils/Helpers/Positioning';
 
 export default class BattleshipsSetupBoard extends Component
 {
@@ -103,7 +104,9 @@ export default class BattleshipsSetupBoard extends Component
 
         let ship = ships[this.state.selectedShipIndex];
 
-        let {row, col} = this.calculateRelativePositon(x, y);
+        let boundingRect = this.gridRef.current.getBoundingClientRect();
+
+        let {row, col} = CalculateRelativePositon(boundingRect, x, y);
 
         let offsets = this.calculateOffsets(row, col, ship);
 
@@ -118,20 +121,7 @@ export default class BattleshipsSetupBoard extends Component
         this.setState({ships:[...ships], squareStyles: styles})
     }
 
-    calculateRelativePositon(x,y)
-    {
-        let gridBoundingRect = this.gridRef.current.getBoundingClientRect();
-
-        let gridLeft = gridBoundingRect.left;
-        let gridTop = gridBoundingRect.top;
-
-        let relativeX = x - gridLeft;
-        let relativeY = y - gridTop;
-
-        return {row: relativeY, col: relativeX};
-    }
-
-    calculateOffsets = (row,col, ship) => {
+    calculateOffsets = (row, col, ship) => {
 
         let gridLengthPx = this.state.nPixelsSquare * this.state.rows;
 
