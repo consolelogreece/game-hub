@@ -102,7 +102,7 @@ export default class Battleships extends Component {
                 {
                     orientation: "horizontal",
                     row:  2,
-                    col:  7,
+                    col:  9,
                     length: 3
                 },
                 {

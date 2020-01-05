@@ -38,12 +38,10 @@ namespace GameHub.Games.BoardGames.Battleships
                 {
                     var row = ship.row;
                     var col = ship.col + i;
-                    if (IsOutsideBoundaries(row,  col))
-                    {
-                        throw new IndexOutOfRangeException("invalid ship position");
-                    }
 
-                    shipMap[new BattleshipsPosition(row, col)] = ship;
+                    var position = new BattleshipsPosition(row, col);
+
+                    shipMap[position] = ship;
                 }
             }
             else
@@ -52,12 +50,10 @@ namespace GameHub.Games.BoardGames.Battleships
                 {
                     var row = ship.row + i;
                     var col = ship.col;
-                    if (IsOutsideBoundaries(row,  col))
-                    {
-                        throw new IndexOutOfRangeException("invalid ship position");
-                    }
 
-                    shipMap[new BattleshipsPosition(row, col)] = ship;
+                    var position = new BattleshipsPosition(row, col);
+
+                    shipMap[position] = ship;
                 }
             }
         }

@@ -34,6 +34,84 @@ namespace GameHub.Games.BoardGames.Battleships
             _game = new BattleshipsGame(config);
         }
 
+        private bool AreShipsOverlapping(List<ShipModel> ships)
+        {
+            var occupiedSquares = new HashSet<BattleshipsPosition>();
+
+            foreach(var ship in ships)
+            {
+                if (ship.orientation == Orientation.Horizontal)
+                {
+                    for(int i = 0; i < ship.length; i++)
+                    {
+                        var row = ship.row;
+                        var col = ship.col + i;
+                        
+                        var position = new BattleshipsPosition(row, col);
+
+                        var exists = !occupiedSquares.Add(position);
+                        if (exists) return true;
+                    }
+                }
+                else
+                {
+                    for(int i = 0; i < ship.length; i++)
+                    {
+                        var row = ship.row + i;
+                        var col = ship.col;
+
+                        var position = new BattleshipsPosition(row, col);
+
+                        var exists = !occupiedSquares.Add(position);
+                        if (exists) return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        public bool AreShipsInBoardBounds(List<ShipModel> ships)
+        {
+            foreach(var ship in ships)
+            {
+                if (ship.orientation == Orientation.Horizontal)
+                {
+                    for(int i = 0; i < ship.length; i++)
+                    {
+                        var row = ship.row;
+                        var col = ship.col + i;
+                        if (row < 0 || row >= _config.rows || col < 0 || col >= _config.cols)
+                        {
+                            return false;
+                        }
+                    }
+                }
+                else
+                {
+                    for(int i = 0; i < ship.length; i++)
+                    {
+                        var row = ship.row + i;
+                        var col = ship.col;
+                        if (row < 0 || row >= _config.rows || col < 0 || col >= _config.cols)
+                        {
+                            return false;
+                        }
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        public ActionResult ValidateShips(List<ShipModel> ships)
+        {
+            if (AreShipsOverlapping(ships)) return new ActionResult(false, "Ships overlapping, stupid");
+            if (!AreShipsInBoardBounds(ships)) return new ActionResult(false, "One or more ships is outside the bounds of the board, stupid");
+
+            return new ActionResult(true);
+        }
+
         public BattleshipsGameState GetGameState()
         {
             throw new System.NotImplementedException();
@@ -76,6 +154,9 @@ namespace GameHub.Games.BoardGames.Battleships
         {
             if (!(p1 != null && p1.Id == playerId || p2 != null && p2.Id == playerId)) return new ActionResult(false, "not registered");
             if (_game.p1 != null && _game.p1.PlayerId == playerId || _game.p2 != null && _game.p2.PlayerId == playerId) return new ActionResult(false, "Already submitted shiperinos");
+            
+            var validation = ValidateShips(shipModels);
+            if (!validation.WasSuccessful) return validation;
 
             _game.Register(shipModels, playerId);
 

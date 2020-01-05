@@ -39,15 +39,6 @@ namespace GameHub.Games.BoardGames.Battleships
             else p2 = newPlayer;
         }
 
-        // public void RegisterShips(List<ShipModel> shipModels, st)
-        // {
-        //     var ships = shipModels.Select(sm => new Ship(sm)).ToList();
-
-        //     var player = p1 == null ? p1 : p2;
-
-        //     player.RegisterShips(ships);
-        // }
-
         public BattleshipsMoveResult Move(BattleshipsPosition move)
         {
             var defendingPlayer = nextTurnPlayer == -1 ? p1 : p2;
