@@ -12,7 +12,7 @@ export default class ConnectFourPage extends React.PureComponent
 
     componentDidMount()
     {
-        this.props.context.setIsLoading(false);
+        this.props.context.setIsLoading(true);
 
         let game = withSignalrConnection(GetRenderedWidthHOC(withTimedErrorMessage(Battleships)), {
             hubUrl: `/battleshipshub${window.location.search}`, 

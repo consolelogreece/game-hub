@@ -31,6 +31,8 @@ export default class Battleships extends Component {
         this.props.on('RematchStarted', gameState => this.RematchStarted(gameState));
         
         this.props.startConnection();
+
+        this.props.onLoadComplete();
     }
 
     GameJoined = () => {};
