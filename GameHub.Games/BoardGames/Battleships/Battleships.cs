@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using GameHub.Games.BoardGames.Common;
 
 namespace GameHub.Games.BoardGames.Battleships
@@ -31,7 +32,7 @@ namespace GameHub.Games.BoardGames.Battleships
         {
             _config = config;
 
-            _game = new BattleshipsGame(config);
+            _game = new BattleshipsGame(config.Rows, _config.Cols);
         }
 
         private bool AreShipsOverlapping(List<ShipModel> ships)
@@ -81,7 +82,7 @@ namespace GameHub.Games.BoardGames.Battleships
                     {
                         var row = ship.row;
                         var col = ship.col + i;
-                        if (row < 0 || row >= _config.rows || col < 0 || col >= _config.cols)
+                        if (row < 0 || row >= _config.Rows || col < 0 || col >= _config.Cols)
                         {
                             return false;
                         }
@@ -93,7 +94,7 @@ namespace GameHub.Games.BoardGames.Battleships
                     {
                         var row = ship.row + i;
                         var col = ship.col;
-                        if (row < 0 || row >= _config.rows || col < 0 || col >= _config.cols)
+                        if (row < 0 || row >= _config.Rows || col < 0 || col >= _config.Cols)
                         {
                             return false;
                         }
@@ -104,10 +105,30 @@ namespace GameHub.Games.BoardGames.Battleships
             return true;
         }
 
+        private bool AreShipsCompliant(List<ShipModel> ships)
+        {
+            foreach(var ship in ships)
+            {
+                if (!_config.InitialShipLayout.Any(s => AreShipsEqual(s, ship)))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        // excluding orientation and position as irrelevant
+        private bool AreShipsEqual(ShipModel ship1, ShipModel ship2)
+        {
+            return ship1.Id == ship2.Id && ship1.length == ship2.length;
+        }
+
         public ActionResult ValidateShips(List<ShipModel> ships)
         {
             if (AreShipsOverlapping(ships)) return new ActionResult(false, "Ships overlapping, stupid");
             if (!AreShipsInBoardBounds(ships)) return new ActionResult(false, "One or more ships is outside the bounds of the board, stupid");
+            if (!AreShipsCompliant(ships)) return new ActionResult(false, "Oops, your ships don't match this games ship configuration");
 
             return new ActionResult(true);
         }
@@ -141,7 +162,7 @@ namespace GameHub.Games.BoardGames.Battleships
             var newPlayer = new BattleshipsPlayerModel { 
                 Id = playerId, 
                 PlayerNick = playerNick, 
-                IsHost = _config.creatorId == playerId
+                IsHost = _config.CreatorId == playerId
             };
 
             if (p1 == null) p1 = newPlayer;
@@ -203,7 +224,7 @@ namespace GameHub.Games.BoardGames.Battleships
 
         private bool IsMoveInBounds(BattleshipsPosition move)
         {
-            return !(move.row >= _config.rows || move.row < 0 || move.col >= _config.cols || move.col < 0);
+            return !(move.row >= _config.Rows || move.row < 0 || move.col >= _config.Cols || move.col < 0);
         }
 
         private string GenerateMoveString(BattleshipsMoveResult result)
@@ -252,7 +273,7 @@ namespace GameHub.Games.BoardGames.Battleships
 
         private Square[,] GetGrid(Player player)
         {
-            if (player == null) return new Square[_config.rows, _config.cols];
+            if (player == null) return new Square[_config.Rows, _config.Cols];
 
             else return player.Board._grid;
         }

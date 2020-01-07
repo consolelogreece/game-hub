@@ -253,7 +253,7 @@ export default class BattleshipsSetupBoard extends Component
                     nPixelsSquare={this.state.nPixelsSquare} 
                     rows={10} 
                     cols={10} 
-                    styles={this.state.squareStyles} >
+                    styles={this.state.squareStyles}>
                     {ships}
                 </Grid>
                 <Button onClick={() => this.props.ReadyUp(this.state.ships)}>SUBMIT THE SHIPS</Button>

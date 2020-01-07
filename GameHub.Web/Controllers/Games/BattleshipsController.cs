@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Caching;
 using GameHub.Games.BoardGames.Battleships;
 using GameHub.Web.Filters.ActionFilters;
@@ -22,10 +23,54 @@ namespace GameHub.Web.Controllers.Games
 
             var Id = System.Guid.NewGuid().ToString();
 
-            config.creatorId = player.profile.Id;
+            config.CreatorId = player.profile.Id;
 
-            config.rows = 10;
-            config.cols = 10;
+            config.Rows = 10;
+            config.Cols = 10;
+
+            var ships = new List<ShipModel>();
+
+            ships.Add(new ShipModel {
+                Id = 0,
+                col = 1,
+                row = 1, 
+                orientation = Orientation.Horizontal,
+                length = 5
+            });
+
+            ships.Add(new ShipModel {
+                Id = 1,
+                col = 3,
+                row = 7, 
+                orientation = Orientation.Vertical,
+                length = 4
+            });
+
+            ships.Add(new ShipModel {
+                Id = 2,
+                col = 1,
+                row = 1, 
+                orientation = Orientation.Horizontal,
+                length = 4
+            });
+
+            ships.Add(new ShipModel {
+                Id = 3,
+                col = 5,
+                row = 3, 
+                orientation = Orientation.Vertical,
+                length = 3
+            });
+
+            ships.Add(new ShipModel {
+                Id = 4,
+                col = 8,
+                row = 4, 
+                orientation = Orientation.Horizontal,
+                length = 2
+            });
+
+            config.InitialShipLayout = ships;
 
             var game = new Battleships(config);
 

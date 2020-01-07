@@ -1,13 +1,15 @@
+using System.Collections.Generic;
+using GameHub.Games.BoardGames.Common;
+
 namespace GameHub.Games.BoardGames.Battleships
 {
-    public class BattleshipsConfiguration
+    public class BattleshipsConfiguration : GameConfiguration
     {
-        public string creatorId {get; set;}
+        public ushort Rows;
 
-        public ushort rows;
+        public ushort Cols;
 
-        public ushort cols;
-
-        //public List<ShipModel>
+        // also used for verifying the user has the correct amount/type of ships.
+        public List<ShipModel> InitialShipLayout { get; set; }
     }  
 }

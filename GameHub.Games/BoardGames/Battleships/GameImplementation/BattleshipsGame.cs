@@ -17,17 +17,21 @@ namespace GameHub.Games.BoardGames.Battleships
         }
 
         private int nextTurnPlayer = 1;
-        private BattleshipsConfiguration _config;
-        public BattleshipsGame(BattleshipsConfiguration config)
+        private int _rows;
+
+        private int _cols;
+        public BattleshipsGame(int rows, int cols)
         {
-            _config = config;
+            _rows = rows;
+            
+            _cols = cols;
         }
 
         public void Register(List<ShipModel> shipModels, string playerId)
         {
             if (p1 != null && p2 != null) throw new System.Exception("wat");
 
-            var board = new Board(_config.rows, _config.cols);
+            var board = new Board(_rows, _cols);
 
             var newPlayer = new Player(board, playerId);
 

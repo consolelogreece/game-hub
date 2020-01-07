@@ -19,11 +19,7 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
 
         public BattleshipsGameState GetGameState()
         {
-           var unRedactedGameState = GetGameService().GetGameState();
-
-           //unRedactedGameState.Opponent = new Player(unRedactedGameState.Opponent.)
-
-           return unRedactedGameState;
+           return GetGameService().GetGameState();
         }
 
         private BattleshipsService GetGameService()
