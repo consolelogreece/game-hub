@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
+using GameHub.Games.BoardGames.Common;
 
 namespace GameHub.Games.BoardGames.ConnectFour
 {
-    public class ConnectFourConfiguration 
+    public class ConnectFourConfiguration : GameConfiguration
     {
-        public string creatorId { get; set;}
-
         public int nRows { get; set; }
 
         public int nCols { get; set; }

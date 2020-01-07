@@ -1,9 +1,9 @@
+using GameHub.Games.BoardGames.Common;
+
 namespace GameHub.Games.BoardGames.Chess
 {
-    public class ChessConfiguration
+    public class ChessConfiguration : GameConfiguration
     {
-        public string creatorId {get; set;}
-
         public int nPlayersMax { get; private set; } = 2;
     }  
 }

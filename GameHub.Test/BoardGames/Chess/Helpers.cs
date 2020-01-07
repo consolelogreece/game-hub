@@ -17,7 +17,7 @@ namespace GameHub.Test.BoardGames.ChessTests
         {
             return new ChessConfiguration
             {
-                creatorId = creatorId
+                CreatorId = creatorId
             };
         }
     }

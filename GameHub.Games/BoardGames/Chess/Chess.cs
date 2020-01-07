@@ -92,7 +92,7 @@ namespace GameHub.Games.BoardGames.Chess
         public ActionResult Start(string playerId)
         {
             // only game creator can start the game.
-            if (playerId != _config.creatorId) return new ActionResult(false,  "You are not the host");
+            if (playerId != _config.CreatorId) return new ActionResult(false,  "You are not the host");
 
             if (_started) return new ActionResult(false, "The game has already started");
 
@@ -108,7 +108,7 @@ namespace GameHub.Games.BoardGames.Chess
             {
                 Id = playerId,
                 PlayerNick = playerNick,
-                IsHost = playerId == _config.creatorId
+                IsHost = playerId == _config.CreatorId
             };
 
             var isWhiteTaken = White != null;
@@ -174,7 +174,7 @@ namespace GameHub.Games.BoardGames.Chess
 
         public ActionResult Restart(string playerId)
         {
-            if( _config.creatorId != playerId) return new ActionResult(false, "You are not the host");
+            if( _config.CreatorId != playerId) return new ActionResult(false, "You are not the host");
 
             // cant rematch if the game hasn't even started.
             if (!_started) return new ActionResult(false, "Game hasn't started");

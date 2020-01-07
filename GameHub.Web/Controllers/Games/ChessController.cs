@@ -22,7 +22,7 @@ namespace GameHub.Web.Controllers.Games
 
             var Id = System.Guid.NewGuid().ToString();
 
-            config.creatorId = player.profile.Id;
+            config.CreatorId = player.profile.Id;
 
             var game = new Chess(config);
 

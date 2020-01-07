@@ -175,7 +175,7 @@ namespace GameHub.Games.BoardGames.ConnectFour
                 Id = playerId, 
                 PlayerNick = playerNick, 
                 PlayerColor = _colors[_players.Count], 
-                IsHost = _config.creatorId == playerId
+                IsHost = _config.CreatorId == playerId
             };
 
             _players.Add(newPlayer);
@@ -187,7 +187,7 @@ namespace GameHub.Games.BoardGames.ConnectFour
         {
             if (_players.Count < 2) return new ActionResult(false, "Not enough players");
 
-            if (playerId != _config.creatorId) return new ActionResult(false,  "You are not the host");
+            if (playerId != _config.CreatorId) return new ActionResult(false,  "You are not the host");
 
             if (_started) return new ActionResult(false, "The game has already started");
 
@@ -198,7 +198,7 @@ namespace GameHub.Games.BoardGames.ConnectFour
 
         public ActionResult Restart(string playerId)
         {
-            if(_config.creatorId != playerId) return new ActionResult(false,  "You are not the host");
+            if(_config.CreatorId != playerId) return new ActionResult(false,  "You are not the host");
 
             _game.ClearBoard();
 

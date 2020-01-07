@@ -17,7 +17,7 @@ namespace GameHub.Test.BoardGames.ConnectFourTests
         {
             return new ConnectFourConfiguration
             {
-                creatorId = creatorId,
+                CreatorId = creatorId,
                 nCols = 7,
                 nRows = 6,
                 winThreshold = 4,
