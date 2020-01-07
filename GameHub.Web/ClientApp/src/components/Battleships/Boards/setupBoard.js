@@ -19,7 +19,7 @@ export default class BattleshipsSetupBoard extends Component
             rows: 10,
             cols: 10,
             nPixelsSquare: 40,
-            ships: [...props.ships],
+            ships: [],
             selectedShipIndex: -1,
             squareStyles: {}
         }
@@ -29,10 +29,13 @@ export default class BattleshipsSetupBoard extends Component
     {
         let nPixelsSquare = props.width / state.rows;
 
-        if (nPixelsSquare !== state.nPixelsSquare)
+        let ships = props.ships === undefined ? [] : [...props.ships];
+
+        if (nPixelsSquare !== state.nPixelsSquare || state.ships !== ships)
         {
             return {
-                nPixelsSquare: nPixelsSquare
+                nPixelsSquare: nPixelsSquare,
+                ships: ships
             }
         }  
 
@@ -52,7 +55,7 @@ export default class BattleshipsSetupBoard extends Component
         this.setState({selectedShipIndex: target.id});
     }
 
-    onMouseUp = event =>
+    onMouseUp = _ =>
     {
         this.setState({selectedShipIndex: -1});
     }

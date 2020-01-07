@@ -66,9 +66,11 @@ export default class Battleships extends Component {
 
     updateStateWithNewGameState = gameState =>
     {
-       this.setState({
+        gameState.configuration.initialShipLayout.map(s => s.orientation = s.orientation === 1 ? "horizontal" : "vertical");
+        this.setState({
             playerShips: gameState.playerShips, 
-            opponentShips: gameState.opponentSunkShips
+            opponentShips: gameState.opponentSunkShips,
+            gameConfiguration: gameState.configuration
         });
     }
 
@@ -98,39 +100,9 @@ export default class Battleships extends Component {
         }
         else
         {
-            return <SetupBoard ships = {[
-                {
-                    orientation: "horizontal",
-                    row:  1,
-                    col:  1,
-                    length: 5
-                },
-                {
-                    orientation: "vertical",
-                    row:  3 ,
-                    col:  9,
-                    length: 4
-                },
-                {
-                    orientation: "horizontal",
-                    row:  2,
-                    col:  9,
-                    length: 3
-                },
-                {
-                    orientation: "vertical",
-                    row:  5,
-                    col:  3,
-                    length: 3
-                },
-                {
-                    orientation: "horizontal",
-                    row:  9,
-                    col:  7,
-                    length: 2
-                }]} 
-                ReadyUp={(ships) => this.invoke("RegisterShips", ships).then(this.populateGameState).then(this.populatePlayerClientInfo)}
-                width={this.props.containerWidth / 2}
+            return <SetupBoard ships = {this.state.gameConfiguration.initialShipLayout} 
+                    ReadyUp={(ships) => this.invoke("RegisterShips", ships).then(this.populateGameState).then(this.populatePlayerClientInfo)}
+                    width={this.props.containerWidth / 2}
                 />
         }
     }
@@ -161,6 +133,7 @@ export default class Battleships extends Component {
                     Rematch = {() => this.invoke('Rematch')}
                     Resign = {() => this.Resign()}
                 />
+
                 <Button onClick={() => this.setState({inPlay: !this.state.inPlay})}>toggle board</Button>
             </div>
         );

@@ -42,15 +42,15 @@ namespace GameHub.Web.Controllers.Games
                 Id = 1,
                 col = 3,
                 row = 7, 
-                orientation = Orientation.Vertical,
+                orientation = Orientation.Horizontal,
                 length = 4
             });
 
             ships.Add(new ShipModel {
                 Id = 2,
                 col = 1,
-                row = 1, 
-                orientation = Orientation.Horizontal,
+                row = 2, 
+                orientation = Orientation.Vertical,
                 length = 4
             });
 

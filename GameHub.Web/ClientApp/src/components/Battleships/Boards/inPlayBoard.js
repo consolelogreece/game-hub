@@ -15,7 +15,7 @@ export default class BattleshipsPlayBoard extends Component
             rows: 10,
             cols: 10,
             nPixelsSquare: 40,
-            ships: [...props.ships],
+            ships: [],
             squareStyles: {}
         }
     }
@@ -24,16 +24,18 @@ export default class BattleshipsPlayBoard extends Component
     {
         let nPixelsSquare = props.width / state.rows;
 
-        if (nPixelsSquare !== state.nPixelsSquare)
+        let ships = props.ships === undefined ? [] : [...props.ships];
+
+        if (nPixelsSquare !== state.nPixelsSquare || state.ships !== ships)
         {
             return {
-                nPixelsSquare: nPixelsSquare
+                nPixelsSquare: nPixelsSquare,
+                ships: ships
             }
         }  
 
         return null;
     }
-                           
 
     render()
     {
