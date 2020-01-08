@@ -15,8 +15,7 @@ export default class BattleshipsPlayBoard extends Component
             rows: 10,
             cols: 10,
             nPixelsSquare: 40,
-            ships: [],
-            squareStyles: {}
+            ships: []
         }
     }
 
@@ -37,6 +36,44 @@ export default class BattleshipsPlayBoard extends Component
         return null;
     }
 
+    getStylesByBoardState(boardState)
+    {
+        let styles = {};
+
+        if (boardState === undefined) return this.styles;
+
+        for(let i = 0; i < boardState.length; i++)
+        {
+            for (let j = 0; j < boardState[i].length; j++)
+            {
+                let key = `${i},${j}`;
+
+                switch (boardState[i][j].state)
+                {
+                    //Untouched
+                    case 0:
+                        break;
+
+                    // Missed
+                    case 1:
+                        styles[key] = {
+                            background: "radial-gradient(circle, #ffffff 26%, transparent 30%)"
+                        };
+                        break;
+                    
+                    // Hit
+                    case 2:
+                        styles[key] = {
+                            background: "radial-gradient(circle, #ff0000 26%, transparent 30%)"
+                        };
+                        break;
+                }
+            }
+        }
+
+        return styles;
+    }
+
     render()
     {
         let ships = this.state.ships.map((ship, index) => {
@@ -52,6 +89,8 @@ export default class BattleshipsPlayBoard extends Component
             )}
         )
 
+        let styles = this.getStylesByBoardState(this.props.boardState);
+
         return(
             <div>
                 <Grid 
@@ -61,7 +100,7 @@ export default class BattleshipsPlayBoard extends Component
                     nPixelsSquare={this.state.nPixelsSquare} 
                     rows={10} 
                     cols={10} 
-                    styles={this.state.squareStyles}>
+                    styles={styles}>
                     {ships}
                 </Grid>
             </div>

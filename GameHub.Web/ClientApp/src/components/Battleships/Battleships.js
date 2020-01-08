@@ -70,7 +70,9 @@ export default class Battleships extends Component {
         this.setState({
             playerShips: gameState.playerShips, 
             opponentShips: gameState.opponentSunkShips,
-            gameConfiguration: gameState.configuration
+            gameConfiguration: gameState.configuration,
+            playerBoardState: gameState.playerBoard,
+            opponentBoardState: gameState.oppenentBoard
         });
     }
 
@@ -96,7 +98,7 @@ export default class Battleships extends Component {
     {
         if (this.state.playerInfo !== null && this.state.playerInfo.ready)
         {
-            return <InPlayBoard width={this.props.containerWidth / 2} ships={this.state.playerShips} />
+            return <InPlayBoard width={this.props.containerWidth / 2} ships={this.state.playerShips} boardState={this.state.playerBoardState}/>
         }
         else
         {
@@ -118,7 +120,7 @@ export default class Battleships extends Component {
             <div>
                 <div style={{display: "flex"}}>
                     {DynamicBoard}
-                    <InPlayBoard width={this.props.containerWidth / 2} ships={this.state.opponentShips}/>
+                    <InPlayBoard width={this.props.containerWidth / 2} ships={this.state.opponentShips} boardState={this.state.opponentBoardState}/>
                 </div>
                 
                 <OptionPanel

@@ -60,7 +60,7 @@ namespace GameHub.Games.BoardGames.Battleships
 
         private bool SquareAlreadyHit(int row, int col)
         {
-            return _grid[row,col].hit;
+            return _grid[row,col].State != SquareState.Untouched;
         }
 
         public bool Hit(BattleshipsPosition move)
@@ -70,9 +70,11 @@ namespace GameHub.Games.BoardGames.Battleships
             if(shipMap.TryGetValue(move, out var hitShip) && hitShip != null)
             {
                 hitShip.hit();
+
+                _grid[move.row, move.col].State = SquareState.Hit;
             }
 
-            _grid[move.row, move.col].hit = true;
+            _grid[move.row, move.col].State = SquareState.Missed;
 
             return true;
         }
