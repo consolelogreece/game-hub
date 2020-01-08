@@ -32,15 +32,15 @@ export default class BattleshipsGrid extends Component
                 style.height = squareSize;
                 style.width = squareSize;
                 squares.push(
-                    <div className="square" key={`${row},${col}`} style={style}>
+                    <div onClick={() => this.props.onSquareClick(row, col)} className="square" key={`${row},${col}`} style={style}>
                         {row},{col}
                     </div>
                 );
             }
         }
 
-        // remove npixelssquare as we dont want these attributes in dom tree
-        let {nPixelsSquare, ...props} = this.props;
+        // remove props we dont want on dom tree
+        let {nPixelsSquare, onSquareClick, gridRef, ...props} = this.props;
 
         return(
             <div style={{height: props.height, width: props.width}} ref={props.gridRef} {...props} id="grid">

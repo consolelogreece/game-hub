@@ -98,7 +98,7 @@ export default class Battleships extends Component {
     {
         if (this.state.playerInfo !== null && this.state.playerInfo.ready)
         {
-            return <InPlayBoard width={this.props.containerWidth / 2} ships={this.state.playerShips} boardState={this.state.playerBoardState}/>
+            return <InPlayBoard width={this.props.containerWidth / 2} ships={this.state.playerShips} boardState={this.state.playerBoardState} onSquareClick={() => {}}/>
         }
         else
         {
@@ -109,10 +109,21 @@ export default class Battleships extends Component {
         }
     }
 
+    isHost = () =>
+    {
+        return this.state.playerInfo === null ? null : this.state.playerInfo.isHost;
+    }
+
+    makeMove = (row, col) =>
+    {
+        this.invoke('Move', {row: row, col: col}).then(x => console.log(x), "ok ok ok ok")
+    }
+
     render()
     {
         let DynamicBoard = this.GetDynamicBoard();
-        let isHost, isPlayerRegistered = false;
+        let isPlayerRegistered = this.state.playerInfo !== null;
+        let isHost = this.isHost();
         let hasPlayerResigned, isGameFull = false;
         let gameState = "lobby";
         
@@ -120,7 +131,7 @@ export default class Battleships extends Component {
             <div>
                 <div style={{display: "flex"}}>
                     {DynamicBoard}
-                    <InPlayBoard width={this.props.containerWidth / 2} ships={this.state.opponentShips} boardState={this.state.opponentBoardState}/>
+                    <InPlayBoard width={this.props.containerWidth / 2} ships={this.state.opponentShips} boardState={this.state.opponentBoardState} onSquareClick={this.makeMove}/>
                 </div>
                 
                 <OptionPanel

@@ -267,6 +267,12 @@ namespace GameHub.Games.BoardGames.Battleships
 
         public ActionResult Start(string playerId)
         {
+            if (playerId != _config.CreatorId) return new ActionResult(false,  "You are not the host");
+
+            if (_started) return new ActionResult(false, "The game has already started");
+
+            if (p1 == null || p2 == null) return new ActionResult(false, "Not enough players");
+
             _started = true;
             return new ActionResult(true);
         }

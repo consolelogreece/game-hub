@@ -255,7 +255,8 @@ export default class BattleshipsSetupBoard extends Component
                     onTouchMove={this.onTouchMove}
                     nPixelsSquare={this.state.nPixelsSquare} 
                     rows={10} 
-                    cols={10} 
+                    cols={10}
+                    onSquareClick={() => {}}
                     styles={this.state.squareStyles}>
                     {ships}
                 </Grid>

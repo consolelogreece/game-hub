@@ -100,7 +100,8 @@ export default class BattleshipsPlayBoard extends Component
                     nPixelsSquare={this.state.nPixelsSquare} 
                     rows={10} 
                     cols={10} 
-                    styles={styles}>
+                    styles={styles}
+                    onSquareClick={this.props.onSquareClick}>
                     {ships}
                 </Grid>
             </div>
