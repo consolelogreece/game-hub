@@ -273,6 +273,8 @@ namespace GameHub.Games.BoardGames.Battleships
 
             if (p1 == null || p2 == null) return new ActionResult(false, "Not enough players");
 
+            if (_game.p1 == null || _game.p2 == null)  return new ActionResult(false, "Not all players are ready");
+
             _started = true;
             return new ActionResult(true);
         }

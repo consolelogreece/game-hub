@@ -27,9 +27,12 @@ export default class Battleships extends Component {
             'GameStarted',
             'GameOver',
             'PlayerMoved'
-        ], gameState => this.updateStateWithNewGameState(gameState));
+        ], async () => {
+            let gameState = await this.fetchState();
+            this.updateStateWithNewGameState(gameState);
+        });
 
-        this.props.on('RematchStarted', gameState => this.RematchStarted(gameState));
+        this.props.on('RematchStarted', () => this.RematchStarted());
         
         this.initialize();   
     }
@@ -43,6 +46,17 @@ export default class Battleships extends Component {
         await this.populatePlayerClientInfo();
 
         this.props.onLoadComplete();
+    }
+
+    fetchState = () =>
+    {
+        return this.invoke('GetGameState');
+    }
+
+    RematchStarted = async () =>
+    {
+        await this.populateGameState();
+        await this.populatePlayerClientInfo();
     }
 
     GameJoined = () => {};
@@ -72,7 +86,7 @@ export default class Battleships extends Component {
             opponentShips: gameState.opponentSunkShips,
             gameConfiguration: gameState.configuration,
             playerBoardState: gameState.playerBoard,
-            opponentBoardState: gameState.oppenentBoard
+            opponentBoardState: gameState.opponentBoard
         });
     }
 
@@ -94,6 +108,15 @@ export default class Battleships extends Component {
         .then(gameState => this.updateStateWithNewGameState(gameState));
     }
 
+    handleRegistrationResponse = async res => 
+    {
+        if (res.wasSuccessful)
+        {
+            await this.populateGameState();
+            await this.populatePlayerClientInfo();
+        }
+    }
+
     GetDynamicBoard()
     {
         if (this.state.playerInfo !== null && this.state.playerInfo.ready)
@@ -103,7 +126,7 @@ export default class Battleships extends Component {
         else
         {
             return <SetupBoard ships = {this.state.gameConfiguration.initialShipLayout} 
-                    ReadyUp={(ships) => this.invoke("RegisterShips", ships).then(this.populateGameState).then(this.populatePlayerClientInfo)}
+                    ReadyUp={(ships) => this.invoke("RegisterShips", ships).then(res => this.handleRegistrationResponse(res))}
                     width={this.props.containerWidth / 2}
                 />
         }
@@ -126,6 +149,8 @@ export default class Battleships extends Component {
         let isHost = this.isHost();
         let hasPlayerResigned, isGameFull = false;
         let gameState = "lobby";
+
+        //console.log(this.state.opponentBoardState)
         
         return (
             <div>

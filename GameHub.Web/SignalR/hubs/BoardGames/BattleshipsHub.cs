@@ -27,13 +27,11 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
             return Context.Items["GameService"] as BattleshipsService;
         }
 
-        private void SendGamestate(string endpoint)
+        private void InformClients(string endpoint)
         {
-            var gameState = GetGameState();
-
             var gameId = Context.Items["GameId"].ToString();
 
-            Clients.Group(gameId).SendAsync(endpoint, gameState);
+            Clients.Group(gameId).SendAsync(endpoint);
         }
 
         public ActionResult StartGame() 
@@ -42,7 +40,7 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
 
             if (result.WasSuccessful)
             {
-                SendGamestate("GameStarted");
+                InformClients("GameStarted");
             }
 
             return result;
@@ -56,7 +54,7 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
 
             if (result.WasSuccessful)
             {
-                SendGamestate("PlayerJoined");
+                InformClients("PlayerJoined");
             }
 
             return result;
@@ -78,7 +76,7 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
 
             if (result.WasSuccessful)
             {
-                SendGamestate("PlayerResigned");
+                InformClients("PlayerResigned");
             }
 
             return result;
@@ -90,7 +88,7 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
 
             if (result.WasSuccessful)
             {
-                SendGamestate("RematchStarted");
+                InformClients("RematchStarted");
             }
 
             return result;
@@ -102,7 +100,7 @@ namespace GameHub.Web.SignalR.hubs.BoardGames
 
             if (result.WasSuccessful)
             {
-                SendGamestate("PlayerMoved");
+                InformClients("PlayerMoved");
             }
 
             return result;

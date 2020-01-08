@@ -39,14 +39,17 @@ export default class BattleshipsPlayBoard extends Component
     getStylesByBoardState(boardState)
     {
         let styles = {};
+        console.log(boardState)
 
-        if (boardState === undefined) return this.styles;
+        if (boardState === undefined) return styles;
 
         for(let i = 0; i < boardState.length; i++)
         {
             for (let j = 0; j < boardState[i].length; j++)
             {
                 let key = `${i},${j}`;
+
+                if (boardState[i][j] === null) continue;
 
                 switch (boardState[i][j].state)
                 {

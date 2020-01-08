@@ -73,8 +73,10 @@ namespace GameHub.Games.BoardGames.Battleships
 
                 _grid[move.row, move.col].State = SquareState.Hit;
             }
-
-            _grid[move.row, move.col].State = SquareState.Missed;
+            else
+            {
+                _grid[move.row, move.col].State = SquareState.Missed;
+            }
 
             return true;
         }
