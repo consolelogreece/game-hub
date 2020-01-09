@@ -38,10 +38,10 @@ export default class BattleshipsGrid extends Component
         }
 
         // remove props we dont want on dom tree
-        let {nPixelsSquare, onSquareClick, ...props} = this.props;
+        let {nPixelsSquare, onSquareClick, gridRef, ...props} = this.props;
 
         return(
-            <div style={{height: props.height, width: props.width}} ref={props.gridRef} {...props} id="grid">
+            <div style={{height: props.height, width: props.width}} ref={gridRef} {...props} id="grid">
                 {squares}
                 {this.props.children}
             </div>
