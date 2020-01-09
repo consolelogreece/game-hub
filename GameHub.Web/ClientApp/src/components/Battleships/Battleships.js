@@ -149,8 +149,6 @@ export default class Battleships extends Component {
         let isHost = this.isHost();
         let hasPlayerResigned, isGameFull = false;
         let gameState = "lobby";
-
-        //console.log(this.state.opponentBoardState)
         
         return (
             <div>
@@ -171,8 +169,6 @@ export default class Battleships extends Component {
                     Rematch = {() => this.invoke('Rematch')}
                     Resign = {() => this.Resign()}
                 />
-
-                <Button onClick={() => this.setState({inPlay: !this.state.inPlay})}>toggle board</Button>
             </div>
         );
     }
