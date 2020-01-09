@@ -23,7 +23,7 @@ export default props =>
                     </div>
                 </div>
             )}
-            <Button {...properinos}>Join</Button>
+            <Button {...properinos}>{props.children}</Button>
         </div>
     );
 }
