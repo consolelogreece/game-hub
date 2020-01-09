@@ -139,7 +139,7 @@ export default class Battleships extends Component {
 
     makeMove = (row, col) =>
     {
-        this.invoke('Move', {row: row, col: col}).then(x => console.log(x), "ok ok ok ok")
+        this.invoke('Move', {row: row, col: col});
     }
 
     render()
@@ -152,12 +152,12 @@ export default class Battleships extends Component {
         
         return (
             <div>
-                <div style={{display: "flex"}}>
-                    <div id="playerBoard">
-                        {DynamicBoard}
-                    </div>
+                <div id="boardsContainer">
                     <div id="opponentBoard">
                         <InPlayBoard width={this.props.containerWidth / 2} ships={this.state.opponentShips} boardState={this.state.opponentBoardState} onSquareClick={this.makeMove}/>
+                    </div>
+                    <div id="playerBoard">
+                        {DynamicBoard}
                     </div>
                 </div>
                 

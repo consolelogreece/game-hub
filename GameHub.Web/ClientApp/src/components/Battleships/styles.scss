@@ -78,8 +78,30 @@
 
 #playerBoard
 {
-  margin-right: 20px;
 }
 
 #opponentBoard
-{}
+{
+  margin-right: 10px;
+  margin-left: -5px;
+}
+
+#boardsContainer
+{
+  display:flex;
+  flex-direction:row;
+}
+
+@media screen and (max-width:1000px)
+{
+  #opponentBoard
+  {
+    margin-bottom: 10px;
+    margin-right: 0px;
+    margin-left: 0px;
+  }
+  #boardsContainer
+  {
+    flex-direction: column;
+  }
+}
