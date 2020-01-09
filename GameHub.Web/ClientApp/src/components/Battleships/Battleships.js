@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import SetupBoard from './Boards/setupBoard';
 import InPlayBoard from './Boards/inPlayBoard';
-import Button from '../Buttons/Standard';
 import OptionPanel from '../Common/OptionPanel';
+import './styles.scss';
 
 export default class Battleships extends Component {
     constructor(props) {
@@ -153,8 +153,12 @@ export default class Battleships extends Component {
         return (
             <div>
                 <div style={{display: "flex"}}>
-                    {DynamicBoard}
-                    <InPlayBoard width={this.props.containerWidth / 2} ships={this.state.opponentShips} boardState={this.state.opponentBoardState} onSquareClick={this.makeMove}/>
+                    <div id="playerBoard">
+                        {DynamicBoard}
+                    </div>
+                    <div id="opponentBoard">
+                        <InPlayBoard width={this.props.containerWidth / 2} ships={this.state.opponentShips} boardState={this.state.opponentBoardState} onSquareClick={this.makeMove}/>
+                    </div>
                 </div>
                 
                 <OptionPanel

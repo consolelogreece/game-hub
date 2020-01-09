@@ -14,7 +14,7 @@ namespace GameHub.Games.BoardGames.Battleships
         public Player(Board board, string playerId)
         {
             Board = board;
-            
+
             PlayerId = playerId;
         }
 

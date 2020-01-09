@@ -27,7 +27,7 @@ namespace GameHub.Games.BoardGames.Battleships
             _cols = cols;
         }
 
-        public void Register(List<ShipModel> shipModels, string playerId)
+        public void Register(List<ShipModel> shipModels, string playerId, PlayerNumber playerNumber)
         {
             if (p1 != null && p2 != null) throw new System.Exception("wat");
 
@@ -39,7 +39,7 @@ namespace GameHub.Games.BoardGames.Battleships
 
             newPlayer.RegisterShips(ships);
 
-            if (p1 == null) p1 = newPlayer;
+            if (playerNumber == PlayerNumber.One) p1 = newPlayer;
             else p2 = newPlayer;
         }
 

@@ -179,7 +179,9 @@ namespace GameHub.Games.BoardGames.Battleships
             var validation = ValidateShips(shipModels);
             if (!validation.WasSuccessful) return validation;
 
-            _game.Register(shipModels, playerId);
+            var playerNumber = p1.Id == playerId ? PlayerNumber.One : PlayerNumber.Two;
+
+            _game.Register(shipModels, playerId, playerNumber);
 
             GetPlayer(playerId).Ready = true;
 
@@ -314,7 +316,6 @@ namespace GameHub.Games.BoardGames.Battleships
         {
             Player player;
             Player opponent;
-            
 
             var plonker = _nextTurnPlayerIndex == 1 ? p1 : p2;
 
