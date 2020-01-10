@@ -86,7 +86,7 @@ export default class BattleshipsPlayBoard extends Component
                     key={index}
                     {...ship}
                     // because backend uses an enum for horizontal/vertical value, we have to convert back to string form here.
-                    orientation={ship.orientation === 1 ? "horizontal" : "vertical"}
+                    //orientation={ship.orientation === 1 ? "horizontal" : "vertical"}
                 />
             )}
         )
@@ -105,6 +105,7 @@ export default class BattleshipsPlayBoard extends Component
                     styles={styles}
                     onSquareClick={this.props.onSquareClick}>
                     {ships}
+                    {this.props.children}
                 </Grid>
             </div>
         );

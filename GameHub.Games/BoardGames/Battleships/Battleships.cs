@@ -299,7 +299,12 @@ namespace GameHub.Games.BoardGames.Battleships
         {
             var endReason = "";
 
-            var status = (_gameOver ? GameStatus.finished : _started ? GameStatus.started : GameStatus.lobby).ToString();
+            GameStatus status;
+
+            if (_gameOver) status = GameStatus.finished;
+            else if (_started) status = GameStatus.started;
+            else if(p1 == null || p2 == null) status = GameStatus.waiting;
+            else status = GameStatus.lobby;
 
             if (_gameOver)
             {
@@ -309,7 +314,7 @@ namespace GameHub.Games.BoardGames.Battleships
                 else endReason = "It's a draw!";
             }
 
-            return new GameProgress(status, endReason);
+            return new GameProgress(status.ToString(), endReason);
         }
 
         public BattleshipsGameState GetGameState(string playerId)
@@ -330,6 +335,11 @@ namespace GameHub.Games.BoardGames.Battleships
                 opponent = _game.p1;
             }
 
+            var players = new List<BattleshipsPlayerModel>();
+
+            if (p1 != null) players.Add(p1);
+            if (p2 != null) players.Add(p2);
+
             return new BattleshipsGameState
             {
                 PlayerShips = GetShips(player),
@@ -338,7 +348,8 @@ namespace GameHub.Games.BoardGames.Battleships
                 OpponentBoard = GetGrid(opponent),
                 Configuration = _config, 
                 CurrentTurnPlayer = plonker, 
-                Status = this.GetGameStatus()  
+                Status = this.GetGameStatus(),
+                Players = players
             };
         }
     }

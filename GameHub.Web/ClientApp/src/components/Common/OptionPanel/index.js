@@ -39,6 +39,7 @@ export default class optionsPanel extends React.Component
         switch (gameState)
         {
             case "lobby":
+            case "waiting":
                 if (!isPlayerRegistered && !isGameFull)
                 {       
                     optionsPanel = <Button onClick={this.joinGame}>Join</Button>

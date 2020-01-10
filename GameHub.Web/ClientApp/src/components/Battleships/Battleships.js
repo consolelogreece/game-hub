@@ -15,7 +15,8 @@ export default class Battleships extends Component {
             opponentBoardState: [[]],
             opponentShips: [],
             playerShips: [],
-            playerInfo: null
+            playerInfo: null,
+            gameState:""
         };
     }
 
@@ -59,7 +60,10 @@ export default class Battleships extends Component {
         await this.populatePlayerClientInfo();
     }
 
-    GameJoined = () => {};
+    GameJoined = () => {
+        this.populatePlayerClientInfo()
+        .then(this.populateGameState())
+    };
     JoinGame = () => {
         return this.invoke('JoinGame');
     }
@@ -80,14 +84,23 @@ export default class Battleships extends Component {
 
     updateStateWithNewGameState = gameState =>
     {
-        gameState.configuration.initialShipLayout.map(s => s.orientation = s.orientation === 1 ? "horizontal" : "vertical");
+        this.mapShipOrientations(gameState.configuration.initialShipLayout);
+        this.mapShipOrientations(gameState.playerShips);
+        this.mapShipOrientations(gameState.opponentSunkShips);
+
         this.setState({
             playerShips: gameState.playerShips, 
             opponentShips: gameState.opponentSunkShips,
             gameConfiguration: gameState.configuration,
             playerBoardState: gameState.playerBoard,
-            opponentBoardState: gameState.opponentBoard
+            opponentBoardState: gameState.opponentBoard,
+            gameState: gameState.status.status
         });
+    }
+
+    mapShipOrientations = ships =>
+    {
+        return ships.map(s => s.orientation = s.orientation === 1 ? "horizontal" : "vertical");
     }
 
     populatePlayerClientInfo = () =>
@@ -119,16 +132,31 @@ export default class Battleships extends Component {
 
     GetDynamicBoard()
     {
+        let allowMoving = this.state.gameState === "lobby";
+
+        let message = !allowMoving ? <div style={{color:"white", position: "absolute", width: "100%", height: "100%", backgroundColor: "rgba(0,0,0,0.5)", zIndex: "99"}}>{"Waiting for both players to join"}</div> : "";
+        
         if (this.state.playerInfo !== null && this.state.playerInfo.ready)
         {
-            return <InPlayBoard width={this.props.containerWidth / 2} ships={this.state.playerShips} boardState={this.state.playerBoardState} onSquareClick={() => {}}/>
+            return <InPlayBoard width={this.props.containerWidth / 2} ships={this.state.playerShips} boardState={this.state.playerBoardState} onSquareClick={() => {}}></InPlayBoard>
         }
         else
         {
-            return <SetupBoard ships = {this.state.gameConfiguration.initialShipLayout} 
+            if (allowMoving)
+            {
+                return <SetupBoard ships = {this.state.gameConfiguration.initialShipLayout} 
                     ReadyUp={(ships) => this.invoke("RegisterShips", ships).then(res => this.handleRegistrationResponse(res))}
                     width={this.props.containerWidth / 2}
-                />
+                >{message}</SetupBoard>
+            }
+            else
+            {
+                return <InPlayBoard 
+                    ships = {this.state.gameConfiguration.initialShipLayout}
+                    width={this.props.containerWidth / 2}>
+                    {message}
+                </InPlayBoard>
+            } 
         }
     }
 
@@ -148,15 +176,17 @@ export default class Battleships extends Component {
         let isPlayerRegistered = this.state.playerInfo !== null;
         let isHost = this.isHost();
         let hasPlayerResigned, isGameFull = false;
-        let gameState = "lobby";
+        let gameState = this.state.gameState;
         
         return (
             <div>
                 <div id="boardsContainer">
-                    <div id="opponentBoard">
+                    {(gameState === "started"|| gameState === "finished") && <div id="opponentBoard">
+                        <span style={{width:"100", textAlign:"center"}}>{"Opponents board"}</span>
                         <InPlayBoard width={this.props.containerWidth / 2} ships={this.state.opponentShips} boardState={this.state.opponentBoardState} onSquareClick={this.makeMove}/>
-                    </div>
+                    </div>}
                     <div id="playerBoard">
+                        <span style={{width:"100", textAlign:"center"}}>{"Your board"}</span>
                         {DynamicBoard}
                     </div>
                 </div>

@@ -246,19 +246,20 @@ export default class BattleshipsSetupBoard extends Component
                 <Grid 
                     width={this.state.nPixelsSquare * this.state.cols}
                     height={this.state.nPixelsSquare * this.state.rows}
-                    gridRef={this.gridRef} 
-                    onMouseDown={this.onMouseDown} 
-                    onMouseUp={this.onMouseUp} 
-                    onMouseMove={this.onMouseMove} 
-                    onTouchStart={this.onMouseDown} 
-                    onTouchEnd={this.onMouseUp} 
+                    gridRef={this.gridRef}
+                    nPixelsSquare={this.state.nPixelsSquare}
+                    onMouseDown={this.onMouseDown}
+                    onMouseUp={this.onMouseUp}
+                    onMouseMove={this.onMouseMove}
+                    onTouchStart={this.onMouseDown}
+                    onTouchEnd={this.onMouseUp}
                     onTouchMove={this.onTouchMove}
-                    nPixelsSquare={this.state.nPixelsSquare} 
                     rows={10} 
                     cols={10}
                     onSquareClick={() => {}}
                     styles={this.state.squareStyles}>
                     {ships}
+                    {this.props.children}
                 </Grid>
                 <Button onClick={() => this.props.ReadyUp(this.state.ships)}>SUBMIT THE SHIPS</Button>
             </div>
