@@ -22,7 +22,7 @@ export default class BattleshipsPlayBoard extends Component
 
     static getDerivedStateFromProps(props, state)
     {
-        let nPixelsSquare = props.width / state.rows;
+        let nPixelsSquare = props.containerWidth / state.rows;
 
         let ships = props.ships === undefined ? [] : [...props.ships];
 

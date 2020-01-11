@@ -60,6 +60,16 @@
   background:rgba(255,255,255,0.5);
 }
 
+#playerBoard
+{
+  width: 10%;
+}
+
+#opponentBoard
+{
+  width: 10%;
+}
+
 .ship-head-setup
 {
   background:rgba(255,255,255,0.5);
@@ -75,25 +85,18 @@
   background-color: #747472 ;
 }
 
-#opponentBoard
-{
-  margin-right: 10px;
-  margin-left: -5px;
-}
-
 #boardsContainer
 {
   display:flex;
   flex-direction:row;
+  justify-content:space-between;
 }
 
 @media screen and (max-width:1000px)
 {
-  #opponentBoard
+  #playerBoard
   {
     margin-bottom: 10px;
-    margin-right: 0px;
-    margin-left: 0px;
   }
   #boardsContainer
   {

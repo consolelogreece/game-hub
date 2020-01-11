@@ -3,6 +3,7 @@ import Battleships from '../../components/Battleships/Battleships';
 import withSignalrConnection from '../../components/HigherOrder/withSignalrConnection';
 import withTimedErrorMessage from '../../components/HigherOrder/withTimedErrorMessage';
 import GetRenderedWidthHOC from '../../components/HigherOrder/GetRenderedWidthHOC';
+import './styles.scss';
 
 export default class ConnectFourPage extends React.PureComponent
 {
@@ -47,7 +48,7 @@ export default class ConnectFourPage extends React.PureComponent
     render()
     {
         return (
-            <div>
+            <div id="battleshipsGameContainer">
                 {!!this.state.game && (
                     <this.state.game onLoadComplete={this.onLoadComplete} />
                 )}

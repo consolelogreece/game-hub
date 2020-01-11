@@ -3,6 +3,7 @@ import SetupBoard from './Boards/setupBoard';
 import InPlayBoard from './Boards/inPlayBoard';
 import OptionPanel from '../Common/OptionPanel';
 import AbsoluteCenterAlign from '../Common/AbsoluteCenter';
+import GetRenderedWidthHOC from '../HigherOrder/GetRenderedWidthHOC';
 import './styles.scss';
 
 export default class Battleships extends Component {
@@ -132,45 +133,45 @@ export default class Battleships extends Component {
         }
     }
 
-    GetDynamicBoard()
+    GetDynamicBoard(allowMoving, message)
     {
-        let allowMoving = this.state.gameState === "lobby";
-
-        let message = !allowMoving ? (
-        <div style={{
-                color:"white", 
-                position: "absolute", 
-                width: "100%", 
-                height: "100%", 
-                backgroundColor: "rgba(0,0,0,0.8)", 
-                zIndex: "99"}}
-            >
-            <AbsoluteCenterAlign>{"Waiting for both players to join"}</AbsoluteCenterAlign>
-        </div>) : "";
-
-        
         if (this.state.playerInfo !== null && this.state.playerInfo.ready)
         {
-            return <InPlayBoard width={this.props.containerWidth / 2} ships={this.state.playerShips} boardState={this.state.playerBoardState} onSquareClick={() => {}}></InPlayBoard>
+            return <InPlayBoard width={this.props.containerWidth / 2.1} ships={this.state.playerShips} boardState={this.state.playerBoardState} onSquareClick={() => {}}>{message}</InPlayBoard>
         }
         else
         {
             if (allowMoving)
             {
-                return <SetupBoard ships = {this.state.gameConfiguration.initialShipLayout} 
+                let Board = GetRenderedWidthHOC(SetupBoard)
+                return <Board ships = {this.state.gameConfiguration.initialShipLayout} 
                     ReadyUp={(ships) => this.invoke("RegisterShips", ships).then(res => this.handleRegistrationResponse(res))}
-                    width={this.props.containerWidth / 2}
-                >{message}</SetupBoard>
+                >{message}</Board>
             }
             else
             {
-                return <InPlayBoard 
-                    ships = {this.state.gameConfiguration.initialShipLayout}
-                    width={this.props.containerWidth / 2}>
+                let Board = GetRenderedWidthHOC(InPlayBoard)
+                return <Board 
+                    ships = {this.state.gameConfiguration.initialShipLayout}>
                     {message}
-                </InPlayBoard>
+                </Board>
             } 
         }
+    }
+
+    generateMessageNode = (allowMoving) => 
+    {
+        return !allowMoving ? (
+            <div style={{
+                    color:"white", 
+                    position: "absolute", 
+                    width: "100%", 
+                    height: "100%", 
+                    backgroundColor: "rgba(0,0,0,0.8)", 
+                    zIndex: "99"}}
+                >
+                <AbsoluteCenterAlign>{"Waiting for both players to join"}</AbsoluteCenterAlign>
+            </div>) : "";
     }
 
     isHost = () =>
@@ -185,22 +186,25 @@ export default class Battleships extends Component {
 
     render()
     {
-        let DynamicBoard = this.GetDynamicBoard();
         let isPlayerRegistered = this.state.playerInfo !== null;
         let isHost = this.isHost();
         let hasPlayerResigned, isGameFull = false;
         let gameState = this.state.gameState;
+        let allowMoving = gameState === "lobby";
+        let message = this.generateMessageNode(allowMoving);
+        let DynamicBoard = this.GetDynamicBoard(allowMoving, message);
+        let OpponentBoard = GetRenderedWidthHOC(InPlayBoard);
         
         return (
             <div>
                 <div id="boardsContainer">
-                    {(gameState === "started"|| gameState === "finished") && <div id="opponentBoard">
-                        <span style={{width:"100", textAlign:"center"}}>{"Opponents board"}</span>
-                        <InPlayBoard width={this.props.containerWidth / 2} ships={this.state.opponentShips} boardState={this.state.opponentBoardState} onSquareClick={this.makeMove}/>
-                    </div>}
                     <div id="playerBoard">
-                        <span style={{width:"100", textAlign:"center"}}>{"Your board"}</span>
+                        <span style={{width:"100%", textAlign:"center"}}>{"Your board"}</span>
                         {DynamicBoard}
+                    </div>
+                    <div id="opponentBoard">
+                        <span style={{width:"100%", textAlign:"center"}}>{"Opponents board"}</span>
+                        <OpponentBoard ships={this.state.opponentShips} boardState={this.state.opponentBoardState} onSquareClick={this.makeMove}>{message}</OpponentBoard>
                     </div>
                 </div>
                 
