@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import Grid from './Common/grid';
 import Ship from '../Ships/ShipPlay';
+import { gridSquareBlue } from '../../../utils/variables';
 import '../styles.scss';
 
 export default class BattleshipsPlayBoard extends Component
@@ -59,14 +60,14 @@ export default class BattleshipsPlayBoard extends Component
                     // Missed
                     case 1:
                         styles[key] = {
-                            background: "radial-gradient(circle, #ffffff 26%, transparent 30%)"
+                            background: `radial-gradient(circle, #ffffff 26%, ${gridSquareBlue} 30%)`
                         };
                         break;
                     
                     // Hit
                     case 2:
                         styles[key] = {
-                            background: "radial-gradient(circle, #ff0000 26%, transparent 30%)"
+                            background: `radial-gradient(circle, #ff0000 26%, ${gridSquareBlue} 30%)`
                         };
                         break;
                 }
@@ -85,8 +86,6 @@ export default class BattleshipsPlayBoard extends Component
                     id={index}
                     key={index}
                     {...ship}
-                    // because backend uses an enum for horizontal/vertical value, we have to convert back to string form here.
-                    //orientation={ship.orientation === 1 ? "horizontal" : "vertical"}
                 />
             )}
         )

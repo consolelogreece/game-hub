@@ -65,6 +65,7 @@ export default class Battleships extends Component {
         this.populatePlayerClientInfo()
         .then(this.populateGameState())
     };
+
     JoinGame = () => {
         return this.invoke('JoinGame');
     }

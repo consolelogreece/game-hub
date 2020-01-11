@@ -5,7 +5,7 @@ import '../styles.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSyncAlt } from '@fortawesome/free-solid-svg-icons';
 import Button from '../../Buttons/Standard';
-import {CalculateRelativePositon} from '../../../utils/Helpers/Positioning';
+import { CalculateRelativePositon } from '../../../utils/Helpers/Positioning';
 
 export default class BattleshipsSetupBoard extends Component
 {

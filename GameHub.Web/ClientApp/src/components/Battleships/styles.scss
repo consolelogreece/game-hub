@@ -1,6 +1,5 @@
 #grid
 {
-  background-color: #333;
   display: flex;
   flex-wrap: wrap;
   margin: 0 auto;
@@ -68,16 +67,12 @@
 
 .ship-body-inplay
 {
-  background-color: aquamarine;
+  background-color: #848482 ;
 }
 
 .ship-head-inplay
 {
-  background-color: aqua;
-}
-
-#playerBoard
-{
+  background-color: #747472 ;
 }
 
 #opponentBoard

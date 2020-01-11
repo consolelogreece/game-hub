@@ -1,8 +1,10 @@
 import React, {Component} from 'react';
+import { gridSquareBlue } from '../../../../utils/variables';
+
 import '../../styles.scss';
 
 let defaultStyle = {
-  backgroundColor: "#333"
+  backgroundColor: gridSquareBlue
 };
 
 export default class BattleshipsGrid extends Component 
@@ -31,6 +33,7 @@ export default class BattleshipsGrid extends Component
                 let style = {...this.getStyle(row, col)};
                 style.height = squareSize;
                 style.width = squareSize;
+                
                 squares.push(
                     <div onClick={() => this.props.onSquareClick(row, col)} className="square" key={`${row},${col}`} style={style} />
                 );

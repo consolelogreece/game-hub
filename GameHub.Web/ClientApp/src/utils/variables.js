@@ -1,0 +1,1 @@
+export const gridSquareBlue = "#3a506b";
