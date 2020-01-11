@@ -62,12 +62,12 @@
 
 #playerBoard
 {
-  width: 10%;
+  width: 49%;
 }
 
 #opponentBoard
 {
-  width: 10%;
+  width: 49%;
 }
 
 .ship-head-setup
@@ -97,6 +97,11 @@
   #playerBoard
   {
     margin-bottom: 10px;
+    width: 100%;
+  }
+  #opponentBoard
+  {
+    width: 100%;
   }
   #boardsContainer
   {

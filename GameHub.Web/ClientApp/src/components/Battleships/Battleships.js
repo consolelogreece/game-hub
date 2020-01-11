@@ -137,7 +137,8 @@ export default class Battleships extends Component {
     {
         if (this.state.playerInfo !== null && this.state.playerInfo.ready)
         {
-            return <InPlayBoard width={this.props.containerWidth / 2.1} ships={this.state.playerShips} boardState={this.state.playerBoardState} onSquareClick={() => {}}>{message}</InPlayBoard>
+            let Board = GetRenderedWidthHOC(InPlayBoard)
+            return <Board ships={this.state.playerShips} boardState={this.state.playerBoardState} onSquareClick={() => {}}>{message}</Board>
         }
         else
         {
@@ -190,7 +191,7 @@ export default class Battleships extends Component {
         let isHost = this.isHost();
         let hasPlayerResigned, isGameFull = false;
         let gameState = this.state.gameState;
-        let allowMoving = gameState === "lobby";
+        let allowMoving = gameState === "lobby" || gameState === "started";
         let message = this.generateMessageNode(allowMoving);
         let DynamicBoard = this.GetDynamicBoard(allowMoving, message);
         let OpponentBoard = GetRenderedWidthHOC(InPlayBoard);
