@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import SetupBoard from './Boards/setupBoard';
 import InPlayBoard from './Boards/inPlayBoard';
 import OptionPanel from '../Common/OptionPanel';
+import AbsoluteCenterAlign from '../Common/AbsoluteCenter';
 import './styles.scss';
 
 export default class Battleships extends Component {
@@ -134,7 +135,18 @@ export default class Battleships extends Component {
     {
         let allowMoving = this.state.gameState === "lobby";
 
-        let message = !allowMoving ? <div style={{color:"white", position: "absolute", width: "100%", height: "100%", backgroundColor: "rgba(0,0,0,0.5)", zIndex: "99"}}>{"Waiting for both players to join"}</div> : "";
+        let message = !allowMoving ? (
+        <div style={{
+                color:"white", 
+                position: "absolute", 
+                width: "100%", 
+                height: "100%", 
+                backgroundColor: "rgba(0,0,0,0.8)", 
+                zIndex: "99"}}
+            >
+            <AbsoluteCenterAlign>{"Waiting for both players to join"}</AbsoluteCenterAlign>
+        </div>) : "";
+
         
         if (this.state.playerInfo !== null && this.state.playerInfo.ready)
         {
