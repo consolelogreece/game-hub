@@ -131,8 +131,8 @@ export default class Battleships extends Component {
     {
         if (res.wasSuccessful)
         {
-            await this.populateGameState();
             await this.populatePlayerClientInfo();
+            await this.populateGameState();
         }
     }
 
