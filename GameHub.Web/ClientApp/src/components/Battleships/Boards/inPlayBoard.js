@@ -95,7 +95,7 @@ export default class BattleshipsPlayBoard extends Component
             // as stated earlier, 2 is the numerical representation of a backend enumeration for the status of a square.
             if (this.props.boardState[unformattedShip.row + (i * horizontalMult)][unformattedShip.col + (i * verticalMult)].state === 2)
             {
-                shipSegmentStyles.push({backgroundColor:"#D8000C"})
+                shipSegmentStyles.push({background: `radial-gradient(circle, #D8000C 26%, #333 30%)`});
             }
             else
             {
