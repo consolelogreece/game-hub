@@ -99,7 +99,7 @@ export default class BattleshipsPlayBoard extends Component
             }
             else
             {
-                shipSegmentStyles.push({backgroundColor:"#848482"});
+                shipSegmentStyles.push({backgroundColor:"#333"});
             }
         }
    

@@ -1,1 +1,1 @@
-export const gridSquareBlue = "#3a506b";
+export const gridSquareBlue = "#0099b6";
