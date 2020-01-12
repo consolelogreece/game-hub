@@ -7,7 +7,6 @@ namespace GameHub.Games.BoardGames.Battleships
     {
         public BattleshipsPlayerModel CurrentTurnPlayer {get;set;}
 
-
         public List<BattleshipsPlayerModel> Players { get; set; }
         
         public BattleshipsConfiguration Configuration { get; set; }

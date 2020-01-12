@@ -83,16 +83,40 @@ export default class BattleshipsPlayBoard extends Component
         return styles;
     }
 
+    formatShip = (unformattedShip, key) => 
+    {
+        let shipSegmentStyles = [];
+        let horizontalMult = unformattedShip.orientation !== "horizontal" ? 1 : 0;
+        let verticalMult = unformattedShip.orientation !== "vertical" ? 1 : 0;
+
+        // check to see if any of the squares occupied by the ship are hit, as if they are then the ship is hit. create an array keeping track of hit ship segments and create relevent styles.
+        for(let i = 0; i < unformattedShip.length ; i++)
+        {
+            // as stated earlier, 2 is the numerical representation of a backend enumeration for the status of a square.
+            if (this.props.boardState[unformattedShip.row + (i * horizontalMult)][unformattedShip.col + (i * verticalMult)].state === 2)
+            {
+                shipSegmentStyles.push({backgroundColor:"#D8000C"})
+            }
+            else
+            {
+                shipSegmentStyles.push({backgroundColor:"#848482"});
+            }
+        }
+   
+        return <Ship
+            nPixelsSquare={this.state.nPixelsSquare} 
+            id={key}
+            key={key}
+            {...unformattedShip}
+            shipSegmentStyles={shipSegmentStyles}
+        />
+    }
+
     render()
     {
         let ships = this.state.ships.map((ship, index) => {
             return (
-                <Ship
-                    nPixelsSquare={this.state.nPixelsSquare} 
-                    id={index}
-                    key={index}
-                    {...ship}
-                />
+                this.formatShip(ship, index)
             )}
         )
 

@@ -42,7 +42,7 @@ export default class BattleshipsSetupBoard extends Component
         {
             newState.ships = ships;
         }
-        
+
         if (Object.keys(newState).length === 0) return null;
 
         return newState;
@@ -240,8 +240,12 @@ export default class BattleshipsSetupBoard extends Component
                 extragoodstyles.top = `${- this.state.nPixelsSquare / 3}px`;
             }
 
+            let shipSegmentStyles = [];
+
+            for(let i = 0; i < ship.length; i++) shipSegmentStyles.push({backgroundColor:"rgba(255,255,255,0.5)"});
+
             return (
-                <Ship style={{cursor: this.state.selectedShipIndex === -1 ? "grab" : "grabbing"}} nPixelsSquare={this.state.nPixelsSquare} key={index} id={index} handleDrag={this.handleDrag} {...ship}>
+                <Ship shipSegmentStyles={shipSegmentStyles} style={{cursor: this.state.selectedShipIndex === -1 ? "grab" : "grabbing"}} nPixelsSquare={this.state.nPixelsSquare} key={index} id={index} handleDrag={this.handleDrag} {...ship}>
                    <FontAwesomeIcon style={{fontSize: `${this.state.nPixelsSquare / 1.5}px`, ...extragoodstyles}} icon={faSyncAlt} onClick={() => {this.rotateShip(index)}}/>
                 </Ship>
             )}

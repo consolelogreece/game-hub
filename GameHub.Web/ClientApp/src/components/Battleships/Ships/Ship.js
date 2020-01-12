@@ -14,17 +14,19 @@ export default class Ship extends Component
 
         let Body = this.props.Body;
 
+        let {shipSegmentStyles} = this.props;
+
         for(let i = 1; i < this.props.length - 1; i++)
         {
-            body.push(<Body height={this.props.nPixelsSquare} key={i} width={this.props.nPixelsSquare} />);
+            body.push(<Body style={shipSegmentStyles[i]} height={this.props.nPixelsSquare} key={i} width={this.props.nPixelsSquare} />);
         }
 
         return (
             <div style={style} name="ship" id={this.props.id} className={"ship-" + this.props.orientation}>
                 {this.props.children}
-                <Head height={this.props.nPixelsSquare} width={this.props.nPixelsSquare} />
+                <Head style={shipSegmentStyles[0]} height={this.props.nPixelsSquare} width={this.props.nPixelsSquare} />
                 {body}
-                <Head height={this.props.nPixelsSquare} width={this.props.nPixelsSquare} />
+                <Head style={shipSegmentStyles[shipSegmentStyles.length - 1]} height={this.props.nPixelsSquare} width={this.props.nPixelsSquare} />
             </div>
         );
     }
