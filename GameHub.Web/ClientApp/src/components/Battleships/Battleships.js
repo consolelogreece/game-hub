@@ -145,7 +145,7 @@ export default class Battleships extends Component {
                     width: "100%", 
                     height: "100%", 
                     backgroundColor: "rgba(0,0,0,0.8)", 
-                    zIndex: "99"}}
+                    zIndex: "3"}}
                 >
                 <AbsoluteCenterAlign>{"Waiting for both players to join"}</AbsoluteCenterAlign>
             </div>) : "";
