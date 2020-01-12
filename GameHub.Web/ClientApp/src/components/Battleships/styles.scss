@@ -55,11 +55,6 @@
   flex-direction: row;
 }
 
-.ship-body-setup
-{
-  background:rgba(255,255,255,0.5);
-}
-
 #playerBoard
 {
   width: 49%;
@@ -70,19 +65,34 @@
   width: 49%;
 }
 
+.ship-segment
+{
+  border: 1px solid white;
+  box-sizing: border-box;
+}
+
+.ship-body-setup
+{
+  @extend .ship-segment;
+  background:rgba(255,255,255,0.5);
+}
+
 .ship-head-setup
 {
+  @extend .ship-segment;
   background:rgba(255,255,255,0.5);
 }
 
 .ship-body-inplay
 {
-  background-color: #848482 ;
+  @extend .ship-segment;
+  background-color: #848482;
 }
 
 .ship-head-inplay
 {
-  background-color: #747472 ;
+  @extend .ship-segment;
+  background-color: #747472;
 }
 
 #boardsContainer
