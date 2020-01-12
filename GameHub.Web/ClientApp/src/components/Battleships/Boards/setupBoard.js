@@ -31,15 +31,21 @@ export default class BattleshipsSetupBoard extends Component
 
         let ships = props.ships === undefined ? [] : [...props.ships];
 
-        if (nPixelsSquare !== state.nPixelsSquare || state.ships !== ships)
-        {
-            return {
-                nPixelsSquare: nPixelsSquare,
-                ships: ships
-            }
-        }  
+        let newState = {};  
 
-        return null;
+        if (nPixelsSquare !== state.nPixelsSquare)
+        {
+            newState.nPixelsSquare = nPixelsSquare;
+        }
+
+        if (state.ships !== ships)
+        {
+            newState.ships = ships;
+        }
+        
+        if (Object.keys(newState).length === 0) return null;
+
+        return newState;
     }
 
     onMouseDown = event =>

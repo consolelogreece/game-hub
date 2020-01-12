@@ -1,15 +1,18 @@
 import React, { Component } from 'react';
-import SetupBoard from './Boards/setupBoard';
-import InPlayBoard from './Boards/inPlayBoard';
+import setupBoard from './Boards/setupBoard';
+import inPlayBoard from './Boards/inPlayBoard';
 import OptionPanel from '../Common/OptionPanel';
 import AbsoluteCenterAlign from '../Common/AbsoluteCenter';
 import GetRenderedWidthHOC from '../HigherOrder/GetRenderedWidthHOC';
 import './styles.scss';
 
+let SetupBoard = GetRenderedWidthHOC(setupBoard);
+let InPlayBoard = GetRenderedWidthHOC(inPlayBoard);
+
 export default class Battleships extends Component {
     constructor(props) {
         super(props);
-
+        
         this.state = {
             inPlay: false,
             gameConfiguration: {},
@@ -133,33 +136,6 @@ export default class Battleships extends Component {
         }
     }
 
-    GetDynamicBoard(allowMoving, message)
-    {
-        if (this.state.playerInfo !== null && this.state.playerInfo.ready)
-        {
-            let Board = GetRenderedWidthHOC(InPlayBoard)
-            return <Board ships={this.state.playerShips} boardState={this.state.playerBoardState} onSquareClick={() => {}}>{message}</Board>
-        }
-        else
-        {
-            if (allowMoving)
-            {
-                let Board = GetRenderedWidthHOC(SetupBoard)
-                return <Board ships = {this.state.gameConfiguration.initialShipLayout} 
-                    ReadyUp={(ships) => this.invoke("RegisterShips", ships).then(res => this.handleRegistrationResponse(res))}
-                >{message}</Board>
-            }
-            else
-            {
-                let Board = GetRenderedWidthHOC(InPlayBoard)
-                return <Board 
-                    ships = {this.state.gameConfiguration.initialShipLayout}>
-                    {message}
-                </Board>
-            } 
-        }
-    }
-
     generateMessageNode = (allowMoving) => 
     {
         return !allowMoving ? (
@@ -193,19 +169,29 @@ export default class Battleships extends Component {
         let gameState = this.state.gameState;
         let allowMoving = gameState === "lobby" || gameState === "started";
         let message = this.generateMessageNode(allowMoving);
-        let DynamicBoard = this.GetDynamicBoard(allowMoving, message);
-        let OpponentBoard = GetRenderedWidthHOC(InPlayBoard);
+        let DynamicBoard;
+
+        if ((this.state.playerInfo !== null && this.state.playerInfo.ready) || !allowMoving)
+        {
+            DynamicBoard = <InPlayBoard key="board1" ships={this.state.playerShips} boardState={this.state.playerBoardState} onSquareClick={() => {}}>{message}</InPlayBoard>
+        }
+        else
+        {
+            DynamicBoard = <SetupBoard key="board1" ships = {this.state.gameConfiguration.initialShipLayout} 
+                ReadyUp={(ships) => this.invoke("RegisterShips", ships).then(res => this.handleRegistrationResponse(res))}
+            >{message}</SetupBoard>
+        }
         
         return (
             <div>
                 <div id="boardsContainer">
                     <div id="playerBoard">
-                        <span style={{width:"100%", textAlign:"center"}}>{"Your board"}</span>
+                        <span>{"Your board"}</span>
                         {DynamicBoard}
                     </div>
                     <div id="opponentBoard">
-                        <span style={{width:"100%", textAlign:"center"}}>{"Opponents board"}</span>
-                        <OpponentBoard ships={this.state.opponentShips} boardState={this.state.opponentBoardState} onSquareClick={this.makeMove}>{message}</OpponentBoard>
+                        <span>{"Opponents board"}</span>
+                        <InPlayBoard key="board2" ships={this.state.opponentShips} boardState={this.state.opponentBoardState} onSquareClick={this.makeMove}>{message}</InPlayBoard>
                     </div>
                 </div>
                 
