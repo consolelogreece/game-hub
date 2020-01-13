@@ -133,11 +133,6 @@ namespace GameHub.Games.BoardGames.Battleships
             return new ActionResult(true);
         }
 
-        public BattleshipsGameState GetGameState()
-        {
-            throw new System.NotImplementedException();
-        }
-
         public BattleshipsPlayerModel GetPlayer(string playerId)
         {
             if (p1 != null && p1.Id == playerId) return p1;
@@ -344,7 +339,6 @@ namespace GameHub.Games.BoardGames.Battleships
             {
                 PlayerShips = GetShips(player),
                 PlayerBoard = GetGrid(player),
-                OpponentSunkShips = GetShips(opponent).FindAll(s => s.IsSunk()),
                 OpponentBoard = GetGrid(opponent),
                 Configuration = _config, 
                 CurrentTurnPlayer = plonker, 

@@ -18,6 +18,5 @@ namespace GameHub.Games.BoardGames.Battleships
 
         // shows where player has shot
         public Square[,] OpponentBoard {get; set;}
-        public List<Ship> OpponentSunkShips;
     }
 }

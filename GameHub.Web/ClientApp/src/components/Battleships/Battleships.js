@@ -18,7 +18,6 @@ export default class Battleships extends Component {
             gameConfiguration: {},
             playerBoardState:[[]],
             opponentBoardState: [[]],
-            opponentShips: [],
             playerShips: [],
             playerInfo: null,
             gameState:""
@@ -92,11 +91,9 @@ export default class Battleships extends Component {
     {
         this.mapShipOrientations(gameState.configuration.initialShipLayout);
         this.mapShipOrientations(gameState.playerShips);
-        this.mapShipOrientations(gameState.opponentSunkShips);
 
         this.setState({
             playerShips: gameState.playerShips, 
-            opponentShips: gameState.opponentSunkShips,
             gameConfiguration: gameState.configuration,
             playerBoardState: gameState.playerBoard,
             opponentBoardState: gameState.opponentBoard,
@@ -191,7 +188,7 @@ export default class Battleships extends Component {
                     </div>
                     <div id="opponentBoard">
                         <span>{"Opponents board"}</span>
-                        <InPlayBoard key="board2" ships={this.state.opponentShips} boardState={this.state.opponentBoardState} onSquareClick={this.makeMove}>{message}</InPlayBoard>
+                        <InPlayBoard key="board2" ships={[]} boardState={this.state.opponentBoardState} onSquareClick={this.makeMove}>{message}</InPlayBoard>
                     </div>
                 </div>
                 
