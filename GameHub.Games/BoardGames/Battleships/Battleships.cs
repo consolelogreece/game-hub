@@ -183,6 +183,42 @@ namespace GameHub.Games.BoardGames.Battleships
             return new ActionResult(true);
         }
 
+        private BattleshipsMoveResult GenerateMoveResult(MoveConsequence moveConsequence)
+        {
+            var success = false;
+            var didEndGame = false;
+            var message = "";
+
+            if (moveConsequence == MoveConsequence.Illegal)
+            {
+                message = "Illegal move!";
+            }
+            else
+            {
+                didEndGame = _game.Winner != null;
+                success = true;
+
+                switch (moveConsequence)
+                {
+                    case MoveConsequence.Miss:
+                        message = "Miss";
+                        break;
+
+                    case MoveConsequence.Hit:
+                        message = "Hit!";
+                        break;
+                    
+                    case MoveConsequence.HitSink:
+                        if (didEndGame) message = "Hit, sink and victory!";
+                        else message = "Hit and sink!";
+                        break;    
+                }
+            }
+
+            return new BattleshipsMoveResult(success, message, didEndGame);
+        }
+
+
         public ActionResult Move(string playerId, BattleshipsPosition move)
         {
             if (!_started)
@@ -202,54 +238,26 @@ namespace GameHub.Games.BoardGames.Battleships
                 return new ActionResult(false, "Move out of bounds");
             }
 
-            var moveResult = _game.Move(move);
+            var moveConsequence = _game.Move(move);
 
-            if (moveResult.WasSuccessful) 
+            if (moveConsequence != MoveConsequence.Illegal) 
             {
                 _nextTurnPlayerIndex *= -1;
             }
 
-            var message = GenerateMoveString(moveResult);
+            var moveResult = GenerateMoveResult(moveConsequence);
 
             if (moveResult.DidEndGame)
             {
                 _gameOver = true;
             }
 
-            return new BattleshipsMoveResult(moveResult.WasSuccessful, message, moveResult.DidEndGame);
+            return moveResult;
         }
 
         private bool IsMoveInBounds(BattleshipsPosition move)
         {
             return !(move.row >= _config.Rows || move.row < 0 || move.col >= _config.Cols || move.col < 0);
-        }
-
-        private string GenerateMoveString(BattleshipsMoveResult result)
-        {
-            if (!result.WasSuccessful) return "Already moved there!";
-            
-            // if (result.HitShip == null)
-            // {
-            //     return "Miss";
-            // }
-            // else
-            // {
-            //     if (result.HitShip.IsSunk())
-            //     {
-            //         if (result.DidEndGame) return "Hit, sink and game!";
-                  
-            //         return "Hit and sink";
-
-                    
-            //     }
-            //     else
-            //     {
-            //        return "Hit";
-            //     }
-                
-            // }
-
-            return "as valid as a cake on cakeday";
         }
 
         public ActionResult Resign(string playerId)

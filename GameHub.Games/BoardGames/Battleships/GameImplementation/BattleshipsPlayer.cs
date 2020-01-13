@@ -29,13 +29,9 @@ namespace GameHub.Games.BoardGames.Battleships
             return Ships.All(s => s.IsSunk());
         }        
 
-        public BattleshipsMoveResult RegisterHit(BattleshipsPosition move)
+        public MoveConsequence RegisterHit(BattleshipsPosition move)
         {
-            var validMove = Board.Hit(move);
-
-            if (!validMove) return new BattleshipsMoveResult(false);
-
-            return new BattleshipsMoveResult(true, "", IsGameOver());
+            return Board.Hit(move);  
         }
     }
 }

@@ -20,6 +20,7 @@ export default class Battleships extends Component {
             opponentBoardState: [[]],
             playerShips: [],
             playerInfo: null,
+            gameMessage: "",
             gameState:""
         };
     }
@@ -155,7 +156,9 @@ export default class Battleships extends Component {
 
     makeMove = (row, col) =>
     {
-        this.invoke('Move', {row: row, col: col});
+        this.invoke('Move', {row: row, col: col}).then(mr => {
+            if (mr.wasSuccessful) this.setState({gameMessage: mr.message});
+        });
     }
 
     render()
@@ -189,6 +192,7 @@ export default class Battleships extends Component {
                     <div id="opponentBoard">
                         <span>{"Opponents board"}</span>
                         <InPlayBoard key="board2" ships={[]} boardState={this.state.opponentBoardState} onSquareClick={this.makeMove}>{message}</InPlayBoard>
+                        {this.state.gameMessage}
                     </div>
                 </div>
                 

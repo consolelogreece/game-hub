@@ -63,22 +63,26 @@ namespace GameHub.Games.BoardGames.Battleships
             return _grid[row,col].State != SquareState.Untouched;
         }
 
-        public bool Hit(BattleshipsPosition move)
+        public MoveConsequence Hit(BattleshipsPosition move)
         {
-            if (SquareAlreadyHit(move.row, move.col)) return false;
+            if (SquareAlreadyHit(move.row, move.col)) return MoveConsequence.Illegal;
 
             if(shipMap.TryGetValue(move, out var hitShip) && hitShip != null)
             {
                 hitShip.hit();
 
                 _grid[move.row, move.col].State = SquareState.Hit;
+
+                if (hitShip.IsSunk()) return MoveConsequence.HitSink;
+                
+                return MoveConsequence.Hit;
             }
             else
             {
                 _grid[move.row, move.col].State = SquareState.Missed;
-            }
 
-            return true;
+                return MoveConsequence.Miss;
+            }
         }
 
         private bool IsOutsideBoundaries(int row, int col)

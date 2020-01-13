@@ -43,13 +43,13 @@ namespace GameHub.Games.BoardGames.Battleships
             else p2 = newPlayer;
         }
 
-        public BattleshipsMoveResult Move(BattleshipsPosition move)
+        public MoveConsequence Move(BattleshipsPosition move)
         {
             var defendingPlayer = nextTurnPlayer == -1 ? p1 : p2;
             
             var result = defendingPlayer.RegisterHit(move);
 
-            if (result.WasSuccessful)
+            if (result != MoveConsequence.Illegal)
             {
                 nextTurnPlayer *= -1;
             }
