@@ -65,18 +65,17 @@ export default function(WrappedComponent, PopupComponent,
             let WrappedComponentProps = {};
             WrappedComponentProps[displayPropName] = this.display;
 
+            let Message = this.state.message !== "" ? <PopupComponent {...PopupComponentProps} /> : <div />;
+            WrappedComponentProps[messagePropName] = Message;
+
+
             return (
-                <div>
-                    <div>
-                        {this.state.message !== "" && (
-                            <PopupComponent {...PopupComponentProps} />
-                        )}
-                     </div>
+                <React.Fragment>
                     <WrappedComponent 
                         {...this.props}
                         {...WrappedComponentProps}
                     />
-                </div>
+                </React.Fragment>
             );
         }
     }

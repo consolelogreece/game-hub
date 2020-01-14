@@ -198,6 +198,7 @@ export default class ConnectFour extends Component {
 
         return (
             <div id="ConnectFour" className="vertical_center">  
+                {this.props.errorMessage}
                 <Title text="Connect Four"/> 
                 <Aboard  
                     className="vertical_center" 

@@ -4,6 +4,7 @@ import inPlayBoard from './Boards/inPlayBoard';
 import OptionPanel from '../Common/OptionPanel';
 import AbsoluteCenterAlign from '../Common/AbsoluteCenter';
 import GetRenderedWidthHOC from '../HigherOrder/GetRenderedWidthHOC';
+
 import './styles.scss';
 
 let SetupBoard = GetRenderedWidthHOC(setupBoard);
@@ -156,9 +157,7 @@ export default class Battleships extends Component {
 
     makeMove = (row, col) =>
     {
-        this.invoke('Move', {row: row, col: col}).then(mr => {
-            if (mr.wasSuccessful) this.setState({gameMessage: mr.message});
-        });
+        return this.invoke('Move', {row: row, col: col});
     }
 
     render()
@@ -173,7 +172,7 @@ export default class Battleships extends Component {
 
         if ((this.state.playerInfo !== null && this.state.playerInfo.ready) || !allowMoving)
         {
-            DynamicBoard = <InPlayBoard key="board1" ships={this.state.playerShips} boardState={this.state.playerBoardState} onSquareClick={() => {}}>{message}</InPlayBoard>
+            DynamicBoard = <InPlayBoard key="board1" ships={this.state.playerShips} boardState={this.state.playerBoardState}>{message}</InPlayBoard>
         }
         else
         {
@@ -184,6 +183,7 @@ export default class Battleships extends Component {
         
         return (
             <div>
+                {this.props.errorMessage}
                 <div id="boardsContainer">
                     <div id="playerBoard">
                         <span>{"Your board"}</span>
