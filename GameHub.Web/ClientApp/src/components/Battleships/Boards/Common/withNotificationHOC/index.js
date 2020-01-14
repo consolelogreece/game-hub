@@ -22,11 +22,9 @@ export default function(WrappedComponent)
                         containerClassNames={"battleships-board-popup-container"}
                         superContainerClassNames={[classNames, renderSpecificClass].join(" ")}
                     >   
-                        <AbsoluteCenterAlign>
-                            <span onClick={this.props.closeError}>
-                                {this.props.notificationMessage}
-                            </span>
-                        </AbsoluteCenterAlign>
+                        <span onClick={this.props.closeMessage}>
+                            {this.props.notificationMessage}
+                        </span>
                     </Popup>
                 </div>
             );
