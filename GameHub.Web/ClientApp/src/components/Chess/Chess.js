@@ -384,6 +384,7 @@ export default class Chess extends Component {
 
         return (
             <div style={{width: width, margin: "0 auto"}}>
+                {this.props.errorMessage}
                 <Title text="CHESS" />
                 {this.state.displayPromotionPrompt &&
                     <Popup 

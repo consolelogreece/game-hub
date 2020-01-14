@@ -4,11 +4,12 @@ import inPlayBoard from './Boards/inPlayBoard';
 import OptionPanel from '../Common/OptionPanel';
 import AbsoluteCenterAlign from '../Common/AbsoluteCenter';
 import GetRenderedWidthHOC from '../HigherOrder/GetRenderedWidthHOC';
+import withNotificationHOC from './Boards/Common/withNotificationHOC';
 
 import './styles.scss';
 
 let SetupBoard = GetRenderedWidthHOC(setupBoard);
-let InPlayBoard = GetRenderedWidthHOC(inPlayBoard);
+let InPlayBoard = GetRenderedWidthHOC(withNotificationHOC(inPlayBoard));
 
 export default class Battleships extends Component {
     constructor(props) {

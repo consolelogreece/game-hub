@@ -112,6 +112,15 @@ export default class BattleshipsPlayBoard extends Component
         />
     }
 
+    handleSquareClick = (row, col) =>
+    {
+        if (this.props.onSquareClick === undefined) return;
+
+        this.props.onSquareClick(row, col).then(mr => {
+            if (mr.wasSuccessful) this.props.displayBoardNotification(mr.message);
+        });
+    }
+
     render()
     {
         let ships = this.state.ships.map((ship, index) => {
@@ -121,22 +130,27 @@ export default class BattleshipsPlayBoard extends Component
         )
 
         let styles = this.getStylesByBoardState(this.props.boardState);
+        let height = this.state.nPixelsSquare * this.state.rows;
+        let width = this.state.nPixelsSquare * this.state.cols;
 
         return(
-            <div>
-                <Grid 
-                    width={this.state.nPixelsSquare * this.state.cols}
-                    height={this.state.nPixelsSquare * this.state.rows}
-                    gridRef={this.gridRef}
-                    nPixelsSquare={this.state.nPixelsSquare} 
-                    rows={10} 
-                    cols={10} 
-                    styles={styles}
-                    onSquareClick={this.props.onSquareClick}>
-                    {ships}
-                    {this.props.children}
-                </Grid>
+        <div>
+            <div style={{position: "absolute", height: `${height}px`, width: `${width}px`}}>
+                {this.props.notificationMessage}
             </div>
+            <Grid 
+                width={width}
+                height={height}
+                gridRef={this.gridRef}
+                nPixelsSquare={this.state.nPixelsSquare} 
+                rows={10} 
+                cols={10} 
+                styles={styles}
+                onSquareClick={this.handleSquareClick}>
+                {ships}
+                {this.props.children}
+            </Grid>
+        </div>
         );
     }
 }
