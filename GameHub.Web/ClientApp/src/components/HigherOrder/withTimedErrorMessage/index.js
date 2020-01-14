@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import withPopupOverlay from '../withTimedMessagePopup/withTimedMessagePopup';
+import withPopupOverlay from '../withTimedMessagePopup';
 import Popup from '../../Popup';
 import './styles.scss';
 
