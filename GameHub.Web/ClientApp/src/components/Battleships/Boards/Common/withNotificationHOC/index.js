@@ -8,28 +8,33 @@ let showClassNames = "battleships-board-notification-super-container-show";
 let hideClassNames = "battleships-board-notification-super-container-hide";
 let classNames = "battleships-board-notification-super-container";
 
+let showMessage = "battleships-board-notification-message-show";
+let hideMessage = "battleships-board-notification-message-hide";
+let messageClassName = "battleships-board-notification-message";
+
 export default function(WrappedComponent)
 {
     class TimedErrorDropdown extends Component
     {
         render = () =>
         {
-            let renderSpecificClass = this.props.shouldShowMessage ? showClassNames : hideClassNames;
+            let renderSpecificClassContainer = this.props.shouldShowMessage ? showClassNames : hideClassNames;
+            let renderSpecificClassMessage = this.props.shouldShowMessage ? showMessage : hideMessage;
 
             return (
                 <div onClick={this.props.closeMessage}>
                     <Popup
                         containerClassNames={"battleships-board-popup-container"}
-                        superContainerClassNames={[classNames, renderSpecificClass].join(" ")}
+                        superContainerClassNames={[classNames, renderSpecificClassContainer].join(" ")}
                     >   
-                        <span onClick={this.props.closeMessage}>
+                    </Popup>
+                        <span className={[messageClassName, renderSpecificClassMessage].join(" ")} onClick={this.props.closeMessage}>
                             {this.props.notificationMessage}
                         </span>
-                    </Popup>
                 </div>
             );
         };
     }
 
-    return withPopupOverlay(WrappedComponent, TimedErrorDropdown, "displayBoardNotification", "notificationMessage", "closeMessage", "shouldShowMessage", 1200000);
+    return withPopupOverlay(WrappedComponent, TimedErrorDropdown, "displayBoardNotification", "notificationMessage", "closeMessage", "shouldShowMessage", 3000);
 }

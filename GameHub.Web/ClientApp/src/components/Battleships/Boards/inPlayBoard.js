@@ -135,7 +135,7 @@ export default class BattleshipsPlayBoard extends Component
 
         return(
         <div>
-            <div style={{position: "absolute", height: `${height}px`, width: `${width}px`}}>
+            <div style={{position: "absolute", height: `${height}px`, width: `${width}px`, overflow: "hidden"}}>
                 {this.props.notificationMessage}
             </div>
             <Grid 
