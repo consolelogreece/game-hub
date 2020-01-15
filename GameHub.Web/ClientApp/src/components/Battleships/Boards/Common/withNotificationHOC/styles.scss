@@ -8,7 +8,7 @@ $transition_period_ms: $transition_period + ms;
 
 .battleships-board-notification-super-container
 {
-    width: 150%;
+    width: 100%;
     overflow: hidden;
     height: 12%;
     top: 44%;
@@ -18,7 +18,6 @@ $transition_period_ms: $transition_period + ms;
     box-sizing: border-box;
     text-align: center;
     cursor: pointer;
-    font-size: 40px;
     z-index: 999;
     position: absolute;
 }
@@ -30,7 +29,7 @@ $transition_period_ms: $transition_period + ms;
     width: 100%;
     position: absolute;
     text-align: center;
-    font-size: 6vw;
+    font-size: 2em;
     font-weight: bold;
     color: #fff;
     font-style: italic;
