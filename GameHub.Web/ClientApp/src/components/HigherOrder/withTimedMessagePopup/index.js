@@ -6,8 +6,10 @@ export default function(WrappedComponent, PopupComponent,
     displayPropName = "display", 
     messagePropName = "message", 
     closePropName = "close", 
-    showPropName = "show", 
-    duration = 3000)
+    showPropName = "show",
+    transitionStatePropName = "transitionState",
+    timeoutDuration = 3000, 
+    transitionDuration = transition_period)
 {
     return class WithTimedPopup extends Component
     {
@@ -17,7 +19,8 @@ export default function(WrappedComponent, PopupComponent,
 
             this.state = {
                 message: "",
-                messageTimeoutDurationMS: duration,
+                messageTimeoutDurationMS: timeoutDuration,
+                transitionState: "none",
                 render: false
             };
         }
@@ -36,6 +39,12 @@ export default function(WrappedComponent, PopupComponent,
 
             this.setState({message:message, render: true}, async () =>
             {
+                this.setState({transitionState: "in"});
+
+                await timeout(transitionDuration);
+
+                this.setState({transitionState:"none"})
+
                 await timeout(this.state.messageTimeoutDurationMS);
 
                 // if the message has changed, dont wipe it as it's the responsibilty of another process now. wiping it can cause shortened messages.
@@ -48,11 +57,11 @@ export default function(WrappedComponent, PopupComponent,
 
         close = async () =>
         {
-            this.setState({render: false});
+            this.setState({render: false, transitionState:"out"});
 
-            await timeout(transition_period);
+            await timeout(transitionDuration);
 
-            this.setState({message: ""});
+            this.setState({message: "", transitionState: "none"});
         }
 
         render = () =>
@@ -60,6 +69,7 @@ export default function(WrappedComponent, PopupComponent,
             let PopupComponentProps = {};
             PopupComponentProps[closePropName] = this.close;
             PopupComponentProps[showPropName] = this.state.render;
+            PopupComponentProps[transitionStatePropName] = this.state.transitionState;
             PopupComponentProps[messagePropName] = this.state.message;
 
             let WrappedComponentProps = {};

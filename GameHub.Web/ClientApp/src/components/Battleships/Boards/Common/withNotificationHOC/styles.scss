@@ -1,13 +1,21 @@
-@import '../../../../../utils/variables';
+$transition_period: 300;
+$transition_period_ms: $transition_period + ms;
+
+:export
+{
+    transition_period: $transition_period;
+}
 
 .battleships-board-notification-super-container
 {
-    width: 100%;
+    width: 150%;
     overflow: hidden;
-    height: 20%;
-    top: 40%;
-    background-color: rgba(255,255,255,0.4);
-    color: #111;
+    height: 12%;
+    top: 44%;
+    background-color: rgb(49, 49, 49);
+    border-top: rgb(44, 44, 44) 8px solid;
+    border-bottom: rgb(44, 44, 44) 8px solid;
+    box-sizing: border-box;
     text-align: center;
     cursor: pointer;
     font-size: 40px;
@@ -18,74 +26,64 @@
 .battleships-board-notification-message
 {
     z-index: 999;
-    top: 45%;
+    top: 47%;
     width: 100%;
     position: absolute;
     text-align: center;
-    font-size: 9vw;
+    font-size: 6vw;
+    font-weight: bold;
+    color: #fff;
+    font-style: italic;
     transform: translateX(-900px);
 }
 
+.battleships-board-notification-message-animate
+{
+    animation: slideacross ($transition_period * 3) + ms forwards;
+    animation-delay: $transition_period_ms;
+    animation-timing-function: cubic-bezier(0.07, 0.93, 0.93, 0.07);
+}
 
 .battleships-board-notification-super-container:hover
 {
-    background-color: rgba(255,255,255,0.5);
+    //background-color: rgba(255,255,255,0.5);
 }
 
 .battleships-board-notification-super-container-show
 {
-    animation: slidein $transition_period_ms;
+    animation: slidein-right $transition_period_ms ease forwards;
 }
 
 .battleships-board-notification-super-container-hide
 {
-    animation: slideout $transition_period_ms;
-    animation-delay: $transition_period_ms;
+    animation: slideout-left $transition_period_ms forwards;
+    animation-delay: $transition_period_ms ease;
 }
 
-.battleships-board-notification-message-show
+@keyframes slideacross
 {
-    animation: slidein $transition_period_ms forwards;
-    animation-delay: $transition_period_ms;
-}
-
-.battleships-board-notification-message-hide
-{
-    animation: slideout $transition_period_ms forwards;
-}
-
-@keyframes fadein {
-    from { opacity: 0; }
-    to   { opacity: 1; }
-}
-
-@keyframes fadeout {
-    from { opacity: 1; }
-    to   { opacity: 0; }
-}
-
-@keyframes slidein {
     0% {
-        transform: translateX(-900px);
-      }
-      100% {
-        transform: translateX(0);
-      }
-}
-
-@keyframes slideout {
-    
-    0% {
-        transform: translateX(0);
+        transform: translateX(-900px) 
     }
     100% {
         transform: translateX(900px);
-    }
+    } 
 }
 
-// @keyframes slideleftright {
-//     100% { left: 0; }
-// }
-// @keyframes slide {
-//     100% { left: 0; }
-// }
+@keyframes slidein-right {
+    100% { 
+        transform: translateX(0px);
+    }
+    0% {
+        transform: translateX(900px);
+        
+    }
+}
+@keyframes slideout-left {
+    0% { 
+        transform: translateX(0px);
+    }
+    100% {
+        transform: translateX(-900px);
+    }
+}

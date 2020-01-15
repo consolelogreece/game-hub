@@ -31,5 +31,5 @@ export default function(WrappedComponent, duration)
         };
     }
 
-    return withPopupOverlay(WrappedComponent, TimedErrorDropdown, "displayTimedError", "errorMessage", "closeError", "shouldShowError", duration);
+    return withPopupOverlay(WrappedComponent, TimedErrorDropdown, "displayTimedError", "errorMessage", "closeError", "shouldShowError","ss", duration);
 }
