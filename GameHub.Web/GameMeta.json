@@ -12,7 +12,7 @@
         },
         {
             "Name": "Battleships",
-            "Thumbnail": "images/chess.png",
+            "Thumbnail": "images/battleships.png",
             "Url": "/battleships"
         }
     ]
