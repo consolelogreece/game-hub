@@ -43,11 +43,6 @@ $transition_period_ms: $transition_period + ms;
     animation-timing-function: cubic-bezier(0.07, 0.93, 0.93, 0.07);
 }
 
-.battleships-board-notification-super-container:hover
-{
-    //background-color: rgba(255,255,255,0.5);
-}
-
 .battleships-board-notification-super-container-show
 {
     animation: slidein-right $transition_period_ms ease forwards;

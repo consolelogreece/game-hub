@@ -22,13 +22,13 @@ export default function(WrappedComponent)
             console.log(renderSpecificClassMessage)
 
             return (
-                <div onClick={this.props.closeMessage}>
+                <div>
                     <Popup
                         containerClassNames={"battleships-board-popup-container"}
                         superContainerClassNames={[classNames, renderSpecificClassContainer].join(" ")}
                     >   
                     </Popup>
-                        <span className={[messageClassName, renderSpecificClassMessage].join(" ")} onClick={this.props.closeMessage}>
+                        <span className={[messageClassName, renderSpecificClassMessage].join(" ")}>
                             {this.props.notificationMessage}
                         </span>
                 </div>
