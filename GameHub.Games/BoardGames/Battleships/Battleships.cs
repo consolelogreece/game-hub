@@ -267,7 +267,22 @@ namespace GameHub.Games.BoardGames.Battleships
 
         public ActionResult Restart(string playerId)
         {
-            throw new System.NotImplementedException();
+            if (playerId != _config.CreatorId) return new ActionResult(false, "You are not the host");
+
+            if (!_started || !_gameOver) return new ActionResult(false, "You can't restart the game yet");
+
+            _game = new BattleshipsGame(_config.Rows, _config.Cols);
+
+            _gameOver = false;
+
+            _started = false;
+
+            _nextTurnPlayerIndex = 1;
+
+            p1.Ready = false;
+            p2.Ready = false;
+
+            return new ActionResult(true);
         }
 
         public ActionResult Start(string playerId)
