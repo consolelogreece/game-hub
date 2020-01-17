@@ -171,7 +171,7 @@ export default class Battleships extends Component {
         let message = this.generateMessageNode(allowMoving);
         let DynamicBoard;
 
-        if ((this.state.playerInfo !== null && this.state.playerInfo.ready) || !allowMoving)
+        if (!isPlayerRegistered || ((isPlayerRegistered && this.state.playerInfo.ready)) || !allowMoving)
         {
             DynamicBoard = <InPlayBoard key="board1" ships={this.state.playerShips} boardState={this.state.playerBoardState}>{message}</InPlayBoard>
         }
