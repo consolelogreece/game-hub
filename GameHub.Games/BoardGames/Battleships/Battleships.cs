@@ -332,11 +332,19 @@ namespace GameHub.Games.BoardGames.Battleships
                 player = _game.p1;
                 opponent = _game.p2;
             }
-            else
+            else if (_game.p2 != null && _game.p2.PlayerId == playerId)
             {
                 player = _game.p2;
                 opponent = _game.p1;
             }
+            else
+            {
+                player = null;
+                opponent = null;
+            }
+
+            var playerBoard = player == null ? GetGrid(_game.p1) : GetGrid(player);
+            var opponentBoard = opponent == null ? GetGrid(_game.p2) : GetGrid(opponent);
 
             var players = new List<BattleshipsPlayerModel>();
 
@@ -346,8 +354,8 @@ namespace GameHub.Games.BoardGames.Battleships
             return new BattleshipsGameState
             {
                 PlayerShips = GetShips(player),
-                PlayerBoard = GetGrid(player),
-                OpponentBoard = GetGrid(opponent),
+                PlayerBoard = playerBoard,
+                OpponentBoard = opponentBoard,
                 Configuration = _config, 
                 CurrentTurnPlayer = plonker, 
                 Status = this.GetGameStatus(),
