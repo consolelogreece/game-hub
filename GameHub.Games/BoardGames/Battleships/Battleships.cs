@@ -140,6 +140,13 @@ namespace GameHub.Games.BoardGames.Battleships
             return null;
         }
 
+        public BattleshipsPlayerModel GetOpponent(string playerId)
+        {
+            if (p1 != null && p1.Id == playerId) return p2;
+            if (p2 != null && p2.Id == playerId) return p1;
+            return null;
+        }
+
         public ActionResult Join(string playerId, string playerNick)
         {
             if (p1 != null && p1.Id == playerId || p2 != null && p2.Id == playerId)
@@ -250,6 +257,7 @@ namespace GameHub.Games.BoardGames.Battleships
             if (moveResult.DidEndGame)
             {
                 _gameOver = true;
+                GetPlayer(playerId).Wins++;
             }
 
             return moveResult;
@@ -262,7 +270,18 @@ namespace GameHub.Games.BoardGames.Battleships
 
         public ActionResult Resign(string playerId)
         {
-            throw new System.NotImplementedException();
+            var player = this.GetPlayer(playerId);
+            
+            if (!_started) return new ActionResult(false, "Game hasn't started");
+
+            // cant resign if player does not exist.
+            if (player == null) return new ActionResult(false, "Not a player");
+
+            _gameOver = true; 
+            
+            GetOpponent(playerId).Wins++;
+
+            return new ActionResult(true);
         }
 
         public ActionResult Restart(string playerId)

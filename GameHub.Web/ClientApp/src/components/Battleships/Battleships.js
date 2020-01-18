@@ -161,6 +161,16 @@ export default class Battleships extends Component {
         return this.invoke('Move', {row: row, col: col});
     }
 
+    Resign = () => 
+    {
+        if (this.state.playerInfo !== null)
+        {
+            this.setState({playerInfo:{...this.state.playerInfo, resigned: true}});
+
+            this.invoke("Resign");
+        }
+    }
+
     render()
     {
         let isPlayerRegistered = this.state.playerInfo !== null;
