@@ -19,8 +19,6 @@ export default function(WrappedComponent)
             let renderSpecificClassContainer = this.props.shouldShowMessage ? showClassNames : hideClassNames;
             let renderSpecificClassMessage = (this.props.notificationTransitionState !== "none" || this.props.shouldShowMessage)  ? showMessage : "";
 
-            console.log(renderSpecificClassMessage)
-
             return (
                 <div>
                     <Popup
